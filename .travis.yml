@@ -1,3 +1,10 @@
 language: node_js
 node_js:
-  - "6.9.4"
+- 6.9.4
+deploy:
+  provider: heroku
+  api_key:
+    secure: siQgDdmL/KLaCIIcrNlkJrh44Zz6WRXwnAb/7BXcPJOWeKzfwg9PsbwM9FRNQMm+rt9XSFG45gwaLA6qDbhEbfVLjbnj8a4fxGUP824TP65fRrQSxq+ypyLNVO9y/gCfZiPUvZ2PogEI5x0dOITDYZqAxYyVdZ3ihwyG6vl2YGmcan/0B3ytgsDGhPX3rBAethKZ4cfRy2EqhgTx7mQJSPxItxeEe86Nz1G4kj8lfIE18VOCUEjZ3i+lNzpaWktbVZX0D3xxkeFv68OTfyhbHysV75twa198sO0+LJrihZ8uyk6GkSUz+O8JhSDzSqjcBchRrPgucoCvUiUpPhQP5Jax9YwiJ1vuxopXvEWffUgLXezPZ+lXGdTCJkYdiv9BwIHErIUOd+cJclvFHobEtl1N/rFBNWaIfOFkvRMY7AKh27VBX0UvmwpgUy7uW+7tnsG36AL9cMY32elM50J2wnuuOEiAe7ALE3kpfhoW1/gS4i1YoDrr2TCZsRC+NWyb2p85klWeTdmVefRxGSzO1G/jUk1qWkISNhtWtp0FAYns4/d8f+R8v4mwIinukpV+EIkU4M5oF7Y9enOC9yVsA5ek0Vd/tZCKx0/i1vzXjgH998klWdSKK+z468hnTKcw6W4YjG3YTMtuI24+4L9GWJ5bJUoYwHQnoywwtsT8V5A=
+  app: finance_project
+  on:
+    repo: evedal/finance_project
