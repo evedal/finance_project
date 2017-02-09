@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/evedal/finance_project.svg?branch=master)](https://travis-ci.org/evedal/finance_project)
+
 # finance_project
 Finance project (reddit-like forum) in NodeJS and React
 
