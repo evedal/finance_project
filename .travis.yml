@@ -9,10 +9,10 @@ deploy:
   on:
     repo: evedal/finance_project
 
-  # MySQL setup
+# MySQL setup
 services:
   - mysql
 
 before_install:
-  - mysql -e 'CREATE DATABASE travis;'
-  - mysql -u travis < database/db.sql
+  - mysql -u root 'CREATE DATABASE travis;'
+  - mysql -u root travis < database/db.sql
