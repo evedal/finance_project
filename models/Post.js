@@ -1,5 +1,5 @@
 var path = require('path');
-var pool = require(path.normalize('../utils/db')).pool;
+var pool = require(path.relative('/models/', '/utils/db')).pool;
 const sqlCreatePost = "INSERT INTO post SET ?";
 const sqlGetPosts = "SELECT * FROM post";
 const sqlDeletePost = "DELETE FROM post WHERE post_id = ?";
