@@ -188,6 +188,7 @@ INSERT INTO segment VALUES(DEFAULT, 'Sjømat', DEFAULT, DEFAULT);
 INSERT INTO company VALUES(DEFAULT, 'FAR', 'Farstad Shipping',DEFAULT, DEFAULT, 1);
 INSERT INTO company VALUES(DEFAULT, 'HAVI', 'Havila Shipping ASA',DEFAULT, DEFAULT, 1);
 
+INSERT INTO user VALUES(DEFAULT, 'Ole', 'Gunnar', 'olegunnar', 'ole@gunnar.no', 'hash','salt',DEFAULT, DEFAULT, DEFAULT);
 
 -- KEEP ON END OF FILE
 SET FOREIGN_KEY_CHECKS = 1;
