@@ -1,8 +1,5 @@
-var path = require('path');
-var dbPath = path.join('../utils/db');
-console.log(dbPath);
-var pool = require(dbPath).pool;
-const sqlCreatePost = "INSERT INTO post SET post_id=DEFAULT,created_date=DEFAULT,removed=DEFAULT,?";
+var pool = require("../utils/db").pool;
+const sqlCreatePost = "INSERT INTO post SET ?";
 const sqlGetPosts = "SELECT * FROM post";
 const sqlGetPostById = "SELECT * FROM post WHERE post_id = ?";
 const sqlDeletePost = "DELETE FROM post WHERE post_id = ?";
