@@ -6,10 +6,10 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
-var api = require('./routes/api');
-console.log(path.join(__dirname, '/utils/db'));
-var db = require(path.join(__dirname, '/utils/db'));
-console.log('hei');
+var apiComment = require('./routes/api/comment');
+var apiPost = require('./routes/api/post');
+var apiUser = require('./routes/api/user');
+
 
 var app = express();
 
@@ -21,13 +21,14 @@ app.set('view engine', 'hbs');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-console.log(path.join(__dirname, "./utils/db"));
 
 app.use('/', index);
-app.use('/api', api);
+app.use('/api/', apiComment);
+app.use('/api/', apiPost);
+app.use('/api/', apiUser);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
