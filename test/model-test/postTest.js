@@ -27,8 +27,8 @@ describe('Create Post', function () {
     });
 });
 describe('Get Post', function () {
-    it("Should get empty posts", function (done) {
-        Post.find(function (result, err) {
+    it("Should get posts", function (done) {
+        Post.find(function (err, result) {
             console.log(result);
             assert.isNotNull(result, "no error when creating empty post");
             done();

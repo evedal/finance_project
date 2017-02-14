@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9e604453-3d23-405c-9f0c-8ad8da50a087" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/models/Comment.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/Post.js" afterPath="$PROJECT_DIR$/models/Post.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/api/comment.js" afterPath="$PROJECT_DIR$/routes/api/comment.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routes/api/post.js" afterPath="$PROJECT_DIR$/routes/api/post.js" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/test/travisTest.js" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/model-test/postTest.js" afterPath="$PROJECT_DIR$/test/model-test/postTest.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -37,18 +34,18 @@
       <file leaf-file-name="Post.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/Post.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="25">
-              <caret line="1" column="45" lean-forward="false" selection-start-line="1" selection-start-column="45" selection-end-line="1" selection-end-column="45" />
+            <state relative-caret-position="1300">
+              <caret line="52" column="40" lean-forward="false" selection-start-line="52" selection-start-column="27" selection-end-line="52" selection-end-column="40" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="User.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/User.js">
+      <file leaf-file-name="postTest.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/test/model-test/postTest.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="25">
-              <caret line="1" column="8" lean-forward="false" selection-start-line="1" selection-start-column="8" selection-end-line="1" selection-end-column="8" />
+            <state relative-caret-position="375">
+              <caret line="35" column="7" lean-forward="true" selection-start-line="35" selection-start-column="7" selection-end-line="35" selection-end-column="7" />
               <folding />
             </state>
           </provider>
@@ -74,16 +71,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="user.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/routes/api/user.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="25">
-              <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="comment.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/api/comment.js">
           <provider selected="true" editor-type-id="text-editor">
@@ -94,11 +81,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Comment.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Comment.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/models/Comment.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="325">
               <caret line="38" column="17" lean-forward="true" selection-start-line="38" selection-start-column="17" selection-end-line="38" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="475">
+              <caret line="39" column="17" lean-forward="true" selection-start-line="39" selection-start-column="17" selection-end-line="39" selection-end-column="17" />
               <folding />
             </state>
           </provider>
@@ -159,7 +156,6 @@
         <option value="$PROJECT_DIR$/test/travisTest.js" />
         <option value="$PROJECT_DIR$/test/modelsTests/postTest.js" />
         <option value="$PROJECT_DIR$/package.json" />
-        <option value="$PROJECT_DIR$/test/model-test/postTest.js" />
         <option value="$PROJECT_DIR$/.travis.yml" />
         <option value="$PROJECT_DIR$/database/db.sql" />
         <option value="$PROJECT_DIR$/routes/index.js" />
@@ -175,6 +171,7 @@
         <option value="$PROJECT_DIR$/routes/api/post.js" />
         <option value="$PROJECT_DIR$/routes/api/comment.js" />
         <option value="$PROJECT_DIR$/models/Comment.js" />
+        <option value="$PROJECT_DIR$/test/model-test/postTest.js" />
       </list>
     </option>
   </component>
@@ -255,6 +252,10 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="model-test" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -412,7 +413,7 @@
       <workItem from="1487062676412" duration="1854000" />
       <workItem from="1487065309971" duration="93000" />
       <workItem from="1487065422874" duration="3456000" />
-      <workItem from="1487072982590" duration="14898000" />
+      <workItem from="1487072982590" duration="15448000" />
     </task>
     <task id="LOCAL-00001" summary="FInished config of db and created new rest routes and queries">
       <created>1487084257593</created>
@@ -425,7 +426,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="74616000" />
+    <option name="totallyTimeSpent" value="75166000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="1942" height="1042" extended-state="6" />
@@ -694,26 +695,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/model-test/postTest.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="750">
-          <caret line="30" column="39" lean-forward="false" selection-start-line="30" selection-start-column="39" selection-end-line="30" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/utils/dbConfigRemote.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
           <caret line="5" column="35" lean-forward="false" selection-start-line="5" selection-start-column="35" selection-end-line="5" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="253">
-          <caret line="35" column="23" lean-forward="true" selection-start-line="35" selection-start-column="23" selection-end-line="35" selection-end-column="23" />
           <folding />
         </state>
       </provider>
@@ -792,14 +777,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/Post.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25">
-          <caret line="1" column="45" lean-forward="false" selection-start-line="1" selection-start-column="45" selection-end-line="1" selection-end-column="45" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/api/post.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="125">
@@ -828,6 +805,30 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="325">
           <caret line="38" column="17" lean-forward="true" selection-start-line="38" selection-start-column="17" selection-end-line="38" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="475">
+          <caret line="39" column="17" lean-forward="true" selection-start-line="39" selection-start-column="17" selection-end-line="39" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/Post.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1300">
+          <caret line="52" column="40" lean-forward="false" selection-start-line="52" selection-start-column="27" selection-end-line="52" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/model-test/postTest.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="35" column="7" lean-forward="true" selection-start-line="35" selection-start-column="7" selection-end-line="35" selection-end-column="7" />
           <folding />
         </state>
       </provider>
