@@ -9,6 +9,7 @@ var index = require('./routes/index');
 var api = require('./routes/api');
 console.log(path.join(__dirname, '/utils/db'));
 var db = require(path.join(__dirname, '/utils/db'));
+console.log('hei');
 
 var app = express();
 
