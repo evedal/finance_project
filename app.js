@@ -7,8 +7,8 @@ var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
 var api = require('./routes/api');
-console.log(path.join(__dirname, '.utils/db'));
-var db = require('./utils/db');
+console.log(path.join(__dirname, '/utils/db'));
+var db = require(path.join(__dirname, '/utils/db'));
 
 var app = express();
 
