@@ -12,15 +12,8 @@ if(process.env.NODE_ENV){
     }
 }
 else{
-    var localConfig = require('./dbConfig');
-    dbConfig = {
-        connectionLimit : 20,
-        host     : localConfig.host,
-        user     : localConfig.user,
-        password : localConfig.password,
-        database : localConfig.database,
-        debug    : false
-    }
+    dbConfig = require('./dbConfig').module;
+
 }
 var pool = mysql.createPool(dbConfig);
 module.exports = {
