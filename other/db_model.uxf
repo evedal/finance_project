@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="14.2">
-  <zoom_level>8</zoom_level>
+  <zoom_level>7</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>792</x>
-      <y>256</y>
-      <w>168</w>
-      <h>160</h>
+      <x>280</x>
+      <y>252</y>
+      <w>147</w>
+      <h>140</h>
     </coordinates>
     <panel_attributes>user
 --
@@ -24,10 +24,10 @@ register_date</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1072</x>
-      <y>256</y>
-      <w>168</w>
-      <h>72</h>
+      <x>525</x>
+      <y>252</y>
+      <w>147</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>comment
 --
@@ -41,10 +41,10 @@ postet_datetime
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1072</x>
-      <y>496</y>
-      <w>168</w>
-      <h>160</h>
+      <x>525</x>
+      <y>462</y>
+      <w>147</w>
+      <h>140</h>
     </coordinates>
     <panel_attributes>post
 --
@@ -58,10 +58,10 @@ content
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>952</x>
-      <y>296</y>
-      <w>136</w>
-      <h>32</h>
+      <x>420</x>
+      <y>287</y>
+      <w>119</w>
+      <h>28</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..n
@@ -71,10 +71,10 @@ m2=1..1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1200</x>
-      <y>208</y>
-      <w>40</w>
-      <h>64</h>
+      <x>637</x>
+      <y>210</y>
+      <w>35</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>lt=-
 
@@ -84,10 +84,10 @@ m1=0..1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1152</x>
-      <y>208</y>
-      <w>72</w>
-      <h>24</h>
+      <x>595</x>
+      <y>210</y>
+      <w>63</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=-</panel_attributes>
     <additional_attributes>70.0;10.0;10.0;10.0</additional_attributes>
@@ -95,10 +95,10 @@ m1=0..1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1152</x>
-      <y>208</y>
-      <w>40</w>
-      <h>64</h>
+      <x>595</x>
+      <y>210</y>
+      <w>35</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>lt=-
 m2=0..n</panel_attributes>
@@ -107,10 +107,10 @@ m2=0..n</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>792</x>
-      <y>504</y>
-      <w>168</w>
-      <h>160</h>
+      <x>280</x>
+      <y>469</y>
+      <w>147</w>
+      <h>140</h>
     </coordinates>
     <panel_attributes>company
 --
@@ -124,10 +124,10 @@ created_date
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>952</x>
-      <y>560</y>
-      <w>136</w>
-      <h>32</h>
+      <x>420</x>
+      <y>518</y>
+      <w>119</w>
+      <h>28</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=1..1
@@ -137,10 +137,10 @@ m2=0..n</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>792</x>
-      <y>728</y>
-      <w>168</w>
-      <h>160</h>
+      <x>280</x>
+      <y>665</y>
+      <w>147</w>
+      <h>140</h>
     </coordinates>
     <panel_attributes>segment
 --
@@ -154,10 +154,10 @@ county
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>936</x>
-      <y>656</y>
-      <w>40</w>
-      <h>88</h>
+      <x>406</x>
+      <y>602</y>
+      <w>35</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=1..n
@@ -167,10 +167,10 @@ m2=0..n</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1152</x>
-      <y>320</y>
-      <w>40</w>
-      <h>192</h>
+      <x>595</x>
+      <y>308</y>
+      <w>35</w>
+      <h>168</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..n
@@ -180,14 +180,15 @@ m2=1..1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>520</x>
-      <y>256</y>
-      <w>168</w>
-      <h>160</h>
+      <x>42</x>
+      <y>252</y>
+      <w>147</w>
+      <h>140</h>
     </coordinates>
     <panel_attributes>message
 --
 user_id{pk]
+header
 content
 time_sent
 </panel_attributes>
@@ -196,10 +197,10 @@ time_sent
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>680</x>
-      <y>320</y>
-      <w>128</w>
-      <h>32</h>
+      <x>182</x>
+      <y>308</y>
+      <w>112</w>
+      <h>28</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=2..n
@@ -209,10 +210,10 @@ m2=0..n</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>952</x>
-      <y>408</y>
-      <w>136</w>
-      <h>104</h>
+      <x>420</x>
+      <y>385</y>
+      <w>119</w>
+      <h>91</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..n
@@ -222,10 +223,10 @@ m2=0..1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>880</x>
-      <y>16</y>
-      <w>168</w>
-      <h>64</h>
+      <x>357</x>
+      <y>42</y>
+      <w>147</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>like
 --
@@ -239,10 +240,10 @@ like_datetime
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1008</x>
-      <y>112</y>
-      <w>96</w>
-      <h>48</h>
+      <x>469</x>
+      <y>126</y>
+      <w>84</w>
+      <h>42</h>
     </coordinates>
     <panel_attributes>post_like
 --
@@ -255,10 +256,10 @@ comment_like_id{pk}
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>952</x>
-      <y>72</y>
-      <w>24</w>
-      <h>72</h>
+      <x>420</x>
+      <y>91</y>
+      <w>21</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
 </panel_attributes>
@@ -267,10 +268,10 @@ comment_like_id{pk}
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>904</x>
-      <y>112</y>
-      <w>120</w>
-      <h>32</h>
+      <x>378</x>
+      <y>126</y>
+      <w>105</w>
+      <h>28</h>
     </coordinates>
     <panel_attributes>lt=-
 </panel_attributes>
@@ -279,10 +280,10 @@ comment_like_id{pk}
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>816</x>
-      <y>112</y>
-      <w>96</w>
-      <h>48</h>
+      <x>301</x>
+      <y>126</y>
+      <w>84</w>
+      <h>42</h>
     </coordinates>
     <panel_attributes>post_like
 --
@@ -295,10 +296,10 @@ post_like_id{pk}
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1096</x>
-      <y>136</y>
-      <w>208</w>
-      <h>32</h>
+      <x>546</x>
+      <y>147</y>
+      <w>182</w>
+      <h>28</h>
     </coordinates>
     <panel_attributes>lt=-
 </panel_attributes>
@@ -307,10 +308,10 @@ post_like_id{pk}
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1232</x>
-      <y>528</y>
-      <w>72</w>
-      <h>32</h>
+      <x>665</x>
+      <y>490</y>
+      <w>63</w>
+      <h>28</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=1..1</panel_attributes>
@@ -319,10 +320,10 @@ m1=1..1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1280</x>
-      <y>144</y>
-      <w>24</w>
-      <h>408</h>
+      <x>707</x>
+      <y>154</y>
+      <w>21</w>
+      <h>357</h>
     </coordinates>
     <panel_attributes>lt=-
 </panel_attributes>
@@ -331,14 +332,66 @@ m1=1..1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>904</x>
-      <y>152</y>
-      <w>184</w>
-      <h>120</h>
+      <x>378</x>
+      <y>161</y>
+      <w>161</w>
+      <h>105</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=0..n
 m2=1..1</panel_attributes>
     <additional_attributes>10.0;10.0;210.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>420</x>
+      <y>336</y>
+      <w>399</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1..1
+m2=0..n
+</panel_attributes>
+    <additional_attributes>10.0;20.0;550.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>210</x>
+      <y>385</y>
+      <w>98</w>
+      <h>322</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=0..n
+m2=0..n</panel_attributes>
+    <additional_attributes>100.0;10.0;10.0;430.0;100.0;430.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>280</x>
+      <y>56</y>
+      <w>91</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m2=0..n
+</panel_attributes>
+    <additional_attributes>10.0;20.0;110.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>280</x>
+      <y>63</y>
+      <w>35</w>
+      <h>203</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1..1</panel_attributes>
+    <additional_attributes>10.0;270.0;10.0;10.0</additional_attributes>
   </element>
 </diagram>
