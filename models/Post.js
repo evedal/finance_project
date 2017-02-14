@@ -6,8 +6,8 @@ const sqlCreatePost = "INSERT INTO post SET post_id=DEFAULT,created_date=DEFAULT
 const sqlGetPosts = "SELECT * FROM post";
 const sqlGetPostById = "SELECT * FROM post WHERE post_id = ?";
 const sqlDeletePost = "DELETE FROM post WHERE post_id = ?";
-const sqlUpdatePost = "UPDATE post SET ?";
-
+const sqlUpdatePost = "UPDATE post SET content=? WHERE post_id = ?";
+const sqlGetPostsByCompany = "SELECT * FROM post WHERE company_id = ?";
 
 function createPost(post_params, callback){
     "use strict";
@@ -40,14 +40,15 @@ function getPostById(post_id, callback){
         return callback(null, result);
     })
 }
-function updatePost(post_data, callback){
+function updatePost(post_content, post_id, callback){
     "use strict";
-    pool.query(sqlUpdatePost, post_data, function (err, result) {
+    var query = pool.query(sqlUpdatePost, [post_content,post_id], function (err, result) {
         if(err){
             return callback(err);
         }
         return callback(null, result);
     });
+    console.log(query)
 
 }
 function deletePost(post_id, callback){
@@ -61,11 +62,20 @@ function deletePost(post_id, callback){
     console.log(query.sql);
     console.log(post_id);
 }
-
+function getPostByCompany(company_id, callback) {
+    "use strict";
+    var query = pool.query(sqlGetPostsByCompany, company_id, function (err, posts) {
+        if(err){
+            return callback(err);
+        }
+        return callback(null, posts);
+    })
+}
 module.exports = {
     create: createPost,
     find: getPosts,
     findById : getPostById,
+    findByCompany: getPostByCompany,
     update: updatePost,
     delete: deletePost
 };
