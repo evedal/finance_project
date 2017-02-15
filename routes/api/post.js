@@ -59,9 +59,23 @@ router.route('/post/:post_id')
     });
 
 //Route for posts from company
+//getDetails{sLimit: startCount, eLimit: endCount}
 router.route('/post/company/:company_id')
     .get(function (req, res) {
-        Post.findByCompany(req.params.company_id, function (err, posts) {
+        Post.findByCompany(req.params.company_id, req.query, function (err, posts) {
+            if(err){
+                res.status(400);
+                res.json(err);
+                return;
+            }
+            res.json(posts);
+        })
+    });
+
+//getDetails{sLimit: start limit, eLimit: end limit}
+router.route('/post/segment/:segment_id')
+    .get(function (req, res) {
+        Post.findBySegment(req.params.segment_id, req.query, function (err, posts) {
             if(err){
                 res.status(400);
                 res.json(err);
