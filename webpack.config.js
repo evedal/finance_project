@@ -3,7 +3,7 @@ var path = require('path');
 
 module.exports = {
     entry: {
-        app: ['./src/app.js', 'whatwg-fetch']
+        app: ['./src/index.js', 'whatwg-fetch']
     },
     output: {
         filename: 'public/build/bundle.js',

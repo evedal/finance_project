@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-
-import CommunicationChat from 'react-material-icons/icons/communication/chat';
-import ActionThumbUp from 'react-material-icons/icons/action/thumb-up';
-
+import { Link } from 'react-router';
 function getTimeSincePosted (datePosted){
     "use strict";
     let t = datePosted.replace("T"," ");
@@ -29,12 +26,12 @@ class Post extends Component{
         }
         return(
             <div>
-                <a href="#">
+                <Link to = {'/user/'+post.user_id } >
                     <div>
                         <h4>av {post.username}</h4>
                     </div>
-                </a>
-                <a href="#">
+                </Link>
+                <Link to={'/company/'+post.company_id + "/post/" +post.post_id }>
                     <div>
                         <h3>{ post.header }</h3>
                         <p> { post.content }</p>
@@ -44,7 +41,7 @@ class Post extends Component{
                         <span>{post.comment_count} <i className="material-icons">comment</i></span>
                         <span>{post.like_count} <i className="material-icons">thumb_up</i></span>
                     </div>
-                </a>
+                </Link>
             </div>
         )
     }
