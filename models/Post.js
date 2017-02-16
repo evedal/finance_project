@@ -1,10 +1,26 @@
 var pool = require("../utils/db").pool;
+
+
 const sqlCreatePost = "INSERT INTO post SET ?";
+
+
 const sqlGetPosts = "SELECT * FROM post";
-const sqlGetPostById = "SELECT * FROM post WHERE post_id = ?";
+
+const sqlGetPostById = "SELECT post.post_id, post.header, post.content, post.created_date, post.user_id, " +
+    "post.company_id, company.name, username, COUNT(like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
+    "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN post_like ON post.post_id = post_like.post_id " +
+    "LEFT JOIN comment ON comment.post_id = post.post_id JOIN company ON post.company_id = company.company_id " +
+    "WHERE post.post_id = ? GROUP BY post_id";
+
 const sqlDeletePost = "DELETE FROM post WHERE post_id = ?";
+
+
 const sqlUpdatePost = "UPDATE post SET content=? WHERE post_id = ?";
+
+
 const sqlGetPostsByCompany = "SELECT * FROM post WHERE company_id = ? ORDER BY created_date DESC LIMIT ?,?";
+
+
 const sqlGetPostsBySegment = "SELECT post.post_id, post.header, post.content, post.created_date, post.user_id, " +
     "company_id, username, COUNT(like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
     "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN post_like ON post.post_id = post_like.post_id " +
@@ -38,6 +54,7 @@ function getPostById(post_id, callback){
     "use strict";
     pool.query(sqlGetPostById, post_id, function (err, result) {
         if(err){
+            console.log(err);
             return callback(err);
         }
         return callback(null, result);
