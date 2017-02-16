@@ -5,7 +5,11 @@ const sqlGetPostById = "SELECT * FROM post WHERE post_id = ?";
 const sqlDeletePost = "DELETE FROM post WHERE post_id = ?";
 const sqlUpdatePost = "UPDATE post SET content=? WHERE post_id = ?";
 const sqlGetPostsByCompany = "SELECT * FROM post WHERE company_id = ? ORDER BY created_date DESC LIMIT ?,?";
-const sqlGetPostsBySegment = "SELECT * FROM post WHERE company_id IN (SELECT company_id FROM segment WHERE segment_id = ?) ORDER BY created_date DESC LIMIT ?,?";
+const sqlGetPostsBySegment = "SELECT post.post_id, post.header, post.content, post.created_date, post.user_id, " +
+    "company_id, username, COUNT(like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
+    "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN post_like ON post.post_id = post_like.post_id " +
+    "LEFT JOIN comment ON comment.post_id = post.post_id WHERE company_id IN (SELECT company_id FROM segment " +
+    "WHERE segment_id = ?) GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
 
 
 function createPost(post_params, callback){
