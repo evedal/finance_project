@@ -1,25 +1,28 @@
 import React, { Component } from 'react';
 import Post from './Post';
-import fetch from 'fetch';
+import 'whatwg-fetch';
 
 class Posts extends Component{
     constructor(){
         super();
         this.state = {
-            posts: {
+            posts: [
 
-            }
+            ]
         }
     }
     componentDidMount(){
         fetch('./api/post/segment/'+1)//this.props.segment)
             .then(function (response) {
                 if(response.ok){
-                    this.state.posts = response.json();
+                    response.json().then((postJson) => {
+                        this.setState({posts: postJson})
+                    })
                 }
-            })
+            }.bind(this))
     }
     render(){
+        console.log(this.state.posts);
         const postList = this.state.posts.map((post, i) => {
             return(
                 <div>
@@ -27,6 +30,7 @@ class Posts extends Component{
                 </div>
             )
         });
+        console.log(postList);
         return(
             <div>
                 { postList }
