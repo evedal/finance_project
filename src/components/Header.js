@@ -5,14 +5,15 @@ import React, { Component } from 'react';
 
 class Header extends Component{
     render(){
+        console.log(this.props);
         return(
             <div>
                 <span>
-                    <h4>{ this.props.header_title }</h4>
+                    <h4>{ this.props.company_title }</h4>
                     <i className="material-icons">{ this.props.icon }</i>
                 </span>
             </div>
         )
     }
 }
-export default Posts;
+export default Header;

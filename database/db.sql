@@ -127,7 +127,7 @@ CREATE TABLE comment(
 );
 -- LIKE CONNECTED TO COMMENT
 CREATE TABLE comment_like(
-    comment_like_id INTEGER,
+    like_id INTEGER,
     comment_id INTEGER NOT NULL
 );
 

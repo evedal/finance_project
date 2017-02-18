@@ -16,6 +16,7 @@ class Post extends Component{
     render(){
         console.log(this.props);
         const post = this.props.currentPost;
+        console.log(post);
         let timeSincePosted = getTimeSincePosted(post.created_date);
         let timePresentation;
         if(timeSincePosted[0] > 0){
@@ -26,7 +27,7 @@ class Post extends Component{
         }
         return(
             <div>
-                <Link to = {'/user/'+post.user_id } >
+                <Link to = {'/user/'+post.user_id} >
                     <div>
                         <h4>av {post.username}</h4>
                     </div>

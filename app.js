@@ -9,6 +9,7 @@ var index = require('./routes/index');
 var apiComment = require('./routes/api/comment');
 var apiPost = require('./routes/api/post');
 var apiUser = require('./routes/api/user');
+var apiCompany = require('./routes/api/company');
 
 
 var app = express();
@@ -29,6 +30,7 @@ app.use('/', index);
 app.use('/api/', apiComment);
 app.use('/api/', apiPost);
 app.use('/api/', apiUser);
+app.use('/api/', apiCompany);
 
 
 // catch 404 and forward to error handler

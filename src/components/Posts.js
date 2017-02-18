@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Post from './Post';
-import 'whatwg-fetch';
-
+import {get} from '../utils/APImanager'
 class Posts extends Component{
     constructor(){
         super();
@@ -12,18 +11,18 @@ class Posts extends Component{
         }
     }
     componentDidMount(){
-        fetch('./api/post/segment/'+1)//this.props.segment)
-            .then(function (response) {
-                if(response.ok){
-                    response.json().then((postJson) => {
-                        this.setState({posts: postJson})
-                    })
-                }
-            }.bind(this))
+        get('/api/post/segment/'+1, function (err, posts) {
+            if(err){
+                alert(err);
+                return;
+            }
+            this.setState({posts: posts})
+
+        }.bind(this));
     }
     render(){
-        console.log(this.state.posts);
         const postList = this.state.posts.map((post, i) => {
+            console.log(post);
             return(
                 <div>
                     <Post currentPost = {post}/>
