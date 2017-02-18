@@ -8,10 +8,8 @@ class Header extends Component{
         console.log(this.props);
         return(
             <div>
-                <span>
-                    <h4>{ this.props.company_title }</h4>
+                    <span>{ this.props.company_title }</span>
                     <i className="material-icons">{ this.props.icon }</i>
-                </span>
             </div>
         )
     }

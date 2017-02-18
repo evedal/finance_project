@@ -10,6 +10,7 @@ function getTimeSincePosted (datePosted){
     let timeDiffMillis = Date.now() - postedDate.getTime();
     let timeDiffMin = Math.round(timeDiffMillis/(1000*60));
     let timeDiffHour = Math.floor(timeDiffMin/60);
+    console.log(timeDiffMin);
     let timeFormatted;
     if(timeDiffHour > 0){
         if(timeDiffHour == 1){

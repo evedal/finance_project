@@ -20,6 +20,7 @@ class PostLayout extends Component{
         }
     }
     componentDidMount(){
+        console.log(this.props);
         get('/api/post/'+this.props.params.post_id, function (err, post) {
             if(err){
                 console.log(err.message);
@@ -52,7 +53,7 @@ class PostLayout extends Component{
             <div>
                 { header }
                 { postInfo }
-                <Comments post_id = {this.props.params.post_id} />
+                <Comments urlParams = {this.props.params} />
             </div>
         )
     }

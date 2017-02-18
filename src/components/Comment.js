@@ -3,8 +3,9 @@ import { Link } from 'react-router';
 import { timeSincePosted } from '../utils/format'
 class Comment extends Component{
     render(){
-        console.log(this.props);
         const comment = this.props.currentComment;
+        console.log(comment);
+
         let timeFormatted = timeSincePosted(comment.posted_datetime);
         return(
             <div>
@@ -16,13 +17,7 @@ class Comment extends Component{
                 <div>
                     <p>{ comment.content }</p>
                 </div>
-                <div>
-                    <Link to="/">
-                        <span>Svar</span>
-                    </Link>
-                    <span>{comment.like_count} <i className="material-icons">thumb_up</i></span>
-                    <span>Merk som spam</span>
-                </div>
+                {this.props.footer}
             </div>
         )
     }
