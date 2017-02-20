@@ -26,7 +26,7 @@ class Comments extends Component{
         const commentList = this.state.comments.map((comment, i) => {
             console.log(comment);
             return(
-                <div>
+                <div className="comments">
                     <CommentWithFooter currentComment = {comment} urlParams = {this.props.urlParams}/>
                 </div>
             )

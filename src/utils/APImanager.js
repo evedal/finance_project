@@ -26,9 +26,13 @@ function getFromApi(url, callback) {
                 return(err.message);
         })
 }
-function postToApi(url, callback) {
+function postToApi(url, payload, callback) {
     fetch(url, {
-        method: 'POST'
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
     })
         .then(function (response) {
                 if(response.ok){

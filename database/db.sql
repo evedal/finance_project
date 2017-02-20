@@ -80,6 +80,8 @@ CREATE TABLE post(
     header VARCHAR(200) NOT NULL,
     content VARCHAR(10000) NOT NULL,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    image_url VARCHAR(200),
+    link_url VARCHAR(200),
     removed BOOLEAN DEFAULT FALSE,
     user_id INTEGER,
     company_id INTEGER NOT NULL,
@@ -189,6 +191,7 @@ INSERT INTO company VALUES(DEFAULT, 'FAR', 'Farstad Shipping',DEFAULT, DEFAULT, 
 INSERT INTO company VALUES(DEFAULT, 'HAVI', 'Havila Shipping ASA',DEFAULT, DEFAULT, 1);
 
 INSERT INTO user VALUES(DEFAULT, 'Ole', 'Gunnar', 'olegunnar', 'ole@gunnar.no', 'hash','salt',DEFAULT, DEFAULT, DEFAULT);
+
 
 -- KEEP ON END OF FILE
 SET FOREIGN_KEY_CHECKS = 1;

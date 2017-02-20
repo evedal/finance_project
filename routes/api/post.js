@@ -85,4 +85,17 @@ router.route('/post/segment/:segment_id')
         })
     });
 
+router.route('/post/ogdata/:url')
+    .get(function (req, res) {
+        Post.getOgData(req.params.url, function (err, data) {
+            if(err){
+                res.status(400);
+                res.json(err);
+                return;
+            }
+            console.log(data)
+            res.json(data);
+        })
+    });
+
 module.exports = router;

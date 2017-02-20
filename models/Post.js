@@ -6,8 +6,8 @@ const sqlCreatePost = "INSERT INTO post SET ?";
 
 const sqlGetPosts = "SELECT * FROM post";
 
-const sqlGetPostById = "SELECT post.post_id, post.header, post.content, post.created_date, post.user_id, " +
-    "post.company_id, company.name, username, COUNT(like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
+const sqlGetPostById = "SELECT post.post_id, post.header, SUBSTRING(post.content, 1, 100) as content, post.created_date, post.user_id, " +
+    "post.company_id, company.name, post.image_url, post.link_url, username, COUNT(like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
     "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN post_like ON post.post_id = post_like.post_id " +
     "LEFT JOIN comment ON comment.post_id = post.post_id JOIN company ON post.company_id = company.company_id " +
     "WHERE post.post_id = ? GROUP BY post_id";
@@ -18,11 +18,14 @@ const sqlDeletePost = "DELETE FROM post WHERE post_id = ?";
 const sqlUpdatePost = "UPDATE post SET content=? WHERE post_id = ?";
 
 
-const sqlGetPostsByCompany = "SELECT * FROM post WHERE company_id = ? ORDER BY created_date DESC LIMIT ?,?";
+const sqlGetPostsByCompany = "SELECT post.post_id, post.header, SUBSTRING(post.content, 1, 100) as content, post.created_date, post.user_id, " +
+    "company_id, post.image_url, post.link_url, username, COUNT(like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
+    "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN post_like ON post.post_id = post_like.post_id " +
+    "LEFT JOIN comment ON comment.post_id = post.post_id WHERE post.company_id = ? GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
 
 
 const sqlGetPostsBySegment = "SELECT post.post_id, post.header, post.content, post.created_date, post.user_id, " +
-    "company_id, username, COUNT(like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
+    "company_id, post.image_url, post.link_url, username, COUNT(like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
     "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN post_like ON post.post_id = post_like.post_id " +
     "LEFT JOIN comment ON comment.post_id = post.post_id WHERE company_id IN (SELECT company_id FROM segment " +
     "WHERE segment_id = ?) GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
@@ -122,6 +125,18 @@ function deletePost(post_id, callback){
     });
 }
 
+function getOgDataForPost(url, callback){
+    "use strict";
+    console.log("url"+url);
+    var ogs = require('open-graph-scraper');
+    ogs({url: url}, function (err, result) {
+        if(err){
+            return callback(err)
+        }
+        return callback(null,result)
+    })
+}
+
 module.exports = {
     create: createPost,
     find: getPosts,
@@ -129,5 +144,6 @@ module.exports = {
     findByCompany: getPostByCompany,
     findBySegment: getPostBySegment,
     update: updatePost,
-    delete: deletePost
+    delete: deletePost,
+    getOgData: getOgDataForPost
 };
