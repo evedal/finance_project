@@ -120,12 +120,12 @@ class TextInput extends Component{
 
 
         return(
-            <form onSubmit={this.props.data.handleSubmit}>
+            <div>
                 {tabPresentation}
                 <div className="flex-center btn-group">
                     <input className= "submit-btn" type="submit" value={this.props.data.submitText} />
                 </div>
-            </form>
+            </div>
         );
     }
 }

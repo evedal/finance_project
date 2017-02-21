@@ -15,14 +15,14 @@ class InputHeaderPopup extends Component {
         else {
             optionHeader = (
                 <div id="option-headers" className="option-content">
-                    <button onClick={this.props.handleHeaders} data-prefix="#" type="button">Header</button>
-                    <button onClick={this.props.handleHeaders} data-prefix="##" type="button">Header</button>
-                    <button onClick={this.props.handleHeaders} data-prefix="###" type="button">Header</button>
+                    <button className="icon-button" onClick={this.props.handleHeaders} data-prefix="#" type="button">Header</button>
+                    <button className="icon-button" onClick={this.props.handleHeaders} data-prefix="##" type="button">Header</button>
+                    <button className="icon-button" onClick={this.props.handleHeaders} data-prefix="###" type="button">Header</button>
                 </div>)
         }
         return (
                 <div className="pop-up-option">
-                    <button id="header-button" type="button" onClick={this.props.handlePopup}>
+                    <button className="icon-button" id="header-button" type="button" onClick={this.props.handlePopup}>
                         <i className="material-icons">text_fields</i>
                     </button>
                     {optionHeader}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
-import { timeSincePosted } from '../utils/format'
+import { timeSincePosted } from '../../utils/format'
 import ReactMarkDown from 'react-markdown';
 class Comment extends Component{
     render(){

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import CommentWithFooter from './CommentWithFooter';
-import {get} from '../utils/APImanager'
+import {get} from '../../utils/APImanager'
 
 class Comments extends Component{
     constructor(){

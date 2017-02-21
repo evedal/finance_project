@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Comment from '../components/Comment';
-import Header from '../components/Header';
-import TextInput from '../components/TextInput';
+import Comment from '../components/comments/Comment';
+import Header from '../components/other/Header';
+import LargeTextField from '../components/forms/LargeTextField';
 
 import {get, post} from '../utils/APImanager';
 
@@ -15,12 +15,10 @@ class AddComment extends Component{
 
             },
             value: "",
-            writeTab : true
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.updateValue = this.updateValue.bind(this);
-        this.handleTabChange = this.handleTabChange.bind(this);
 
     }
 
@@ -70,20 +68,11 @@ class AddComment extends Component{
             alert("Du må skrive inn noe tekst")
         }
     }
-    handleTabChange(event){
-        console.log(event.target.id);
-        let writeTab = true;
-        if(event.target.id === "prev"){
-            writeTab = false;
-        }
-        this.setState({writeTab : writeTab})
-    }
+
     updateValue(newValue, callback){
-        this.setState({value: newValue}, callback())
+        console.log(newValue);
+        this.setState({value: newValue}, callback)
     }
-
-
-
     render(){
         let comment;
         let headerPost;
@@ -97,25 +86,30 @@ class AddComment extends Component{
             postData.parent_comment_id = this.state.comment.comment_id;
         }
         if(this.state.post.post_id){
-            headerPost = <Header title = {this.state.post.header} titleLink = {"/company/"+this.state.post.company_id+"/post/"+this.state.post.post_id}/>
-            postData.post_id = this.state.post.post_id;
+            let headerData = {
+                icon: "",
+                iconLink: "",
+                title: this.state.post.header,
+                titleLink: "/company/"+this.state.post.company_id+"/post/"+this.state.post.post_id
+            };
+            console.log(this.state.post)
+            headerPost = <Header data = {headerData}/>
         }
+
         let textInputData = {
-            writeTab: this.state.writeTab,
             updateValue: this.updateValue,
             handleChange: this.handleChange,
-            handleSubmit: this.handleSubmit,
             value: this.state.value,
             placeholder: "Skriv en kommentar",
             submitText: "Publiser ditt svar",
-            postData: postData,
-            handleTabChange: this.handleTabChange
         }
         return(
             <div className="container">
                 {headerPost}
                 {comment}
-                <TextInput data = {textInputData} />
+                <form onSubmit={this.handleSubmit}>
+                    <LargeTextField data = {textInputData} />
+                </form>
             </div>
         )
     }

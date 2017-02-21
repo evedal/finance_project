@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Post from './Post';
-import {get} from '../utils/APImanager'
+import {get} from '../../utils/APImanager'
 class Posts extends Component{
 
     render(){

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Posts from '../components/Posts';
-import Header from '../components/Header';
-import Dropdown from '../components/Dropdown'
+import Posts from '../components/posts/Posts';
+import Header from '../components/other/Header';
+import Dropdown from '../components/other/Dropdown'
 import {get} from '../utils/APImanager'
 class CompanyLayout extends Component{
     constructor(){
@@ -49,7 +49,13 @@ class CompanyLayout extends Component{
             posts = <Posts posts = {this.state.posts} handleLike={this.handleLike}/>
         }
         if(this.state.company.company_id){
-            header = <Header icon = "add" title = {this.state.company.name} titleLink = {"/company/"+this.state.company.company_id}/>
+            let headerData = {
+                icon: "add",
+                iconLink: "/company/"+this.state.company.company_id+"/post",
+                title: this.state.company.name,
+                titleLink: "/company/"+this.state.company.company_id
+            };
+            header = <Header data = {headerData}/>
         }
         return(
             <div className="container">

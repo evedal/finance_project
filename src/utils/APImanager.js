@@ -10,7 +10,10 @@ function getFromApi(url, callback) {
         .then(function (response) {
             if(response.ok){
                 response.json().then((json) => {
-                    if(json.length > 0) {
+                    console.log(json)
+                    console.log(json.length);
+
+                    if(json.length > 0 || !(Object.keys(json).length == 0 && json.constructor === Object)) {
                         return callback(null, json)
                     }
                     else{

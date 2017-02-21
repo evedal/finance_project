@@ -4,6 +4,7 @@ import Home from './common/Home';
 import AddComment from './common/AddComment';
 import PostLayout from './common/PostLayout';
 import Layout from './common/Layout';
+import AddPost from './common/AddPost'
 import CompanyLayout from './common/CompanyLayout';
 
 const routes = (
@@ -11,6 +12,7 @@ const routes = (
         <IndexRoute component={Home}/>
         <Route path="user/:user_id" component={PostLayout}  />
         <Route path="company/:company_id" component={CompanyLayout}  />
+        <Route path="company/:company_id/post" component={AddPost}  />
         <Route path="company/:company_id/post/:post_id" component={PostLayout}  />
         <Route path="company/:company_id/post/:post_id/comment/:comment_id" component={AddComment} />
     </Route>

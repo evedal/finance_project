@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import Posts from '../components/Posts';
-import Header from '../components/Header';
+import Posts from '../components/posts/Posts';
+import Header from '../components/other/Header';
 
 class Home extends Component{
     render(){
