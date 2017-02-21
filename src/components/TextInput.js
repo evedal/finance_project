@@ -2,6 +2,8 @@
  * Created by evend on 2/16/2017.
  */
 import React, { Component } from 'react';
+import TextInputPreview from './TextInputPreview';
+import InputHeader from './InputHeader';
 
 class TextInput extends Component{
     constructor(){
@@ -32,11 +34,12 @@ class TextInput extends Component{
         }
     }
     handlePopup(){
+        console.log(this.state.popup);
         this.setState({popup : !this.state.popup})
     }
     handleSimpleMarkdown(event, pattern, numbs, wrapText, link){
         let textArea = document.getElementById("textarea");
-        let value = this.props.value;
+        let value = this.props.data.value;
         let newValue;
         if(wrapText) {
              newValue = value.slice(0, textArea.selectionStart) + pattern +
@@ -52,7 +55,7 @@ class TextInput extends Component{
         }
         let newEnd = textArea.selectionEnd + numbs;
         let newStart = textArea.selectionStart + numbs;
-        this.props.updateValue(newValue, ()=>{
+        this.props.data.updateValue(newValue, ()=>{
             this.setCaretPosition("textarea", newStart, newEnd)
         });
     }
@@ -84,69 +87,43 @@ class TextInput extends Component{
 
 
     render(){
-        let popupOptions;
-        if(this.state.popup){
-            popupOptions = (
-                <div className="pop-up-option">
-                    <button id = "header-button" type="button" onClick={this.handlePopup}>
-                        <i className="material-icons">text_fields</i>
-                    </button>
-                    <div id="option-headers" className="option-content show">
-                        <button onClick={this.handleHeaders} data-prefix = "#" type="button">Header</button>
-                        <button onClick={this.handleHeaders} data-prefix = "##" type="button">Header</button>
-                        <button onClick={this.handleHeaders} data-prefix = "###" type="button">Header</button>
-                    </div>
+        let tabPresentation;
+        console.log(this.props.data.writeTab)
+        let headerData = {
+            handleBold : this.handleBold,
+            handleItalic: this.handleItalic,
+            handleHeaders: this.handleHeaders,
+            handleLink: this.handleLink,
+            handleBulleted: this.handleBulleted,
+            handleNumbered: this.handleNumbered,
+            handlePopup: this.handlePopup,
+            popup: this.state.popup,
+            handleTabChange: this.props.data.handleTabChange,
+            writeTab: this.props.data.writeTab
+        }
+        if(!this.props.data.writeTab){
+            tabPresentation = (
+                <div>
+                    <InputHeader data = {headerData} />
+                    <TextInputPreview text={this.props.data.value} />
                 </div>
             )
         }
         else{
-            popupOptions = (
-                <div className="pop-up-option">
-                    <button type="button" onClick={this.handlePopup}>
-                        <i className="material-icons">text_fields</i>
-                    </button>
-                    <div id="option-headers" className="option-content">
-                        <button onClick={this.handleHeaders} data-prefix = "#" type="button">Header</button>
-                        <button onClick={this.handleHeaders} data-prefix = "##" type="button">Header</button>
-                        <button onClick={this.handleHeaders} data-prefix = "###" type="button">Header</button>
-                    </div>
+            tabPresentation = (
+                <div>
+                    <InputHeader data = {headerData} />
+                    <textarea id="textarea" className="form-control comment-textarea" placeholder={this.props.data.placeholder} value={this.props.data.value} onChange={this.props.data.handleChange} />
                 </div>
             )
         }
+
+
         return(
-            <form onSubmit={this.props.handleSubmit}>
-                <div className="input-header flex-center">
-                    <nav>
-                        <button type="button" className="active">Skriv</button><button type="button">Forhåndsvis</button>
-                    </nav>
-                    <div className="flex-center format-buttons">
-                        <div >
-                            {popupOptions}
-                            <button type="button" onClick={this.handleBold}>
-                                <i className="material-icons">format_bold</i>
-                            </button>
-                            <button type="button" onClick={this.handleItalic}>
-                                <i className="material-icons">format_italic</i>
-                            </button>
-                        </div>
-                        <div>
-                            <button type="button" onClick={this.handleLink}>
-                                <i className="material-icons">insert_link</i>
-                            </button>
-                        </div>
-                        <div>
-                            <button type="button" onClick={this.handleBulleted}>
-                                <i className="material-icons">format_list_bulleted</i>
-                            </button>
-                            <button type="button" onClick={this.handleNumbered}>
-                                <i className="material-icons">format_list_numbered</i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <textarea id="textarea" className="form-control comment-textarea" placeholder={this.props.placeholder} value={this.props.value} onChange={this.props.handleChange}></textarea>
+            <form onSubmit={this.props.data.handleSubmit}>
+                {tabPresentation}
                 <div className="flex-center btn-group">
-                    <input className= "submit-btn" type="submit" value={this.props.submitText} />
+                    <input className= "submit-btn" type="submit" value={this.props.data.submitText} />
                 </div>
             </form>
         );

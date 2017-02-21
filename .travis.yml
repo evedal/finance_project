@@ -16,3 +16,5 @@ services:
 before_install:
   - mysql -e 'CREATE DATABASE travis;'
   - mysql -u root travis < database/db.sql
+
+"heroku-postbuild": "webpack -p --config ./webpack.prod.config.js --progress"

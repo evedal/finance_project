@@ -14,11 +14,13 @@ class AddComment extends Component{
             post: {
 
             },
-            value: ""
+            value: "",
+            writeTab : true
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.updateValue = this.updateValue.bind(this);
+        this.handleTabChange = this.handleTabChange.bind(this);
 
     }
 
@@ -68,6 +70,14 @@ class AddComment extends Component{
             alert("Du må skrive inn noe tekst")
         }
     }
+    handleTabChange(event){
+        console.log(event.target.id);
+        let writeTab = true;
+        if(event.target.id === "prev"){
+            writeTab = false;
+        }
+        this.setState({writeTab : writeTab})
+    }
     updateValue(newValue, callback){
         this.setState({value: newValue}, callback())
     }
@@ -90,11 +100,22 @@ class AddComment extends Component{
             headerPost = <Header title = {this.state.post.header} titleLink = {"/company/"+this.state.post.company_id+"/post/"+this.state.post.post_id}/>
             postData.post_id = this.state.post.post_id;
         }
+        let textInputData = {
+            writeTab: this.state.writeTab,
+            updateValue: this.updateValue,
+            handleChange: this.handleChange,
+            handleSubmit: this.handleSubmit,
+            value: this.state.value,
+            placeholder: "Skriv en kommentar",
+            submitText: "Publiser ditt svar",
+            postData: postData,
+            handleTabChange: this.handleTabChange
+        }
         return(
             <div className="container">
                 {headerPost}
                 {comment}
-                <TextInput updateValue = {this.updateValue} handleChange = {this.handleChange} handleSubmit = {this.handleSubmit } value = {this.state.value} placeholder = "Skriv en kommentar" submitText = "Publiser ditt svar" postData = {postData}/>
+                <TextInput data = {textInputData} />
             </div>
         )
     }
