@@ -11,7 +11,7 @@ URL: https://finance-project.herokuapp.com/
 ### TODOS
 
 1. Add preview to comment : DONE
-2. Add create new post
+2. Add create new post : DONE
 3. Fix links to include segment
 4. Add names instead of id's to url
 5. Design log-in page.
