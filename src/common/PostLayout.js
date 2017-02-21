@@ -17,9 +17,17 @@ class PostLayout extends Component{
             comments: [
 
             ]
-        }
+        };
+        this.handleLike = this.handleLike.bind(this);
+    }
+    handleLike(){
+        let updatedPost = this.state.post;
+        updatedPost.liked = !this.state.post.liked;
+        updatedPost.like_count = updatedPost.liked ? ++updatedPost.like_count : --updatedPost.like_count;
+        this.setState({post: updatedPost});
     }
     componentDidMount(){
+        console.log(this.props);
         get('/api/post/'+this.props.params.post_id, function (err, post) {
             if(err){
                 console.log(err.message);
@@ -37,22 +45,23 @@ class PostLayout extends Component{
         }.bind(this));
 
     }
+
     render(){
         let postInfo;
         let header;
         if(this.state.post.post_id){
-            postInfo = <Post currentPost= {this.state.post}/>
+            postInfo = <Post currentPost= {this.state.post} handleLike={this.handleLike}/>
         }
         if(this.state.company){
-            header = <Header icon = "mode_edit" company_title = { this.state.company.name }/>
+            header = <Header icon = "mode_edit" title = { this.state.company.name } titleLink = {"/company/"+this.state.company.company_id}/>
         }
 
             console.log(this.state.post);
         return(
-            <div>
+            <div className="container">
                 { header }
                 { postInfo }
-                <Comments post_id = {this.props.params.post_id} />
+                <Comments urlParams = {this.props.params} />
             </div>
         )
     }

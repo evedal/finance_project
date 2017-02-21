@@ -1,28 +1,22 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { timeSincePosted } from '../utils/format'
+import ReactMarkDown from 'react-markdown';
 class Comment extends Component{
     render(){
-        console.log(this.props);
         const comment = this.props.currentComment;
+        console.log(comment);
+
         let timeFormatted = timeSincePosted(comment.posted_datetime);
         return(
-            <div>
+            <div className="comment">
                 <Link to = {'/user/'+comment.user_id} >
-                    <div>
-                        <h4>av {comment.username} - {timeFormatted} siden</h4>
-                    </div>
+                    <h3>av {comment.username} - {timeFormatted} siden</h3>
                 </Link>
-                <div>
-                    <p>{ comment.content }</p>
+                <div className="markdown">
+                    <ReactMarkDown source={comment.content} escapeHtml = {true} />
                 </div>
-                <div>
-                    <Link to="/">
-                        <span>Svar</span>
-                    </Link>
-                    <span>{comment.like_count} <i className="material-icons">thumb_up</i></span>
-                    <span>Merk som spam</span>
-                </div>
+                {this.props.footer}
             </div>
         )
     }
