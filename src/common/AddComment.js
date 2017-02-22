@@ -23,7 +23,6 @@ class AddComment extends Component{
     }
 
     componentDidMount() {
-        console.log(this.props) ;
         get('/api/comment/' + this.props.params.comment_id, function (err, comment) {
             if (err) {
                 console.log(err.message);
@@ -43,7 +42,6 @@ class AddComment extends Component{
     handleChange(event){
         event.preventDefault();
         this.setState({value: event.target.value});
-        console.log(event.target.value)
     }
     handleSubmit(event){
         event.preventDefault();
@@ -70,19 +68,19 @@ class AddComment extends Component{
     }
 
     updateValue(newValue, callback){
-        console.log(newValue);
         this.setState({value: newValue}, callback)
     }
     render(){
         let comment;
         let headerPost;
+        let params = this.props.params;
         let postData = {
             post_id: "",
             parent_comment_id: "",
             user_id: 1 //todo: change to dynamic
         };
         if(this.state.comment.comment_id){
-            comment = <Comment urlParams = {this.props.params} currentComment = {this.state.comment}/>
+            comment = <Comment urlParams = {params} currentComment = {this.state.comment}/>
             postData.parent_comment_id = this.state.comment.comment_id;
         }
         if(this.state.post.post_id){
@@ -90,9 +88,8 @@ class AddComment extends Component{
                 icon: "",
                 iconLink: "",
                 title: this.state.post.header,
-                titleLink: "/company/"+this.state.post.company_id+"/post/"+this.state.post.post_id
+                titleLink: "/company/"+params.ticker+"/post/"+params.post_id
             };
-            console.log(this.state.post)
             headerPost = <Header data = {headerData}/>
         }
 

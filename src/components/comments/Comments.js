@@ -24,10 +24,10 @@ class Comments extends Component{
     }
     render(){
         const commentList = this.state.comments.map((comment, i) => {
-            console.log(comment);
+            let basePath = this.props.basePath + "/comment/"+comment.comment_id;
             return(
                 <div className="comments">
-                    <CommentWithFooter currentComment = {comment} urlParams = {this.props.urlParams}/>
+                    <CommentWithFooter basePath = {basePath} currentComment = {comment} urlParams = {this.props.urlParams}/>
                 </div>
             )
         });

@@ -7,9 +7,9 @@ const sqlCreatePost = "INSERT INTO post SET ?";
 const sqlGetPosts = "SELECT * FROM post";
 
 const sqlGetPostById = "SELECT post.post_id, post.header, SUBSTRING(post.content, 1, 100) as content, post.created_date, post.user_id, " +
-    "post.company_id, company.name, post.image_url, post.link_url, username, COUNT(like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
+    "post.ticker, company.name, post.image_url, post.link_url, username, COUNT(like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
     "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN post_like ON post.post_id = post_like.post_id " +
-    "LEFT JOIN comment ON comment.post_id = post.post_id JOIN company ON post.company_id = company.company_id " +
+    "LEFT JOIN comment ON comment.post_id = post.post_id JOIN company ON post.ticker = company.ticker " +
     "WHERE post.post_id = ? GROUP BY post_id";
 
 const sqlDeletePost = "DELETE FROM post WHERE post_id = ?";
@@ -19,16 +19,16 @@ const sqlUpdatePost = "UPDATE post SET content=? WHERE post_id = ?";
 
 
 const sqlGetPostsByCompany = "SELECT post.post_id, post.header, SUBSTRING(post.content, 1, 100) as content, post.created_date, post.user_id, " +
-    "company_id, post.image_url, post.link_url, username, COUNT(like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
+    "ticker, post.image_url, post.link_url, username, COUNT(like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
     "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN post_like ON post.post_id = post_like.post_id " +
-    "LEFT JOIN comment ON comment.post_id = post.post_id WHERE post.company_id = ? GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
+    "LEFT JOIN comment ON comment.post_id = post.post_id WHERE post.ticker = ? GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
 
 
 const sqlGetPostsBySegment = "SELECT post.post_id, post.header, post.content, post.created_date, post.user_id, " +
-    "company_id, post.image_url, post.link_url, username, COUNT(like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
+    "ticker, post.image_url, post.link_url, username, COUNT(like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
     "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN post_like ON post.post_id = post_like.post_id " +
-    "LEFT JOIN comment ON comment.post_id = post.post_id WHERE company_id IN (SELECT company_id FROM segment " +
-    "WHERE segment_id = ?) GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
+    "LEFT JOIN comment ON comment.post_id = post.post_id WHERE ticker IN (SELECT ticker FROM segment " +
+    "WHERE name = ?) GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
 
 
 function createPost(post_params, callback){
@@ -71,11 +71,11 @@ function getPostById(post_id, callback){
  }
  Order by is hardcoded to created_date
  */
-function getPostByCompany(company_id, getDetails, callback) {
+function getPostByCompany(ticker, getDetails, callback) {
     "use strict";
     getDetails.sLimit = (getDetails.sLimit) ? getDetails.sLimit : 0;
     getDetails.eLimit = (getDetails.eLimit) ? getDetails.eLimit : getDetails.sLimit+30;
-    var query = pool.query(sqlGetPostsByCompany, [company_id, getDetails.sLimit,getDetails.eLimit], function (err, posts) {
+    var query = pool.query(sqlGetPostsByCompany, [ticker, getDetails.sLimit,getDetails.eLimit], function (err, posts) {
         if(err){
             console.log(err);
             return callback(err);
@@ -91,11 +91,11 @@ function getPostByCompany(company_id, getDetails, callback) {
  }
  Order by is hardcoded to created_date
  */
-function getPostBySegment(segment_id, getDetails, callback) {
+function getPostBySegment(name, getDetails, callback) {
     "use strict";
     getDetails.sLimit = (getDetails.sLimit) ? getDetails.sLimit : 0;
     getDetails.eLimit = (getDetails.eLimit) ? getDetails.eLimit : getDetails.sLimit+30;
-    var query = pool.query(sqlGetPostsBySegment, [segment_id, getDetails.sLimit,getDetails.eLimit], function (err, posts) {
+    var query = pool.query(sqlGetPostsBySegment, [name, getDetails.sLimit,getDetails.eLimit], function (err, posts) {
         if(err){
             console.log(err);
             return callback(err);

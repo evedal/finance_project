@@ -15248,7 +15248,6 @@ var AddComment = function (_Component) {
     _createClass(AddComment, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-            console.log(this.props);
             (0, _APImanager.get)('/api/comment/' + this.props.params.comment_id, function (err, comment) {
                 if (err) {
                     console.log(err.message);
@@ -15269,7 +15268,6 @@ var AddComment = function (_Component) {
         value: function handleChange(event) {
             event.preventDefault();
             this.setState({ value: event.target.value });
-            console.log(event.target.value);
         }
     }, {
         key: 'handleSubmit',
@@ -15300,7 +15298,6 @@ var AddComment = function (_Component) {
     }, {
         key: 'updateValue',
         value: function updateValue(newValue, callback) {
-            console.log(newValue);
             this.setState({ value: newValue }, callback);
         }
     }, {
@@ -15308,13 +15305,14 @@ var AddComment = function (_Component) {
         value: function render() {
             var comment = void 0;
             var headerPost = void 0;
+            var params = this.props.params;
             var postData = {
                 post_id: "",
                 parent_comment_id: "",
                 user_id: 1 //todo: change to dynamic
             };
             if (this.state.comment.comment_id) {
-                comment = _react2.default.createElement(_Comment2.default, { urlParams: this.props.params, currentComment: this.state.comment });
+                comment = _react2.default.createElement(_Comment2.default, { urlParams: params, currentComment: this.state.comment });
                 postData.parent_comment_id = this.state.comment.comment_id;
             }
             if (this.state.post.post_id) {
@@ -15322,9 +15320,8 @@ var AddComment = function (_Component) {
                     icon: "",
                     iconLink: "",
                     title: this.state.post.header,
-                    titleLink: "/company/" + this.state.post.company_id + "/post/" + this.state.post.post_id
+                    titleLink: "/company/" + params.ticker + "/post/" + params.post_id
                 };
-                console.log(this.state.post);
                 headerPost = _react2.default.createElement(_Header2.default, { data: headerData });
             }
 
@@ -15425,9 +15422,9 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Posts = __webpack_require__(285);
+var _CompanyPosts = __webpack_require__(304);
 
-var _Posts2 = _interopRequireDefault(_Posts);
+var _CompanyPosts2 = _interopRequireDefault(_CompanyPosts);
 
 var _Header = __webpack_require__(282);
 
@@ -15462,19 +15459,24 @@ var CompanyLayout = function (_Component) {
         _this.handleLike = _this.handleLike.bind(_this);
         return _this;
     }
+    /*
+        Gets data for company for header and dropdown.
+        Gets posts from relevant company
+     */
+
 
     _createClass(CompanyLayout, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-            var companyId = this.props.params.company_id;
-            (0, _APImanager.get)('/api/post/company/' + companyId, function (err, posts) {
+            var ticker = this.props.params.ticker;
+            (0, _APImanager.get)('/api/post/company/' + ticker, function (err, posts) {
                 if (err) {
                     console.log(err.message);
                     return;
                 }
                 this.setState({ posts: posts });
             }.bind(this));
-            (0, _APImanager.get)('/api/company/' + companyId, function (err, company) {
+            (0, _APImanager.get)('/api/company/' + ticker, function (err, company) {
                 console.log(company);
                 if (err) {
                     console.log(err.message);
@@ -15496,15 +15498,18 @@ var CompanyLayout = function (_Component) {
         value: function render() {
             var header = void 0;
             var posts = void 0;
+            var params = this.props.params;
+            var basePath = "/segment/" + params.name;
             if (this.state.posts.length > 0) {
-                posts = _react2.default.createElement(_Posts2.default, { posts: this.state.posts, handleLike: this.handleLike });
+                posts = _react2.default.createElement(_CompanyPosts2.default, { basePath: basePath, posts: this.state.posts, handleLike: this.handleLike });
             }
-            if (this.state.company.company_id) {
+            if (this.state.company.ticker) {
+                var segmentPath = "/segment/" + params.name;
                 var headerData = {
                     icon: "add",
-                    iconLink: "/company/" + this.state.company.company_id + "/post",
-                    title: this.state.company.name,
-                    titleLink: "/company/" + this.state.company.company_id
+                    iconLink: segmentPath + "/company/" + params.ticker + "/post",
+                    title: params.name,
+                    titleLink: segmentPath
                 };
                 header = _react2.default.createElement(_Header2.default, { data: headerData });
             }
@@ -15654,9 +15659,9 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Post = __webpack_require__(284);
+var _DetailedPost = __webpack_require__(303);
 
-var _Post2 = _interopRequireDefault(_Post);
+var _DetailedPost2 = _interopRequireDefault(_DetailedPost);
 
 var _Comments = __webpack_require__(287);
 
@@ -15712,7 +15717,7 @@ var PostLayout = function (_Component) {
                 }
                 this.setState({ post: post[0] });
             }.bind(this));
-            (0, _APImanager.get)('/api/company/' + this.props.params.company_id, function (err, company) {
+            (0, _APImanager.get)('/api/company/' + this.props.params.ticker, function (err, company) {
                 console.log(company);
                 if (err) {
                     console.log(err.message);
@@ -15726,27 +15731,30 @@ var PostLayout = function (_Component) {
         value: function render() {
             var postInfo = void 0;
             var header = void 0;
+            var params = this.props.params;
+            var basePath = "/segment/" + params.name + "/company/" + params.ticker;
+            var post = this.state.post;
+            var comments = void 0;
             if (this.state.post.post_id) {
-                postInfo = _react2.default.createElement(_Post2.default, { currentPost: this.state.post, handleLike: this.handleLike });
+                postInfo = _react2.default.createElement(_DetailedPost2.default, { basePath: basePath, post: post, handleLike: this.handleLike });
+                var detailedBasePath = basePath + "/post/" + post.post_id + "/" + encodeURI(post.header);
+                comments = _react2.default.createElement(_Comments2.default, { basePath: detailedBasePath, urlParams: params });
             }
-            if (this.state.company && this.state.post.post_id) {
-                var company = this.state.company;
+            if (this.state.company && post.post_id) {
                 var headerData = {
                     icon: "mode_edit",
-                    iconLink: "/company/" + company.company_id + "/post/" + this.state.post.post_id + "/comment",
-                    title: company.name,
-                    titleLink: "/company/" + company.company_id
+                    iconLink: "/company/" + params.ticker + "/post/" + params.post_id + "/comment",
+                    title: params.ticker,
+                    titleLink: basePath
                 };
                 header = _react2.default.createElement(_Header2.default, { data: headerData });
             }
-
-            console.log(this.state.post);
             return _react2.default.createElement(
                 'div',
                 { className: 'container' },
                 header,
                 postInfo,
-                _react2.default.createElement(_Comments2.default, { urlParams: this.props.params })
+                comments
             );
         }
     }]);
@@ -15804,6 +15812,10 @@ var _CompanyLayout = __webpack_require__(125);
 
 var _CompanyLayout2 = _interopRequireDefault(_CompanyLayout);
 
+var _SegmentLayout = __webpack_require__(301);
+
+var _SegmentLayout2 = _interopRequireDefault(_SegmentLayout);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var routes = _react2.default.createElement(
@@ -15811,10 +15823,17 @@ var routes = _react2.default.createElement(
     { path: '/', component: _Layout2.default },
     _react2.default.createElement(_reactRouter.IndexRoute, { component: _Home2.default }),
     _react2.default.createElement(_reactRouter.Route, { path: 'user/:user_id', component: _PostLayout2.default }),
-    _react2.default.createElement(_reactRouter.Route, { path: 'company/:company_id', component: _CompanyLayout2.default }),
-    _react2.default.createElement(_reactRouter.Route, { path: 'company/:company_id/post', component: _AddPost2.default }),
-    _react2.default.createElement(_reactRouter.Route, { path: 'company/:company_id/post/:post_id', component: _PostLayout2.default }),
-    _react2.default.createElement(_reactRouter.Route, { path: 'company/:company_id/post/:post_id/comment/:comment_id', component: _AddComment2.default })
+    _react2.default.createElement(_reactRouter.Route, { path: 'segment/:name', component: _SegmentLayout2.default }),
+    _react2.default.createElement(_reactRouter.Route, { path: 'segment/:name/company/:ticker', component: _CompanyLayout2.default }),
+    _react2.default.createElement(_reactRouter.Route, { path: 'segment/:name/company/:ticker/post', component: _AddPost2.default }),
+    _react2.default.createElement(_reactRouter.Route, { path: 'segment/:name/company/:ticker/post/:post_id(/:slug)', component: _PostLayout2.default }),
+    _react2.default.createElement(_reactRouter.Route, { path: 'segment/:name/company/:ticker/post/:post_id(/:slug)/comment/:comment_id', component: _AddComment2.default }),
+    '/*',
+    _react2.default.createElement(_reactRouter.Route, { path: 'company/:ticker', component: _CompanyLayout2.default }),
+    _react2.default.createElement(_reactRouter.Route, { path: 'company/:ticker/post', component: _AddPost2.default }),
+    _react2.default.createElement(_reactRouter.Route, { path: 'company/:ticker/post/:post_id', component: _PostLayout2.default }),
+    _react2.default.createElement(_reactRouter.Route, { path: 'company/:ticker/post/:post_id/comment/:comment_id', component: _AddComment2.default }),
+    '*/'
 );
 
 exports.default = routes;
@@ -35965,16 +35984,25 @@ var Post = function (_Component) {
 
     _createClass(Post, [{
         key: 'render',
+
+        /*
+            Basepath is generated as more components are called.
+            Top components generate path for segment and segment_name
+            Posts adds company and ticker to path
+            Post finally adds post_id and slug to the path
+         */
         value: function render() {
             console.log(this.props);
             var post = this.props.currentPost;
             var timePresentation = (0, _format.timeSincePosted)(post.created_date);
             var content = void 0;
             var likeContent = void 0;
+            var encodedHeader = encodeURI(post.header);
+            var contentPath = this.props.basePath + "/post/" + post.post_id + "/" + encodedHeader;
             if (post.image_url) {
                 content = _react2.default.createElement(
                     _reactRouter.Link,
-                    { to: '/company/' + post.company_id + "/post/" + post.post_id },
+                    { to: contentPath },
                     _react2.default.createElement('img', { src: post.image_url }),
                     _react2.default.createElement(
                         'h5',
@@ -35985,7 +36013,7 @@ var Post = function (_Component) {
             } else {
                 content = _react2.default.createElement(
                     _reactRouter.Link,
-                    { to: '/company/' + post.company_id + "/post/" + post.post_id },
+                    { to: contentPath },
                     _react2.default.createElement(
                         'h5',
                         null,
@@ -36032,20 +36060,7 @@ var Post = function (_Component) {
             return _react2.default.createElement(
                 'div',
                 { className: 'post' },
-                _react2.default.createElement(
-                    _reactRouter.Link,
-                    { to: '/user/' + post.user_id },
-                    _react2.default.createElement(
-                        'div',
-                        { className: 'post-head' },
-                        _react2.default.createElement(
-                            'h3',
-                            null,
-                            'av ',
-                            post.username
-                        )
-                    )
-                ),
+                this.props.header,
                 _react2.default.createElement(
                     'div',
                     { className: 'post-content' },
@@ -36136,13 +36151,13 @@ var Posts = function (_Component) {
             var _this2 = this;
 
             var postList = this.props.posts.map(function (post, i) {
+                var basePath = _this2.props.basePath + "/company/" + post.ticker;
                 return _react2.default.createElement(
                     'div',
                     null,
-                    _react2.default.createElement(_Post2.default, { currentPost: post, handleLike: _this2.props.handleLike.bind(null, i) })
+                    _react2.default.createElement(_Post2.default, { basePath: basePath, currentPost: post, handleLike: _this2.props.handleLike.bind(null, i) })
                 );
             });
-            console.log(postList);
             return _react2.default.createElement(
                 'div',
                 null,
@@ -36210,7 +36225,7 @@ var CommentWithFooter = function (_Component) {
                         { className: 'flex-center' },
                         _react2.default.createElement(
                             _reactRouter.Link,
-                            { to: '/company/' + urlParams.company_id + '/post/' + urlParams.post_id + '/comment/' + comment.comment_id },
+                            { to: this.props.basePath },
                             _react2.default.createElement(
                                 'span',
                                 null,
@@ -36309,11 +36324,11 @@ var Comments = function (_Component) {
             var _this2 = this;
 
             var commentList = this.state.comments.map(function (comment, i) {
-                console.log(comment);
+                var basePath = _this2.props.basePath + "/comment/" + comment.comment_id;
                 return _react2.default.createElement(
                     'div',
                     { className: 'comments' },
-                    _react2.default.createElement(_CommentWithFooter2.default, { currentComment: comment, urlParams: _this2.props.urlParams })
+                    _react2.default.createElement(_CommentWithFooter2.default, { basePath: basePath, currentComment: comment, urlParams: _this2.props.urlParams })
                 );
             });
             return _react2.default.createElement(
@@ -37029,8 +37044,8 @@ var AddPost = function (_Component) {
     _createClass(AddPost, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-            var companyId = this.props.params.company_id;
-            (0, _APImanager.get)('/api/company/' + companyId, function (err, company) {
+            var ticker = this.props.params.ticker;
+            (0, _APImanager.get)('/api/company/' + ticker, function (err, company) {
                 console.log(company);
                 if (err) {
                     console.log(err.message);
@@ -37039,17 +37054,21 @@ var AddPost = function (_Component) {
                 this.setState({ company: company[0] });
             }.bind(this));
         }
+
+        // Handlers for markdown
+
     }, {
         key: 'handleImgToggle',
         value: function handleImgToggle() {
-            this.setState({ cancelled: !this.state.linkData.cancelled });
+            var post = this.state.post;
+            post.cancelled = !post.cancelled;
+            this.setState({ post: post });
         }
     }, {
         key: 'handleUrlOnBlur',
         value: function handleUrlOnBlur() {
             var url = this.state.post.url;
-            var isValid = _validUrl2.default.isUri(url); //TODO
-            console.log(encodeURIComponent(url));
+            var isValid = _validUrl2.default.isUri(url);
             if (isValid) {
                 (0, _APImanager.get)("/api/post/ogdata/" + encodeURIComponent(url), function (err, result) {
                     if (err) {
@@ -37105,32 +37124,36 @@ var AddPost = function (_Component) {
 
             event.preventDefault();
             var _post = this.state.post;
+            var params = this.props.params;
+            var segmentPath = "/segment/" + params.name;
             var data = {
                 header: _post.header,
                 content: _post.value,
                 image_url: _post.imgUrl,
                 link_url: _post.url,
-                company_id: this.state.company.company_id,
+                ticker: this.state.company.ticker,
                 user_id: 1 };
             (0, _APImanager.post)("/api/post", data, function (err, post) {
                 if (err) {
                     alert(err.message);
                     return;
                 }
-                console.log(post);
-                _this2.props.router.push('/company/' + _this2.state.company.company_id + '/post/' + post.post_id);
+                _this2.props.router.push(segmentPath + '/company/' + params.ticker + '/post/' + post.post_id);
             });
         }
     }, {
         key: 'render',
         value: function render() {
             var header = void 0;
+
             if (this.state.company.company_id) {
+                var params = this.props.params;
+                var titleLink = "/segment/" + params.name + "/company/" + params.ticker;
                 var headerData = {
                     icon: "",
                     iconLink: "",
                     title: this.state.company.name,
-                    titleLink: "/company/" + this.state.company.company_id
+                    titleLink: titleLink
                 };
                 header = _react2.default.createElement(_Header2.default, { data: headerData });
             }
@@ -37278,7 +37301,7 @@ var ImageToggle = function (_Component) {
                 if (data.cancelled) {
                     image = _react2.default.createElement(
                         "button",
-                        { className: "flex-center icon-button", onClick: data.handleImgToggle },
+                        { className: "flex-center icon-button", type: "button", onClick: data.handleImgToggle },
                         _react2.default.createElement(
                             "p",
                             { className: "" },
@@ -37297,7 +37320,7 @@ var ImageToggle = function (_Component) {
                         _react2.default.createElement("img", { src: data.url }),
                         _react2.default.createElement(
                             "button",
-                            { className: "flex-center icon-button", onClick: data.handleImgToggle },
+                            { className: "flex-center icon-button", type: "button", onClick: data.handleImgToggle },
                             _react2.default.createElement(
                                 "p",
                                 { className: "" },
@@ -37585,6 +37608,360 @@ module.exports = function(module) {
 	return module;
 };
 
+
+/***/ }),
+/* 301 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(3);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _SegmentPosts = __webpack_require__(302);
+
+var _SegmentPosts2 = _interopRequireDefault(_SegmentPosts);
+
+var _Header = __webpack_require__(282);
+
+var _Header2 = _interopRequireDefault(_Header);
+
+var _Dropdown = __webpack_require__(292);
+
+var _Dropdown2 = _interopRequireDefault(_Dropdown);
+
+var _APImanager = __webpack_require__(30);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var SegmentLayout = function (_Component) {
+    _inherits(SegmentLayout, _Component);
+
+    function SegmentLayout() {
+        _classCallCheck(this, SegmentLayout);
+
+        var _this = _possibleConstructorReturn(this, (SegmentLayout.__proto__ || Object.getPrototypeOf(SegmentLayout)).call(this));
+
+        _this.state = {
+            posts: [],
+            segment: {}
+        };
+        _this.handleLike = _this.handleLike.bind(_this);
+        return _this;
+    }
+    /*
+        Gets data for header, segment information and posts
+     */
+
+
+    _createClass(SegmentLayout, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var segmentName = this.props.params.name;
+            (0, _APImanager.get)('/api/post/segment/' + segmentName, function (err, posts) {
+                if (err) {
+                    console.log(err.message);
+                    return;
+                }
+                this.setState({ posts: posts });
+            }.bind(this));
+            (0, _APImanager.get)('/api/segment/' + segmentName, function (err, segment) {
+                console.log(segment);
+                if (err) {
+                    console.log(err.message);
+                    return;
+                }
+                this.setState({ segment: segment[0] });
+            }.bind(this));
+        }
+        /*
+            Sets post like to the opposite of its previous state.
+            Index: the posts index in the list of posts
+         */
+
+    }, {
+        key: 'handleLike',
+        value: function handleLike(index) {
+            var updatedPosts = this.state.posts;
+            updatedPosts[index].liked = !updatedPosts[index].liked;
+            updatedPosts[index].like_count = updatedPosts[index].liked ? ++updatedPosts[index].like_count : --updatedPosts[index].like_count;
+            this.setState({ posts: updatedPosts });
+        }
+        /*
+            Renders header, dropdown and posts, and adds information to children and links
+         */
+
+    }, {
+        key: 'render',
+        value: function render() {
+            var header = void 0;
+            var posts = void 0;
+            var pathname = this.props.location.pathname;
+            if (this.state.posts.length > 0) {
+                posts = _react2.default.createElement(_SegmentPosts2.default, { basePath: pathname, posts: this.state.posts, handleLike: this.handleLike });
+            }
+            if (this.state.segment) {
+                var headerData = {
+                    title: this.state.segment.name,
+                    titleLink: pathname
+                };
+                header = _react2.default.createElement(_Header2.default, { data: headerData });
+            }
+            return _react2.default.createElement(
+                'div',
+                { className: 'container' },
+                header,
+                _react2.default.createElement(_Dropdown2.default, { title: 'Segment-informasjon' }),
+                posts
+            );
+        }
+    }]);
+
+    return SegmentLayout;
+}(_react.Component);
+
+exports.default = SegmentLayout;
+
+/***/ }),
+/* 302 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(3);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Post = __webpack_require__(284);
+
+var _Post2 = _interopRequireDefault(_Post);
+
+var _reactRouter = __webpack_require__(27);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var SegmentPosts = function (_Component) {
+    _inherits(SegmentPosts, _Component);
+
+    function SegmentPosts() {
+        _classCallCheck(this, SegmentPosts);
+
+        return _possibleConstructorReturn(this, (SegmentPosts.__proto__ || Object.getPrototypeOf(SegmentPosts)).apply(this, arguments));
+    }
+
+    _createClass(SegmentPosts, [{
+        key: 'render',
+        value: function render() {
+            var _this2 = this;
+
+            var postList = this.props.posts.map(function (post, i) {
+                var basePath = _this2.props.basePath + "/company/" + post.ticker;
+                return _react2.default.createElement(
+                    'div',
+                    null,
+                    _react2.default.createElement(_Post2.default, { basePath: basePath, currentPost: post, handleLike: _this2.props.handleLike.bind(null, i), header: _react2.default.createElement(
+                            _reactRouter.Link,
+                            { to: basePath },
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'post-head' },
+                                _react2.default.createElement(
+                                    'h3',
+                                    null,
+                                    post.ticker
+                                )
+                            )
+                        ) })
+                );
+            });
+            return _react2.default.createElement(
+                'div',
+                null,
+                postList
+            );
+        }
+    }]);
+
+    return SegmentPosts;
+}(_react.Component);
+
+exports.default = SegmentPosts;
+
+/***/ }),
+/* 303 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(3);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = __webpack_require__(27);
+
+var _Post = __webpack_require__(284);
+
+var _Post2 = _interopRequireDefault(_Post);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var DetailedPost = function (_Component) {
+    _inherits(DetailedPost, _Component);
+
+    function DetailedPost() {
+        _classCallCheck(this, DetailedPost);
+
+        return _possibleConstructorReturn(this, (DetailedPost.__proto__ || Object.getPrototypeOf(DetailedPost)).apply(this, arguments));
+    }
+
+    _createClass(DetailedPost, [{
+        key: 'render',
+        value: function render() {
+            var post = this.props.post;
+            var encodedHeader = encodeURI(post.header);
+            var header = _react2.default.createElement(
+                _reactRouter.Link,
+                { to: '/user/' + post.user_id },
+                _react2.default.createElement(
+                    'div',
+                    { className: 'post-head' },
+                    _react2.default.createElement(
+                        'h3',
+                        null,
+                        'av ',
+                        post.username
+                    )
+                )
+            );
+            var contentPath = this.props.basePath + "/post/" + post.post_id + "/" + encodedHeader;
+            return _react2.default.createElement(_Post2.default, { basePath: contentPath, currentPost: post, handleLike: this.props.handleLike,
+                header: header });
+        }
+    }]);
+
+    return DetailedPost;
+}(_react.Component);
+
+exports.default = DetailedPost;
+
+/***/ }),
+/* 304 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(3);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Post = __webpack_require__(284);
+
+var _Post2 = _interopRequireDefault(_Post);
+
+var _reactRouter = __webpack_require__(27);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var CompanyPosts = function (_Component) {
+    _inherits(CompanyPosts, _Component);
+
+    function CompanyPosts() {
+        _classCallCheck(this, CompanyPosts);
+
+        return _possibleConstructorReturn(this, (CompanyPosts.__proto__ || Object.getPrototypeOf(CompanyPosts)).apply(this, arguments));
+    }
+
+    _createClass(CompanyPosts, [{
+        key: 'render',
+        value: function render() {
+            var _this2 = this;
+
+            var postList = this.props.posts.map(function (post, i) {
+                var basePath = _this2.props.basePath + "/company/" + post.ticker;
+                return _react2.default.createElement(
+                    'div',
+                    null,
+                    _react2.default.createElement(_Post2.default, { basePath: basePath, currentPost: post, handleLike: _this2.props.handleLike.bind(null, i), header: _react2.default.createElement(
+                            _reactRouter.Link,
+                            { to: '/user/' + post.user_id },
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'post-head' },
+                                _react2.default.createElement(
+                                    'h3',
+                                    null,
+                                    'av ',
+                                    post.username
+                                )
+                            )
+                        ) })
+                );
+            });
+            return _react2.default.createElement(
+                'div',
+                null,
+                postList
+            );
+        }
+    }]);
+
+    return CompanyPosts;
+}(_react.Component);
+
+exports.default = CompanyPosts;
 
 /***/ })
 /******/ ]);

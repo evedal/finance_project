@@ -2,16 +2,23 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import {timeSincePosted} from '../../utils/format'
 class Post extends Component{
-
+/*
+    Basepath is generated as more components are called.
+    Top components generate path for segment and segment_name
+    Posts adds company and ticker to path
+    Post finally adds post_id and slug to the path
+ */
     render(){
         console.log(this.props);
         const post = this.props.currentPost;
         let timePresentation = timeSincePosted(post.created_date);
         let content;
         let likeContent;
+        let encodedHeader = encodeURI(post.header);
+        let contentPath = this.props.basePath+"/post/"+post.post_id+"/"+encodedHeader;
         if(post.image_url){
             content = (
-                <Link to = {'/company/'+post.company_id + "/post/" +post.post_id } >
+                <Link to = {contentPath } >
                     <img src={post.image_url}/>
                     <h5>{post.header}</h5>
                 </Link>
@@ -19,7 +26,7 @@ class Post extends Component{
         }
         else{
             content = (
-                <Link to = {'/company/'+post.company_id + "/post/" +post.post_id } >
+                <Link to = {contentPath } >
                     <h5>{post.header}</h5>
                     <p>{post.content}</p>
                 </Link>
@@ -43,11 +50,7 @@ class Post extends Component{
         }
         return(
             <div className="post">
-                <Link to = {'/user/'+post.user_id} >
-                    <div className="post-head">
-                        <h3>av {post.username}</h3>
-                    </div>
-                </Link>
+                {this.props.header}
                 <div className="post-content">
                     {content}
                     <div className="post-footer flex-center">

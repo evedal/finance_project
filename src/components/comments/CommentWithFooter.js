@@ -11,7 +11,7 @@ class CommentWithFooter extends Component{
             <Comment currentComment = {comment} footer = {
                 <div className="flex-center comment-footer">
                     <div className="flex-center">
-                        <Link to={`/company/${urlParams.company_id}/post/${urlParams.post_id}/comment/${comment.comment_id}`}>
+                        <Link to={this.props.basePath}>
                             <span>Svar</span>
                         </Link>
 

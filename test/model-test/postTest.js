@@ -16,22 +16,63 @@ describe('Create Post', function () {
             'content' : 'Here is the body',
             'created_date' : moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
             'user_id' : '1',
-            'company_id' : '1'
+            'ticker' : 'FAR'
         };
         Post.create(data, function (err, result) {
-            console.log(result);
             createId = result.insertId;
             assert.isNotNull(result, "error when creating post");
             done();
         });
     });
+    it("Should be able to update post", function (done) {
+        Post.update({'header' : 'Title'}, 1, function (err, result) {
+            assert.isOk(result, "Post was updated")
+            done()
+
+        })
+    })
 });
 describe('Get Post', function () {
     it("Should get posts", function (done) {
         Post.find(function (err, result) {
-            console.log(result);
             assert.isNotNull(result, "no error when creating empty post");
             done();
+        });
+    });
+    it("Should get one post", function (done) {
+        Post.findById(1, function (err, result) {
+            assert.isNotNull(result, "No error when getting one post")
+            done()
+        })
+    })
+    it("Should get posts from company", function (done) {
+        Post.findByCompany(1, {}, function (err, result) {
+            assert.isNotNull(result, "No error when getting post from company")
+            done()
+        })
+    })
+    it("Should get posts from segment", function (done) {
+        Post.findBySegment(1, {}, function (err, result) {
+            assert.isNotNull(result, "No error when getting post from segment")
+            done()
+        })
+    })
+});
+describe('Get og data for post', function () {
+    it("Should find og data", function (done) {
+        Post.getOgData("aftenposten.no", function (err, result) {
+            assert.isNotNull(result.success, "Found og data")
+            done()
+
+        });
+    });
+    it("Should not find og data", function (done) {
+        this.timeout(4000)
+        Post.getOgData("aftenposten", function (err, result) {
+            console.log("error: "+err)
+            assert.isTrue(err, "Did not find og data")
+            done()
+
         });
     });
 });
