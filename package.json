@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www --exec babel-node --presets es2015,react",
+    "start" : "babel-node ./bin/www --presets es2015,react",
+    "startDev": "nodemon ./bin/www --exec babel-node --presets es2015,react",
     "test": "cross-env ./node_modules/.bin/_mocha --recursive --compilers js:babel-core/register"
   },
   "dependencies": {
