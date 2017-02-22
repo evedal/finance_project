@@ -23,13 +23,15 @@ class AddComment extends Component{
     }
 
     componentDidMount() {
-        get('/api/comment/' + this.props.params.comment_id, function (err, comment) {
-            if (err) {
-                console.log(err.message);
-                return;
-            }
-            this.setState({comment: comment[0]})
-        }.bind(this));
+        if(this.props.params.comment_id) {
+            get('/api/comment/' + this.props.params.comment_id, function (err, comment) {
+                if (err) {
+                    console.log(err.message);
+                    return;
+                }
+                this.setState({comment: comment[0]})
+            }.bind(this));
+        }
         get('/api/post/' + this.props.params.post_id, function (err, post) {
             if (err) {
                 console.log(err.message);
@@ -46,12 +48,14 @@ class AddComment extends Component{
     handleSubmit(event){
         event.preventDefault();
         let state = this.state;
+        let params = this.props.params;
+        let redirectPath = "/segment/"+params.name+"/company/"+params.ticker+"/post/"+params.post_id;
         if(state.value != ""){
             let data = {
                 content: state.value,
                 post_id: state.post.post_id,
                 user_id: state.post.user_id,
-                parent_comment_id: state.post.parent_comment_id
+                parent_comment_id: state.comment.comment_id
             };
             post("/api/comment", data, (err, post) => {
                 if(err){
@@ -59,7 +63,7 @@ class AddComment extends Component{
                     return;
                 }
                 console.log(post);
-                this.props.router.push('/company/'+state.post.company_id+'/post/'+state.post.post_id);
+                this.props.router.push(redirectPath);
             })
         }
         else{
@@ -83,12 +87,14 @@ class AddComment extends Component{
             comment = <Comment urlParams = {params} currentComment = {this.state.comment}/>
             postData.parent_comment_id = this.state.comment.comment_id;
         }
+
         if(this.state.post.post_id){
+            let postLink = "/segment/"+params.name+"/company/"+params.ticker+"/post/"+params.post_id;
             let headerData = {
                 icon: "",
                 iconLink: "",
                 title: this.state.post.header,
-                titleLink: "/company/"+params.ticker+"/post/"+params.post_id
+                titleLink: postLink
             };
             headerPost = <Header data = {headerData}/>
         }

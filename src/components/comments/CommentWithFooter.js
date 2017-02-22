@@ -2,13 +2,15 @@ import Comment from './Comment';
 import React, {Component} from 'react';
 import { Link } from 'react-router';
 
+
 class CommentWithFooter extends Component{
     render(){
         let comment = this.props.currentComment;
         let urlParams = this.props.urlParams;
-
+        let children = this.props.childComments;
+        console.log("heihei")
         return(
-            <Comment currentComment = {comment} footer = {
+            <Comment currentComment = {comment} childComments = {children} footer = {
                 <div className="flex-center comment-footer">
                     <div className="flex-center">
                         <Link to={this.props.basePath}>

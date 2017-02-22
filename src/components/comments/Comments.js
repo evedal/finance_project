@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import CommentWithFooter from './CommentWithFooter';
+import CommentsRecursive from './CommentsRecursive';
 import {get} from '../../utils/APImanager'
+import commentSort from '../../utils/commentSort';
 
 class Comments extends Component{
     constructor(){
@@ -22,15 +23,16 @@ class Comments extends Component{
         }.bind(this));
 
     }
+
     render(){
-        const commentList = this.state.comments.map((comment, i) => {
-            let basePath = this.props.basePath + "/comment/"+comment.comment_id;
-            return(
-                <div className="comments">
-                    <CommentWithFooter basePath = {basePath} currentComment = {comment} urlParams = {this.props.urlParams}/>
-                </div>
-            )
-        });
+        let commentList;
+        let basePath = "/segment/";
+
+        if(this.state.comments.length > 0) {
+            let sorted = commentSort(this.state.comments);
+            commentList = <CommentsRecursive basePath={basePath} comments={sorted}/>
+        }
+
         return(
             <div>
                 { commentList }

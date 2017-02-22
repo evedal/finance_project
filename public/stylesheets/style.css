@@ -329,16 +329,7 @@ form input{
     padding: 0.5rem;
     left: 1rem;
 }
-.option-content:before {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 0;
-    left: 0;
-    top: -0.4rem;
-    border: 0.4rem solid;
-    border-color:  transparent transparent transparent white;
-}
+
 .option-content button:first-child{
     font-size: 1.3rem;
     font-weight: 500;

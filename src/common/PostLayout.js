@@ -28,14 +28,28 @@ class PostLayout extends Component{
         this.setState({post: updatedPost});
     }
     componentDidMount(){
-        console.log(this.props);
         get('/api/post/'+this.props.params.post_id, function (err, post) {
             if(err){
                 console.log(err.message);
                 return;
             }
-            this.setState({post: post[0]})
+            this.setState({post: post[0]});
+            let params = this.props.params;
+            let encodedSlug = encodeURI(post[0].header);
+            let pathname = this.props.location.pathname;
+            if(!this.props.params.slug){
+                console.log(pathname[-1])
+                if(pathname[-1] != "/") pathname += "/";
+                let pathWithSlug = this.props.location.pathname+encodedSlug;
+                this.props.router.push(pathWithSlug);
+            }
+
+
+
         }.bind(this));
+
+        //Get company, set state and add slug to path
+
         get('/api/company/'+this.props.params.ticker, function (err, company) {
             console.log(company);
             if(err){
@@ -43,9 +57,11 @@ class PostLayout extends Component{
                 return;
             }
             this.setState({company: company[0]})
+
         }.bind(this));
 
     }
+
 
     render(){
         let postInfo;
@@ -54,6 +70,7 @@ class PostLayout extends Component{
         let basePath = "/segment/"+params.name+"/company/"+params.ticker;
         let post = this.state.post;
         let comments;
+
         if(this.state.post.post_id){
             postInfo = <DetailedPost basePath={basePath} post= {post} handleLike={this.handleLike}/>
             let detailedBasePath = basePath+"/post/"+post.post_id+"/"+encodeURI(post.header);
@@ -63,7 +80,7 @@ class PostLayout extends Component{
         if(this.state.company && post.post_id){
             let headerData = {
                 icon: "mode_edit",
-                iconLink: "/company/"+params.ticker+"/post/"+params.post_id+"/comment",
+                iconLink: basePath+"/post/"+params.post_id+"/comment",
                 title: params.ticker,
                 titleLink: basePath
             };
