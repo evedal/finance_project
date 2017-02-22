@@ -10,6 +10,8 @@ var apiComment = require('./routes/api/comment');
 var apiPost = require('./routes/api/post');
 var apiUser = require('./routes/api/user');
 var apiCompany = require('./routes/api/company');
+var apiSegment = require('./routes/api/segment');
+
 import { renderToString } from 'react-dom/server';
 import { match, RouterContext } from 'react-router';
 import routes from './routes';
@@ -34,6 +36,7 @@ app.use('/api/', apiComment);
 app.use('/api/', apiPost);
 app.use('/api/', apiUser);
 app.use('/api/', apiCompany);
+app.use('/api/', apiSegment);
 
 if(process.env.NODE_ENV !== 'test') {
     app.get('*', (req, res) => {

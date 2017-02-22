@@ -5,13 +5,13 @@ class Posts extends Component{
 
     render(){
         const postList = this.props.posts.map((post, i) => {
+            let basePath = this.props.basePath+"/company/"+post.ticker;
             return(
                 <div>
-                    <Post currentPost = {post} handleLike = {this.props.handleLike.bind(null, i)} />
+                    <Post basePath={basePath} currentPost = {post} handleLike = {this.props.handleLike.bind(null, i)} />
                 </div>
             )
         });
-        console.log(postList);
         return(
             <div>
                 { postList }

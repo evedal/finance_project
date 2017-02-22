@@ -1,76 +1,77 @@
 import React, { Component } from 'react';
-import CompanyPosts from '../components/posts/CompanyPosts';
+import SegmentPosts from '../components/posts/SegmentPosts';
 import Header from '../components/other/Header';
 import Dropdown from '../components/other/Dropdown'
 import {get} from '../utils/APImanager'
-class CompanyLayout extends Component{
+class SegmentLayout extends Component{
     constructor(){
         super();
         this.state = {
             posts: [
 
             ],
-            company: {
+            segment: {
 
-            }
+            },
         };
         this.handleLike = this.handleLike.bind(this)
     }
     /*
-        Gets data for company for header and dropdown.
-        Gets posts from relevant company
+        Gets data for header, segment information and posts
      */
     componentDidMount(){
-        let ticker = this.props.params.ticker;
-        get('/api/post/company/'+ticker, function (err, posts) {
+        let segmentName = this.props.params.name;
+        get('/api/post/segment/'+segmentName, function (err, posts) {
             if(err){
                 console.log(err.message);
                 return;
             }
             this.setState({posts: posts})
         }.bind(this));
-        get('/api/company/'+ticker, function (err, company) {
-            console.log(company);
+        get('/api/segment/'+segmentName, function (err, segment) {
+            console.log(segment);
             if(err){
                 console.log(err.message);
                 return;
             }
-            this.setState({company: company[0]})
+            this.setState({segment: segment[0]})
         }.bind(this));
 
     }
+    /*
+        Sets post like to the opposite of its previous state.
+        Index: the posts index in the list of posts
+     */
     handleLike(index){
         let updatedPosts = this.state.posts;
         updatedPosts[index].liked = !updatedPosts[index].liked;
         updatedPosts[index].like_count = updatedPosts[index].liked ? ++updatedPosts[index].like_count : --updatedPosts[index].like_count;
         this.setState({posts : updatedPosts})
     }
-
+    /*
+        Renders header, dropdown and posts, and adds information to children and links
+     */
     render(){
         let header;
         let posts;
-        let params = this.props.params;
-        let basePath = "/segment/"+params.name;
+        let pathname = this.props.location.pathname;
         if(this.state.posts.length > 0){
-            posts = <CompanyPosts basePath={basePath} posts = {this.state.posts} handleLike={this.handleLike}/>
+            posts = <SegmentPosts basePath = {pathname} posts = {this.state.posts} handleLike={this.handleLike}/>
         }
-        if(this.state.company.ticker){
-            let segmentPath = "/segment/"+params.name;
+        if(this.state.segment){
             let headerData = {
-                icon: "add",
-                iconLink: segmentPath+"/company/"+params.ticker+"/post",
-                title: params.name,
-                titleLink: segmentPath
+                title: this.state.segment.name,
+                titleLink: pathname
             };
             header = <Header data = {headerData}/>
         }
         return(
             <div className="container">
                 {header}
-                <Dropdown title="Selskapsinformasjon"/>
+                <Dropdown title="Segment-informasjon"/>
                 {posts}
             </div>
         )
     }
 }
-export default CompanyLayout;
+export default SegmentLayout;

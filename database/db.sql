@@ -36,7 +36,7 @@ ALTER TABLE user ADD UNIQUE INDEX (email);
 -- SEGMENTS FOR COMPANY
 CREATE TABLE segment(
     segment_id INTEGER  AUTO_INCREMENT,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(100) NOT NULL UNIQUE,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     removed BOOLEAN DEFAULT FALSE,
     CONSTRAINT pk_segment PRIMARY KEY(segment_id)
@@ -51,26 +51,25 @@ CREATE TABLE user_segment(
 );
 
 CREATE TABLE company(
-    company_id INTEGER AUTO_INCREMENT,
     ticker VARCHAR(10) NOT NULL,
     name VARCHAR(100) NOT NULL,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     removed BOOLEAN DEFAULT FALSE,
     segment_id INTEGER NOT NULL,
-    CONSTRAINT pk_company PRIMARY KEY(company_id)
+    CONSTRAINT pk_company PRIMARY KEY(ticker)
 );
 -- USER SUBSCRIBED TO A COMPANY
 CREATE TABLE user_company(
     user_id INTEGER,
-    company_id INTEGER,
+    ticker VARCHAR(10),
     subscription_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT pk_user_company PRIMARY KEY(user_id, company_id)
+    CONSTRAINT pk_user_company PRIMARY KEY(user_id, ticker)
 );
 -- OWN TABLE FOR ADMINS ON COMPANY PAGE
 -- CREATED FOR FUTURE ADMIN INFORMATION
 CREATE TABLE company_admin(
     company_admin_id INTEGER,
-    company_id INTEGER NOT NULL,
+    ticker VARCHAR(10) NOT NULL,
     user_id INTEGER NOT NULL,
     CONSTRAINT pk_company_admin PRIMARY KEY(company_admin_id)
 );
@@ -84,7 +83,7 @@ CREATE TABLE post(
     link_url VARCHAR(200),
     removed BOOLEAN DEFAULT FALSE,
     user_id INTEGER,
-    company_id INTEGER NOT NULL,
+    ticker VARCHAR(10) NOT NULL,
     CONSTRAINT pk_post PRIMARY KEY(post_id)
 );
 -- MESSAGE FROM USER
@@ -145,21 +144,21 @@ REFERENCES segment(segment_id);
 ALTER TABLE user_company
   ADD CONSTRAINT fk1_user_company FOREIGN KEY(user_id)
 REFERENCES user(user_id),
-  ADD CONSTRAINT fk2_user_company FOREIGN KEY(company_id)
-REFERENCES company(company_id);
+  ADD CONSTRAINT fk2_user_company FOREIGN KEY(ticker)
+REFERENCES company(ticker);
 
 
 ALTER TABLE company_admin
   ADD CONSTRAINT fk1_company_admin FOREIGN KEY(user_id)
 REFERENCES user(user_id),
-  ADD CONSTRAINT fk2_company_admin FOREIGN KEY(company_id)
-REFERENCES company(company_id);
+  ADD CONSTRAINT fk2_company_admin FOREIGN KEY(ticker)
+REFERENCES company(ticker);
 
 ALTER TABLE post
   ADD CONSTRAINT fk1_post FOREIGN KEY(user_id)
 REFERENCES user(user_id),
-  ADD CONSTRAINT fk2_post FOREIGN KEY(company_id)
-REFERENCES company(company_id);
+  ADD CONSTRAINT fk2_post FOREIGN KEY(ticker)
+REFERENCES company(ticker);
 
 ALTER TABLE comment
   ADD CONSTRAINT fk1_comment FOREIGN KEY(user_id)
@@ -187,11 +186,14 @@ INSERT INTO segment VALUES(DEFAULT, 'Energi', DEFAULT, DEFAULT);
 INSERT INTO segment VALUES(DEFAULT, 'Sjømat', DEFAULT, DEFAULT);
 
 -- COMPANIES
-INSERT INTO company VALUES(DEFAULT, 'FAR', 'Farstad Shipping',DEFAULT, DEFAULT, 1);
-INSERT INTO company VALUES(DEFAULT, 'HAVI', 'Havila Shipping ASA',DEFAULT, DEFAULT, 1);
+INSERT INTO company VALUES('FAR', 'Farstad Shipping',DEFAULT, DEFAULT, 1);
+INSERT INTO company VALUES('HAVI', 'Havila Shipping ASA',DEFAULT, DEFAULT, 1);
 
 INSERT INTO user VALUES(DEFAULT, 'Ole', 'Gunnar', 'olegunnar', 'ole@gunnar.no', 'hash','salt',DEFAULT, DEFAULT, DEFAULT);
 
+INSERT INTO post VALUES(DEFAULT, 'header', 'content', DEFAULT, null, null, default, 1, 'FAR');
+
+INSERT INTO comment VALUES(DEFAULT, 'content', DEFAULT, 1, 1, null);
 
 -- KEEP ON END OF FILE
 SET FOREIGN_KEY_CHECKS = 1;

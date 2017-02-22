@@ -32,8 +32,8 @@ class AddPost extends Component{
     }
 
     componentDidMount(){
-        let companyId = this.props.params.company_id;
-        get('/api/company/'+companyId, function (err, company) {
+        let ticker = this.props.params.ticker;
+        get('/api/company/'+ticker, function (err, company) {
             console.log(company);
             if(err){
                 console.log(err.message);
@@ -43,13 +43,15 @@ class AddPost extends Component{
         }.bind(this));
     }
 
+    // Handlers for markdown
     handleImgToggle(){
-        this.setState({cancelled: !this.state.linkData.cancelled})
+        let post = this.state.post;
+        post.cancelled = !post.cancelled;
+        this.setState({post: post})
     }
     handleUrlOnBlur(){
         let url = this.state.post.url;
-        let isValid = validUrl.isUri(url) //TODO
-        console.log(encodeURIComponent(url));
+        let isValid = validUrl.isUri(url);
         if(isValid){
             get("/api/post/ogdata/"+encodeURIComponent(url), function (err, result){
                 if(err){
@@ -97,34 +99,38 @@ class AddPost extends Component{
     handleSubmit(event){
         event.preventDefault();
         let _post = this.state.post;
-            let data = {
-                header: _post.header,
-                content: _post.value,
-                image_url: _post.imgUrl,
-                link_url: _post.url,
-                company_id: this.state.company.company_id,
-                user_id: 1, //TODO
-            };
-            post("/api/post", data, (err, post) => {
-                if(err){
-                    alert(err.message);
-                    return;
-                }
-                console.log(post);
-                this.props.router.push('/company/'+this.state.company.company_id+'/post/'+post.post_id);
-            })
+        let params = this.props.params;
+        let segmentPath = "/segment/"+params.name;
+        let data = {
+            header: _post.header,
+            content: _post.value,
+            image_url: _post.imgUrl,
+            link_url: _post.url,
+            ticker: this.state.company.ticker,
+            user_id: 1, //TODO
+        };
+        post("/api/post", data, (err, post) => {
+            if(err){
+                alert(err.message);
+                return;
+            }
+            this.props.router.push(segmentPath+'/company/'+params.ticker+'/post/'+post.post_id);
+        })
 
 
     }
 
     render(){
         let header;
+
         if(this.state.company.company_id){
+            let params = this.props.params;
+            let titleLink = "/segment/"+params.name+"/company/"+params.ticker;
             let headerData = {
                 icon: "",
                 iconLink: "",
                 title: this.state.company.name,
-                titleLink: "/company/"+this.state.company.company_id
+                titleLink: titleLink
             };
             header = <Header data = {headerData}/>
         }

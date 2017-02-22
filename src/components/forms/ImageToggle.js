@@ -9,7 +9,7 @@ class ImageToggle extends Component{
             console.log(data.cancelled)
             if(data.cancelled){
                 image = (
-                    <button className="flex-center icon-button" onClick={data.handleImgToggle}>
+                    <button className="flex-center icon-button" type="button" onClick={data.handleImgToggle}>
                         <p className="">Bruk bildet?</p>
                         <i className="material-icons">add</i>
                     </button>
@@ -19,7 +19,7 @@ class ImageToggle extends Component{
                 image = (
                     <div className="flex-center">
                         <img src={data.url}/>
-                        <button className="flex-center icon-button" onClick={data.handleImgToggle}>
+                        <button className="flex-center icon-button" type="button" onClick={data.handleImgToggle}>
                             <p className="">Fjern bildet?</p>
                             <i className="material-icons">clear</i>
                         </button>

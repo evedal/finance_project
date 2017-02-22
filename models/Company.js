@@ -1,9 +1,10 @@
 var pool = require("../utils/db").pool;
-const sqlGetCompany = "SELECT * FROM company WHERE company_id = ?";
+const sqlGetCompany = "SELECT * FROM company WHERE ticker = ?";
 
-function getCompanyById(company_id, callback){
+function getCompanyById(ticker, callback){
     "use strict";
-    pool.query(sqlGetCompany, company_id, function (err, company) {
+    console.log(ticker)
+    pool.query(sqlGetCompany, ticker, function (err, company) {
         if(err){
             console.log(err);
             return callback(err);

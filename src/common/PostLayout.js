@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Post from '../components/posts/Post';
+import DetailedPost from '../components/posts/DetailedPost';
 import Comments from '../components/comments/Comments'
 import Header from '../components/other/Header';
 import {get} from '../utils/APImanager'
@@ -20,6 +20,7 @@ class PostLayout extends Component{
         };
         this.handleLike = this.handleLike.bind(this);
     }
+
     handleLike(){
         let updatedPost = this.state.post;
         updatedPost.liked = !this.state.post.liked;
@@ -35,7 +36,7 @@ class PostLayout extends Component{
             }
             this.setState({post: post[0]})
         }.bind(this));
-        get('/api/company/'+this.props.params.company_id, function (err, company) {
+        get('/api/company/'+this.props.params.ticker, function (err, company) {
             console.log(company);
             if(err){
                 console.log(err.message);
@@ -49,26 +50,30 @@ class PostLayout extends Component{
     render(){
         let postInfo;
         let header;
+        let params = this.props.params;
+        let basePath = "/segment/"+params.name+"/company/"+params.ticker;
+        let post = this.state.post;
+        let comments;
         if(this.state.post.post_id){
-            postInfo = <Post currentPost= {this.state.post} handleLike={this.handleLike}/>
+            postInfo = <DetailedPost basePath={basePath} post= {post} handleLike={this.handleLike}/>
+            let detailedBasePath = basePath+"/post/"+post.post_id+"/"+encodeURI(post.header);
+            comments = <Comments basePath = {detailedBasePath} urlParams = {params} />
+
         }
-        if(this.state.company && this.state.post.post_id){
-            let company = this.state.company;
+        if(this.state.company && post.post_id){
             let headerData = {
                 icon: "mode_edit",
-                iconLink: "/company/"+company.company_id+"/post/"+this.state.post.post_id+"/comment",
-                title: company.name,
-                titleLink: "/company/"+company.company_id
+                iconLink: "/company/"+params.ticker+"/post/"+params.post_id+"/comment",
+                title: params.ticker,
+                titleLink: basePath
             };
             header = <Header data = {headerData}/>
         }
-
-            console.log(this.state.post);
         return(
             <div className="container">
                 { header }
                 { postInfo }
-                <Comments urlParams = {this.props.params} />
+                { comments }
             </div>
         )
     }
