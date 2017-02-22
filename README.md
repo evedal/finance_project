@@ -12,11 +12,17 @@ URL: https://finance-project.herokuapp.com/
 
 1. Add preview to comment : DONE
 2. Add create new post : DONE
-3. Fix links to include segment
-4. Add names instead of id's to url
-5. Design log-in page.
-6. Design register pager.
-7. Create front-page
-8. Create add new company
-9. Create add new segment
+3. Fix links to include segment : DONE
+4. Add names instead of id's to url : DONE
+5. Design log-in page. : BLOCKED
+6. Design register pager : BLOCKED
+7. Create front-page : BLOCKED
+8. Create add new company : IN-PROGRESS
+9. Create add new segment : BLOCKED
 10. Fix webpack for production
+11. Create breadcrumbs for path
+12. Fix login API
+13. Fix login Front-end
+14. Add company-data
+15. Add segment-data
+16. Add suggested articles
