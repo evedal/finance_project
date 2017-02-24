@@ -2,7 +2,7 @@ var chai = require('chai');
 var assert = chai.assert;
 var User = require('../../controllers/UserController');
 var createId;
-describe('Create User', function () {
+describe.skip('Create User', function () {
     it("should not be able to create empty", function (done) {
         User.create({}, function (result, err) {
             assert.isNotNull(err, "no error when creating empty post");

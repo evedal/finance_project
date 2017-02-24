@@ -59,6 +59,7 @@ describe('Get Post', function () {
     })
 });
 describe('Get og data for post', function () {
+    this.timeout(4000);
     it("Should find og data", function (done) {
         Post.getOgData("aftenposten.no", function (err, result) {
             assert.isNotNull(result.success, "Found og data")
@@ -67,7 +68,7 @@ describe('Get og data for post', function () {
         });
     });
     it("Should not find og data", function (done) {
-        this.timeout(4000)
+        this.timeout(4000);
         Post.getOgData("aftenposten", function (err, result) {
             console.log("error: "+err)
             assert.isTrue(err, "Did not find og data")
@@ -77,6 +78,7 @@ describe('Get og data for post', function () {
     });
 });
 describe('Delete Post', function () {
+
     it("Should be able to delete post", function (done) {
         Post.delete({'post_id' : createId}, function (err, result) {
             assert.isNotNull(result, "error when deleting post");
