@@ -234,16 +234,20 @@ header h1 a:last-child {
     color: #CB7800;
 }
 .comments{
-    padding: 0 0.5rem;
-
-}
-.comment{
     margin-top: 0.5rem;
     margin-left: 1rem;
+
 }
-.comments > .comment{
+.all-comments{
+    padding: 0 0.5rem;
+}
+
+.comment{
+}
+.all-comments > .comments{
     margin-left: 0;
 }
+
 
 .comment h3{
     color: #95989A;
@@ -329,16 +333,7 @@ form input{
     padding: 0.5rem;
     left: 1rem;
 }
-.option-content:before {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 0;
-    left: 0;
-    top: -0.4rem;
-    border: 0.4rem solid;
-    border-color:  transparent transparent transparent white;
-}
+
 .option-content button:first-child{
     font-size: 1.3rem;
     font-weight: 500;

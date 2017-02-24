@@ -130,7 +130,7 @@ function getOgDataForPost(url, callback){
     console.log("url"+url);
     var ogs = require('open-graph-scraper');
     ogs({url: url}, function (err, result) {
-        if(err || !result.success){
+        if(err || !result || !result.success){
             return callback(err)
         }
         return callback(null,result.data)

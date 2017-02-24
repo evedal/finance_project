@@ -18,7 +18,7 @@ class InputHeader extends Component {
             navigation = (
                 <nav>
                     <button id="write"type="button" className="icon-button" onClick={this.props.data.handleTabChange}
-                    >Skriv</button><button className="active" id="prev" type="button" onClick={this.props.data.handleTabChange}>Forhåndsvis</button>
+                    >Skriv</button><button className="active icon-button" id="prev" type="button" onClick={this.props.data.handleTabChange}>Forhåndsvis</button>
                 </nav>
             )
         }

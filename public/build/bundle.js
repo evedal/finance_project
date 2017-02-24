@@ -15248,13 +15248,15 @@ var AddComment = function (_Component) {
     _createClass(AddComment, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-            (0, _APImanager.get)('/api/comment/' + this.props.params.comment_id, function (err, comment) {
-                if (err) {
-                    console.log(err.message);
-                    return;
-                }
-                this.setState({ comment: comment[0] });
-            }.bind(this));
+            if (this.props.params.comment_id) {
+                (0, _APImanager.get)('/api/comment/' + this.props.params.comment_id, function (err, comment) {
+                    if (err) {
+                        console.log(err.message);
+                        return;
+                    }
+                    this.setState({ comment: comment[0] });
+                }.bind(this));
+            }
             (0, _APImanager.get)('/api/post/' + this.props.params.post_id, function (err, post) {
                 if (err) {
                     console.log(err.message);
@@ -15276,12 +15278,14 @@ var AddComment = function (_Component) {
 
             event.preventDefault();
             var state = this.state;
+            var params = this.props.params;
+            var redirectPath = "/segment/" + params.name + "/company/" + params.ticker + "/post/" + params.post_id;
             if (state.value != "") {
                 var data = {
                     content: state.value,
                     post_id: state.post.post_id,
                     user_id: state.post.user_id,
-                    parent_comment_id: state.post.parent_comment_id
+                    parent_comment_id: state.comment.comment_id
                 };
                 (0, _APImanager.post)("/api/comment", data, function (err, post) {
                     if (err) {
@@ -15289,7 +15293,7 @@ var AddComment = function (_Component) {
                         return;
                     }
                     console.log(post);
-                    _this2.props.router.push('/company/' + state.post.company_id + '/post/' + state.post.post_id);
+                    _this2.props.router.push(redirectPath);
                 });
             } else {
                 alert("Du må skrive inn noe tekst");
@@ -15315,12 +15319,14 @@ var AddComment = function (_Component) {
                 comment = _react2.default.createElement(_Comment2.default, { urlParams: params, currentComment: this.state.comment });
                 postData.parent_comment_id = this.state.comment.comment_id;
             }
+
             if (this.state.post.post_id) {
+                var postLink = "/segment/" + params.name + "/company/" + params.ticker + "/post/" + params.post_id;
                 var headerData = {
                     icon: "",
                     iconLink: "",
                     title: this.state.post.header,
-                    titleLink: "/company/" + params.ticker + "/post/" + params.post_id
+                    titleLink: postLink
                 };
                 headerPost = _react2.default.createElement(_Header2.default, { data: headerData });
             }
@@ -15709,14 +15715,25 @@ var PostLayout = function (_Component) {
     }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
-            console.log(this.props);
-            (0, _APImanager.get)('/api/post/' + this.props.params.post_id, function (err, post) {
+            console.log(this.props.params);
+            var params = this.props.params;
+            (0, _APImanager.get)('/api/post/' + params.post_id, function (err, post) {
                 if (err) {
                     console.log(err.message);
                     return;
                 }
                 this.setState({ post: post[0] });
+                var encodedSlug = encodeURI(post[0].header);
+                var pathname = this.props.location.pathname;
+                if (!params.slug) {
+                    if (pathname.slice(-1) != "/") pathname += "/";
+                    var pathWithSlug = this.props.location.pathname + encodedSlug;
+                    this.props.router.push(pathWithSlug);
+                }
             }.bind(this));
+
+            //Get company, set state and add slug to path
+
             (0, _APImanager.get)('/api/company/' + this.props.params.ticker, function (err, company) {
                 console.log(company);
                 if (err) {
@@ -15735,15 +15752,16 @@ var PostLayout = function (_Component) {
             var basePath = "/segment/" + params.name + "/company/" + params.ticker;
             var post = this.state.post;
             var comments = void 0;
+
             if (this.state.post.post_id) {
                 postInfo = _react2.default.createElement(_DetailedPost2.default, { basePath: basePath, post: post, handleLike: this.handleLike });
                 var detailedBasePath = basePath + "/post/" + post.post_id + "/" + encodeURI(post.header);
-                comments = _react2.default.createElement(_Comments2.default, { basePath: detailedBasePath, urlParams: params });
+                comments = _react2.default.createElement(_Comments2.default, { basePath: detailedBasePath, params: params });
             }
             if (this.state.company && post.post_id) {
                 var headerData = {
                     icon: "mode_edit",
-                    iconLink: "/company/" + params.ticker + "/post/" + params.post_id + "/comment",
+                    iconLink: basePath + "/post/" + params.post_id + "/comment",
                     title: params.ticker,
                     titleLink: basePath
                 };
@@ -15826,8 +15844,8 @@ var routes = _react2.default.createElement(
     _react2.default.createElement(_reactRouter.Route, { path: 'segment/:name', component: _SegmentLayout2.default }),
     _react2.default.createElement(_reactRouter.Route, { path: 'segment/:name/company/:ticker', component: _CompanyLayout2.default }),
     _react2.default.createElement(_reactRouter.Route, { path: 'segment/:name/company/:ticker/post', component: _AddPost2.default }),
+    _react2.default.createElement(_reactRouter.Route, { path: 'segment/:name/company/:ticker/post/:post_id(/:slug)/comment(/:comment_id)', component: _AddComment2.default }),
     _react2.default.createElement(_reactRouter.Route, { path: 'segment/:name/company/:ticker/post/:post_id(/:slug)', component: _PostLayout2.default }),
-    _react2.default.createElement(_reactRouter.Route, { path: 'segment/:name/company/:ticker/post/:post_id(/:slug)/comment/:comment_id', component: _AddComment2.default }),
     '/*',
     _react2.default.createElement(_reactRouter.Route, { path: 'company/:ticker', component: _CompanyLayout2.default }),
     _react2.default.createElement(_reactRouter.Route, { path: 'company/:ticker/post', component: _AddPost2.default }),
@@ -35842,6 +35860,7 @@ var Header = function (_Component) {
                     )
                 );
             }
+            console.log(this.props.data);
             return _react2.default.createElement(
                 'div',
                 { className: 'second-header flex-center' },
@@ -35889,6 +35908,10 @@ var _reactMarkdown = __webpack_require__(249);
 
 var _reactMarkdown2 = _interopRequireDefault(_reactMarkdown);
 
+var _CommentsRecursive = __webpack_require__(306);
+
+var _CommentsRecursive2 = _interopRequireDefault(_CommentsRecursive);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -35911,7 +35934,6 @@ var Comment = function (_Component) {
         value: function render() {
             var comment = this.props.currentComment;
             console.log(comment);
-
             var timeFormatted = (0, _format.timeSincePosted)(comment.posted_datetime);
             return _react2.default.createElement(
                 'div',
@@ -35934,7 +35956,8 @@ var Comment = function (_Component) {
                     { className: 'markdown' },
                     _react2.default.createElement(_reactMarkdown2.default, { source: comment.content, escapeHtml: true })
                 ),
-                this.props.footer
+                this.props.footer,
+                this.props.childComments
             );
         }
     }]);
@@ -36215,9 +36238,9 @@ var CommentWithFooter = function (_Component) {
         key: 'render',
         value: function render() {
             var comment = this.props.currentComment;
-            var urlParams = this.props.urlParams;
-
-            return _react2.default.createElement(_Comment2.default, { currentComment: comment, footer: _react2.default.createElement(
+            var children = this.props.childComments;
+            console.log("heihei");
+            return _react2.default.createElement(_Comment2.default, { currentComment: comment, childComments: children, footer: _react2.default.createElement(
                     'div',
                     { className: 'flex-center comment-footer' },
                     _react2.default.createElement(
@@ -36225,7 +36248,7 @@ var CommentWithFooter = function (_Component) {
                         { className: 'flex-center' },
                         _react2.default.createElement(
                             _reactRouter.Link,
-                            { to: this.props.basePath },
+                            { to: this.props.basePath + "/comment/" + comment.comment_id },
                             _react2.default.createElement(
                                 'span',
                                 null,
@@ -36278,11 +36301,15 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _CommentWithFooter = __webpack_require__(286);
+var _CommentsRecursive = __webpack_require__(306);
 
-var _CommentWithFooter2 = _interopRequireDefault(_CommentWithFooter);
+var _CommentsRecursive2 = _interopRequireDefault(_CommentsRecursive);
 
 var _APImanager = __webpack_require__(30);
+
+var _commentSort = __webpack_require__(305);
+
+var _commentSort2 = _interopRequireDefault(_commentSort);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -36309,8 +36336,7 @@ var Comments = function (_Component) {
     _createClass(Comments, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-            console.log(this.props);
-            (0, _APImanager.get)('/api/comment/post/' + this.props.urlParams.post_id, function (err, comments) {
+            (0, _APImanager.get)('/api/comment/post/' + this.props.params.post_id, function (err, comments) {
                 if (err) {
                     console.log(err.message);
                     return;
@@ -36321,19 +36347,19 @@ var Comments = function (_Component) {
     }, {
         key: 'render',
         value: function render() {
-            var _this2 = this;
+            var commentList = void 0;
+            var params = this.props.params;
 
-            var commentList = this.state.comments.map(function (comment, i) {
-                var basePath = _this2.props.basePath + "/comment/" + comment.comment_id;
-                return _react2.default.createElement(
-                    'div',
-                    { className: 'comments' },
-                    _react2.default.createElement(_CommentWithFooter2.default, { basePath: basePath, currentComment: comment, urlParams: _this2.props.urlParams })
-                );
-            });
+            var basePath = "/segment/" + params.name + "/company/" + params.ticker + "/post/" + params.post_id;
+
+            if (this.state.comments.length > 0) {
+                var sorted = (0, _commentSort2.default)(this.state.comments);
+                commentList = _react2.default.createElement(_CommentsRecursive2.default, { basePath: basePath, comments: sorted });
+            }
+
             return _react2.default.createElement(
                 'div',
-                null,
+                { className: 'all-comments' },
                 commentList
             );
         }
@@ -36414,7 +36440,7 @@ var InputHeader = function (_Component) {
                     ),
                     _react2.default.createElement(
                         'button',
-                        { className: 'active', id: 'prev', type: 'button', onClick: this.props.data.handleTabChange },
+                        { className: 'active icon-button', id: 'prev', type: 'button', onClick: this.props.data.handleTabChange },
                         'Forh\xE5ndsvis'
                     )
                 );
@@ -37146,7 +37172,7 @@ var AddPost = function (_Component) {
         value: function render() {
             var header = void 0;
 
-            if (this.state.company.company_id) {
+            if (this.state.company.ticker) {
                 var params = this.props.params;
                 var titleLink = "/segment/" + params.name + "/company/" + params.ticker;
                 var headerData = {
@@ -37710,7 +37736,7 @@ var SegmentLayout = function (_Component) {
         value: function render() {
             var header = void 0;
             var posts = void 0;
-            var pathname = this.props.location.pathname;
+            var pathname = "/segment/" + this.props.params.name;
             if (this.state.posts.length > 0) {
                 posts = _react2.default.createElement(_SegmentPosts2.default, { basePath: pathname, posts: this.state.posts, handleLike: this.handleLike });
             }
@@ -37873,8 +37899,7 @@ var DetailedPost = function (_Component) {
                     )
                 )
             );
-            var contentPath = this.props.basePath + "/post/" + post.post_id + "/" + encodedHeader;
-            return _react2.default.createElement(_Post2.default, { basePath: contentPath, currentPost: post, handleLike: this.props.handleLike,
+            return _react2.default.createElement(_Post2.default, { basePath: this.props.basePath, currentPost: post, handleLike: this.props.handleLike,
                 header: header });
         }
     }]);
@@ -37962,6 +37987,116 @@ var CompanyPosts = function (_Component) {
 }(_react.Component);
 
 exports.default = CompanyPosts;
+
+/***/ }),
+/* 305 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+exports.default = function (comments) {
+    var roots = [];
+    var children = {};
+    for (var i = 0; i < comments.length; i++) {
+        var comment = comments[i];
+        var p = comment.parent_comment_id;
+        var target = !p ? roots : children[p] || (children[p] = []);
+        target.push({ value: comment });
+    }
+    var findChildren = function findChildren(parent) {
+        if (children[parent.value.comment_id]) {
+            parent.children = children[parent.value.comment_id];
+            for (var _i = 0; _i < parent.children.length; _i++) {
+                findChildren(parent.children[_i]);
+            }
+        }
+    };
+    for (var _i2 = 0; _i2 < roots.length; _i2++) {
+        findChildren(roots[_i2]);
+    }
+    return roots;
+};
+
+/***/ }),
+/* 306 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(3);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = __webpack_require__(27);
+
+var _CommentWithFooter = __webpack_require__(286);
+
+var _CommentWithFooter2 = _interopRequireDefault(_CommentWithFooter);
+
+var _reactMarkdown = __webpack_require__(249);
+
+var _reactMarkdown2 = _interopRequireDefault(_reactMarkdown);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+;
+
+/*
+    Adds new comments recursivly with children
+ */
+
+var CommentsRecursive = function (_Component) {
+    _inherits(CommentsRecursive, _Component);
+
+    function CommentsRecursive() {
+        _classCallCheck(this, CommentsRecursive);
+
+        return _possibleConstructorReturn(this, (CommentsRecursive.__proto__ || Object.getPrototypeOf(CommentsRecursive)).apply(this, arguments));
+    }
+
+    _createClass(CommentsRecursive, [{
+        key: 'render',
+        value: function render() {
+            var props = this.props;
+            var commentList = null;
+            if (props.comments != undefined) {
+                commentList = props.comments.map(function (comment) {
+                    console.log(comment.children);
+                    return _react2.default.createElement(_CommentWithFooter2.default, { basePath: props.basePath, currentComment: comment.value,
+                        childComments: _react2.default.createElement(CommentsRecursive, { comments: comment.children,
+                            basePath: props.basePath }) });
+                });
+            }
+            return _react2.default.createElement(
+                'div',
+                { className: 'comments' },
+                commentList
+            );
+        }
+    }]);
+
+    return CommentsRecursive;
+}(_react.Component);
+
+exports.default = CommentsRecursive;
 
 /***/ })
 /******/ ]);

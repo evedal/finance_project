@@ -77,7 +77,7 @@ CREATE TABLE company_admin(
 CREATE TABLE post(
     post_id INTEGER AUTO_INCREMENT,
     header VARCHAR(200) NOT NULL,
-    content VARCHAR(10000) NOT NULL,
+    content VARCHAR(10000),
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     image_url VARCHAR(200),
     link_url VARCHAR(200),

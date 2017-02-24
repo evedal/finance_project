@@ -11,6 +11,7 @@ class Header extends Component{
                 </Link>
                 )
         }
+        console.log(this.props.data)
         return(
             <div className="second-header flex-center">
                 <Link to={this.props.data.titleLink} >

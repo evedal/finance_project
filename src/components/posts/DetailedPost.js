@@ -14,8 +14,7 @@ class DetailedPost extends Component {
                 </div>
             </Link>
         );
-        let contentPath = this.props.basePath + "/post/" + post.post_id + "/" + encodedHeader;
-        return <Post basePath={contentPath} currentPost={post} handleLike={this.props.handleLike}
+        return <Post basePath={this.props.basePath} currentPost={post} handleLike={this.props.handleLike}
                      header={header}/>
     }
 }

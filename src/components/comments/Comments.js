@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import CommentWithFooter from './CommentWithFooter';
+import CommentsRecursive from './CommentsRecursive';
 import {get} from '../../utils/APImanager'
+import commentSort from '../../utils/commentSort';
 
 class Comments extends Component{
     constructor(){
@@ -12,8 +13,7 @@ class Comments extends Component{
         }
     }
     componentDidMount(){
-        console.log(this.props);
-        get('/api/comment/post/'+this.props.urlParams.post_id, function (err, comments) {
+        get('/api/comment/post/'+this.props.params.post_id, function (err, comments) {
             if(err){
                 console.log(err.message);
                 return;
@@ -22,17 +22,22 @@ class Comments extends Component{
         }.bind(this));
 
     }
+
     render(){
-        const commentList = this.state.comments.map((comment, i) => {
-            let basePath = this.props.basePath + "/comment/"+comment.comment_id;
-            return(
-                <div className="comments">
-                    <CommentWithFooter basePath = {basePath} currentComment = {comment} urlParams = {this.props.urlParams}/>
-                </div>
+        let commentList;
+        let params = this.props.params;
+
+        let basePath = "/segment/"+params.name+"/company/"+params.ticker+"/post/"+params.post_id;
+
+        if(this.state.comments.length > 0) {
+            let sorted = commentSort(this.state.comments);
+            commentList = (
+                    <CommentsRecursive basePath={basePath} comments={sorted}/>
             )
-        });
+        }
+
         return(
-            <div>
+            <div className="all-comments">
                 { commentList }
             </div>
         )

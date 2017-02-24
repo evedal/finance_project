@@ -123,7 +123,7 @@ class AddPost extends Component{
     render(){
         let header;
 
-        if(this.state.company.company_id){
+        if(this.state.company.ticker){
             let params = this.props.params;
             let titleLink = "/segment/"+params.name+"/company/"+params.ticker;
             let headerData = {

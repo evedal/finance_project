@@ -54,7 +54,7 @@ class SegmentLayout extends Component{
     render(){
         let header;
         let posts;
-        let pathname = this.props.location.pathname;
+        let pathname = "/segment/"+this.props.params.name;
         if(this.state.posts.length > 0){
             posts = <SegmentPosts basePath = {pathname} posts = {this.state.posts} handleLike={this.handleLike}/>
         }

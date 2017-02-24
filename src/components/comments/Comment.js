@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { timeSincePosted } from '../../utils/format'
 import ReactMarkDown from 'react-markdown';
+import CommentsRecursive from './CommentsRecursive';
 class Comment extends Component{
     render(){
         const comment = this.props.currentComment;
         console.log(comment);
-
         let timeFormatted = timeSincePosted(comment.posted_datetime);
         return(
             <div className="comment">
@@ -17,6 +17,7 @@ class Comment extends Component{
                     <ReactMarkDown source={comment.content} escapeHtml = {true} />
                 </div>
                 {this.props.footer}
+                {this.props.childComments}
             </div>
         )
     }
