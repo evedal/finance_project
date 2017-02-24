@@ -1,5 +1,4 @@
 var mysql = require('mysql');
-var app = require('../app');
 var dbConfig;
 if(process.env.NODE_ENV){
     dbConfig = {
@@ -17,5 +16,7 @@ else{
 }
 var pool = mysql.createPool(dbConfig);
 module.exports = {
-    pool : pool
+    getPool : function(){
+        return pool;
+    }
 };

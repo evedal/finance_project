@@ -1,9 +1,9 @@
-var pool = require("../utils/db").pool;
+var db = require("../utils/db");
 const sqlGetSegmentByName = "SELECT * FROM segment WHERE name = ?";
 
 function getSegmentByName(name, callback){
     "use strict";
-    pool.query(sqlGetSegmentByName, name, function (err, segment) {
+    db.getPool().query(sqlGetSegmentByName, name, function (err, segment) {
         if(err){
             console.log(err);
             return callback(err);
