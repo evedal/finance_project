@@ -234,16 +234,20 @@ header h1 a:last-child {
     color: #CB7800;
 }
 .comments{
-    padding: 0 0.5rem;
-
-}
-.comment{
     margin-top: 0.5rem;
     margin-left: 1rem;
+
 }
-.comments > .comment{
+.all-comments{
+    padding: 0 0.5rem;
+}
+
+.comment{
+}
+.all-comments > .comments{
     margin-left: 0;
 }
+
 
 .comment h3{
     color: #95989A;

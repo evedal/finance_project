@@ -7,9 +7,7 @@ class Comment extends Component{
     render(){
         const comment = this.props.currentComment;
         console.log(comment);
-
         let timeFormatted = timeSincePosted(comment.posted_datetime);
-        console.log(this.props.children);
         return(
             <div className="comment">
                 <Link to = {'/user/'+comment.user_id} >

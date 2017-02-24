@@ -15715,18 +15715,18 @@ var PostLayout = function (_Component) {
     }, {
         key: 'componentDidMount',
         value: function componentDidMount() {
-            (0, _APImanager.get)('/api/post/' + this.props.params.post_id, function (err, post) {
+            console.log(this.props.params);
+            var params = this.props.params;
+            (0, _APImanager.get)('/api/post/' + params.post_id, function (err, post) {
                 if (err) {
                     console.log(err.message);
                     return;
                 }
                 this.setState({ post: post[0] });
-                var params = this.props.params;
                 var encodedSlug = encodeURI(post[0].header);
                 var pathname = this.props.location.pathname;
-                if (!this.props.params.slug) {
-                    console.log(pathname[-1]);
-                    if (pathname[-1] != "/") pathname += "/";
+                if (!params.slug) {
+                    if (pathname.slice(-1) != "/") pathname += "/";
                     var pathWithSlug = this.props.location.pathname + encodedSlug;
                     this.props.router.push(pathWithSlug);
                 }
@@ -15756,7 +15756,7 @@ var PostLayout = function (_Component) {
             if (this.state.post.post_id) {
                 postInfo = _react2.default.createElement(_DetailedPost2.default, { basePath: basePath, post: post, handleLike: this.handleLike });
                 var detailedBasePath = basePath + "/post/" + post.post_id + "/" + encodeURI(post.header);
-                comments = _react2.default.createElement(_Comments2.default, { basePath: detailedBasePath, urlParams: params });
+                comments = _react2.default.createElement(_Comments2.default, { basePath: detailedBasePath, params: params });
             }
             if (this.state.company && post.post_id) {
                 var headerData = {
@@ -35934,9 +35934,7 @@ var Comment = function (_Component) {
         value: function render() {
             var comment = this.props.currentComment;
             console.log(comment);
-
             var timeFormatted = (0, _format.timeSincePosted)(comment.posted_datetime);
-            console.log(this.props.children);
             return _react2.default.createElement(
                 'div',
                 { className: 'comment' },
@@ -36240,7 +36238,6 @@ var CommentWithFooter = function (_Component) {
         key: 'render',
         value: function render() {
             var comment = this.props.currentComment;
-            var urlParams = this.props.urlParams;
             var children = this.props.childComments;
             console.log("heihei");
             return _react2.default.createElement(_Comment2.default, { currentComment: comment, childComments: children, footer: _react2.default.createElement(
@@ -36251,7 +36248,7 @@ var CommentWithFooter = function (_Component) {
                         { className: 'flex-center' },
                         _react2.default.createElement(
                             _reactRouter.Link,
-                            { to: this.props.basePath },
+                            { to: this.props.basePath + "/comment/" + comment.comment_id },
                             _react2.default.createElement(
                                 'span',
                                 null,
@@ -36339,8 +36336,7 @@ var Comments = function (_Component) {
     _createClass(Comments, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
-            console.log(this.props);
-            (0, _APImanager.get)('/api/comment/post/' + this.props.urlParams.post_id, function (err, comments) {
+            (0, _APImanager.get)('/api/comment/post/' + this.props.params.post_id, function (err, comments) {
                 if (err) {
                     console.log(err.message);
                     return;
@@ -36352,7 +36348,9 @@ var Comments = function (_Component) {
         key: 'render',
         value: function render() {
             var commentList = void 0;
-            var basePath = "/segment/";
+            var params = this.props.params;
+
+            var basePath = "/segment/" + params.name + "/company/" + params.ticker + "/post/" + params.post_id;
 
             if (this.state.comments.length > 0) {
                 var sorted = (0, _commentSort2.default)(this.state.comments);
@@ -36361,7 +36359,7 @@ var Comments = function (_Component) {
 
             return _react2.default.createElement(
                 'div',
-                null,
+                { className: 'all-comments' },
                 commentList
             );
         }
@@ -38083,14 +38081,13 @@ var CommentsRecursive = function (_Component) {
                 commentList = props.comments.map(function (comment) {
                     console.log(comment.children);
                     return _react2.default.createElement(_CommentWithFooter2.default, { basePath: props.basePath, currentComment: comment.value,
-                        urlParams: props.urlParams,
-                        childComments: _react2.default.createElement(CommentsRecursive, { comments: comment.children }) });
+                        childComments: _react2.default.createElement(CommentsRecursive, { comments: comment.children,
+                            basePath: props.basePath }) });
                 });
             }
-            console.log(commentList);
             return _react2.default.createElement(
                 'div',
-                null,
+                { className: 'comments' },
                 commentList
             );
         }

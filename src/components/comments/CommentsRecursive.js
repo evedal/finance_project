@@ -15,13 +15,12 @@ class CommentsRecursive extends Component{
             commentList = props.comments.map(function (comment) {
                 console.log(comment.children);
                 return <CommentWithFooter basePath={props.basePath} currentComment={comment.value}
-                                          urlParams={props.urlParams}
-                                          childComments={<CommentsRecursive comments={comment.children}/>}/>
+                                          childComments={<CommentsRecursive comments={comment.children}
+                                          basePath = {props.basePath} />}/>
             });
         }
-        console.log(commentList)
         return(
-            <div>
+            <div className="comments">
                 {commentList}
             </div>
         )
