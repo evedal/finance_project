@@ -191,9 +191,12 @@ INSERT INTO company VALUES('HAVI', 'Havila Shipping ASA',DEFAULT, DEFAULT, 1);
 
 INSERT INTO user VALUES(DEFAULT, 'Ole', 'Gunnar', 'olegunnar', 'ole@gunnar.no', 'hash','salt',DEFAULT, DEFAULT, DEFAULT);
 
+INSERT INTO user_company VALUES(1, 1, DEFAULT);
+
 INSERT INTO post VALUES(DEFAULT, 'header', 'content', DEFAULT, null, null, default, 1, 'FAR');
 
 INSERT INTO comment VALUES(DEFAULT, 'content', DEFAULT, 1, 1, null);
+
 
 -- KEEP ON END OF FILE
 SET FOREIGN_KEY_CHECKS = 1;

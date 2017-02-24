@@ -1,4 +1,6 @@
-var pool = require("../utils/db").pool;
+var db = require("../utils/db");
+var pool = db.pool;
+console.log(db);
 
 
 const sqlCreatePost = "INSERT INTO post SET ?";
@@ -30,6 +32,13 @@ const sqlGetPostsBySegment = "SELECT post.post_id, post.header, post.content, po
     "LEFT JOIN comment ON comment.post_id = post.post_id WHERE ticker IN (SELECT ticker FROM segment " +
     "WHERE name = ?) GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
 
+const sqlGetPostsByUser = "SELECT post.post_id, post.header, post.content, post.created_date, post.user_id, " +
+    "company.ticker, post.image_url, post.link_url, segment.name, username, COUNT(like_id) as like_count, " +
+    "COUNT(comment_id) as comment_count FROM post LEFT JOIN user ON post.user_id = user.user_id " +
+    "LEFT JOIN post_like ON post.post_id = post_like.post_id LEFT JOIN comment ON comment.post_id = post.post_id " +
+    "JOIN company ON post.ticker= company.ticker LEFT JOIN segment ON segment.segment_id = company.segment_id " +
+    "WHERE post.ticker IN (SELECT ticker FROM user_company WHERE user_id = ?) GROUP BY post_id " +
+    "ORDER BY created_date DESC LIMIT ?,?";
 
 function createPost(post_params, callback){
     "use strict";
@@ -136,13 +145,26 @@ function getOgDataForPost(url, callback){
         return callback(null,result.data)
     })
 }
-
+function getPostByUser(user_id, getDetails, callback) {
+    "use strict";
+    getDetails.sLimit = (getDetails.sLimit) ? getDetails.sLimit : 0;
+    getDetails.eLimit = (getDetails.eLimit) ? getDetails.eLimit : getDetails.sLimit+30;
+    var query = pool.query(sqlGetPostsByUser, [user_id, getDetails.sLimit,getDetails.eLimit], function (err, posts) {
+        if(err){
+            console.log(err);
+            return callback(err);
+        }
+        console.log(posts);
+        return callback(null, posts);
+    });
+}
 module.exports = {
     create: createPost,
     find: getPosts,
     findById : getPostById,
     findByCompany: getPostByCompany,
     findBySegment: getPostBySegment,
+    findByUser: getPostByUser,
     update: updatePost,
     delete: deletePost,
     getOgData: getOgDataForPost

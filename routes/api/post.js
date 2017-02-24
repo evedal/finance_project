@@ -85,6 +85,18 @@ router.route('/post/segment/:name')
         })
     });
 
+router.route('/post/user/:user_id')
+    .get(function (req, res) {
+        Post.findByUser(req.params.user_id, req.query, function (err, posts) {
+            if(err){
+                res.status(400);
+                res.json(err);
+                return;
+            }
+            res.json(posts);
+        })
+    });
+
 router.route('/post/ogdata/:url')
     .get(function (req, res) {
         Post.getOgData(req.params.url, function (err, data) {

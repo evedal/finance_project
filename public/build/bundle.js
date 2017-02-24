@@ -15551,13 +15551,15 @@ var _react = __webpack_require__(3);
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Posts = __webpack_require__(285);
+var _HomePosts = __webpack_require__(307);
 
-var _Posts2 = _interopRequireDefault(_Posts);
+var _HomePosts2 = _interopRequireDefault(_HomePosts);
 
 var _Header = __webpack_require__(282);
 
 var _Header2 = _interopRequireDefault(_Header);
+
+var _APImanager = __webpack_require__(30);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -15573,17 +15575,46 @@ var Home = function (_Component) {
     function Home() {
         _classCallCheck(this, Home);
 
-        return _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (Home.__proto__ || Object.getPrototypeOf(Home)).call(this));
+
+        _this.state = {
+            posts: []
+        };
+        _this.handleLike = _this.handleLike.bind(_this);
+        return _this;
     }
 
     _createClass(Home, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            (0, _APImanager.get)('/api/post/user/' + 1, function (err, posts) {
+                if (err) {
+                    console.log(err.message);
+                    return;
+                }
+                this.setState({ posts: posts });
+            }.bind(this));
+        }
+    }, {
+        key: 'handleLike',
+        value: function handleLike(index) {
+            var updatedPosts = this.state.posts;
+            updatedPosts[index].liked = !updatedPosts[index].liked;
+            updatedPosts[index].like_count = updatedPosts[index].liked ? ++updatedPosts[index].like_count : --updatedPosts[index].like_count;
+            this.setState({ posts: updatedPosts });
+        }
+    }, {
         key: 'render',
         value: function render() {
+            var data = {
+                title: "Din forside",
+                titleLink: "#"
+            };
             return _react2.default.createElement(
                 'div',
                 null,
-                _react2.default.createElement(_Header2.default, { icon: '', title: 'Din forside' }),
-                _react2.default.createElement(_Posts2.default, { posts: [] })
+                _react2.default.createElement(_Header2.default, { data: data }),
+                _react2.default.createElement(_HomePosts2.default, { posts: this.state.posts, handleLike: this.handleLike })
             );
         }
     }]);
@@ -36129,72 +36160,7 @@ var Post = function (_Component) {
 exports.default = Post;
 
 /***/ }),
-/* 285 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _react = __webpack_require__(3);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _Post = __webpack_require__(284);
-
-var _Post2 = _interopRequireDefault(_Post);
-
-var _APImanager = __webpack_require__(30);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Posts = function (_Component) {
-    _inherits(Posts, _Component);
-
-    function Posts() {
-        _classCallCheck(this, Posts);
-
-        return _possibleConstructorReturn(this, (Posts.__proto__ || Object.getPrototypeOf(Posts)).apply(this, arguments));
-    }
-
-    _createClass(Posts, [{
-        key: 'render',
-        value: function render() {
-            var _this2 = this;
-
-            var postList = this.props.posts.map(function (post, i) {
-                var basePath = _this2.props.basePath + "/company/" + post.ticker;
-                return _react2.default.createElement(
-                    'div',
-                    null,
-                    _react2.default.createElement(_Post2.default, { basePath: basePath, currentPost: post, handleLike: _this2.props.handleLike.bind(null, i) })
-                );
-            });
-            return _react2.default.createElement(
-                'div',
-                null,
-                postList
-            );
-        }
-    }]);
-
-    return Posts;
-}(_react.Component);
-
-exports.default = Posts;
-
-/***/ }),
+/* 285 */,
 /* 286 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -38097,6 +38063,84 @@ var CommentsRecursive = function (_Component) {
 }(_react.Component);
 
 exports.default = CommentsRecursive;
+
+/***/ }),
+/* 307 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(3);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Post = __webpack_require__(284);
+
+var _Post2 = _interopRequireDefault(_Post);
+
+var _reactRouter = __webpack_require__(27);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var HomePosts = function (_Component) {
+    _inherits(HomePosts, _Component);
+
+    function HomePosts() {
+        _classCallCheck(this, HomePosts);
+
+        return _possibleConstructorReturn(this, (HomePosts.__proto__ || Object.getPrototypeOf(HomePosts)).apply(this, arguments));
+    }
+
+    _createClass(HomePosts, [{
+        key: 'render',
+        value: function render() {
+            var _this2 = this;
+
+            var postList = this.props.posts.map(function (post, i) {
+                var basePath = "/segment/" + post.name + "/company/" + post.ticker;
+                return _react2.default.createElement(
+                    'div',
+                    null,
+                    _react2.default.createElement(_Post2.default, { basePath: basePath, currentPost: post, handleLike: _this2.props.handleLike.bind(null, i), header: _react2.default.createElement(
+                            _reactRouter.Link,
+                            { to: basePath },
+                            _react2.default.createElement(
+                                'div',
+                                { className: 'post-head' },
+                                _react2.default.createElement(
+                                    'h3',
+                                    null,
+                                    post.ticker
+                                )
+                            )
+                        ) })
+                );
+            });
+            return _react2.default.createElement(
+                'div',
+                null,
+                postList
+            );
+        }
+    }]);
+
+    return HomePosts;
+}(_react.Component);
+
+exports.default = HomePosts;
 
 /***/ })
 /******/ ]);

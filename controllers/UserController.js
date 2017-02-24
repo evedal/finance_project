@@ -41,9 +41,9 @@ function createUser(user, callback){
         is_page_admin : false,
         removed : 0
     };
-
+    console.log(user);
     User.create(user, callback)
 }
 module.exports = {
     create: createUser
-    }
+};

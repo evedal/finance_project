@@ -16,7 +16,6 @@ else{
 
 }
 var pool = mysql.createPool(dbConfig);
-console.log("POOOOOL: "+pool);
 module.exports = {
     pool : pool
 };
