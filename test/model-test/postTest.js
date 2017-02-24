@@ -57,6 +57,12 @@ describe('Get Post', function () {
             done()
         })
     })
+    it("Should get posts from user", function (done) {
+        Post.findByUser(1, {}, function (err, result) {
+            assert.isNotNull(result, "No error when getting post from user")
+            done()
+        })
+    })
 });
 describe('Get og data for post', function () {
     this.timeout(4000);
