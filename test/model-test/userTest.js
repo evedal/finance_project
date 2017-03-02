@@ -1,6 +1,6 @@
 var chai = require('chai');
 var assert = chai.assert;
-var User = require('../../controllers/UserController');
+var User = require('../../controllers/user');
 var UserModel = require('../../models/User');
 
 var createId;
@@ -15,9 +15,9 @@ describe('Create User', function () {
         var data = {
             'first_name' : 'Test',
             'last_name' : 'Test',
-            'email' : 'test@test.no',
+            'email' : 'test2@test.no',
             'password' : 'testeste',
-            'username' : 'testeste'
+            'username' : 'testesten'
         };
         User.create(data, function (err, result) {
             createId = result.user_id;
@@ -52,6 +52,13 @@ describe('Create User', function () {
 
             done()
         });
+    });
+    it("Should log in user", function (done) {
+        UserModel.delete(createId, function (err, result) {
+            assert.isNotNull(result, "Issue with deleting user");
+            done();
+        })
+
     });
     it("Should delete user", function (done) {
         console.log(createId)

@@ -1,5 +1,6 @@
 var router = require('express').Router();
 var Post = require('../../models/Post');
+var auth = require('../../controllers/auth');
 
 //Create rest routes for posts
 router.route('/post')
@@ -13,16 +14,23 @@ router.route('/post')
             res.json(posts);
         });
     })
-    .post(function (req, res) {
+    .post(auth.isAuthenticated, function (req, res) {
         console.log(req.body);
-        Post.create(req.body, function (err, result) {
-            if(err){
-                res.status(400);
-                res.json(err);
-                return;
-            }
-            res.json(result);
-        })
+        if(req.user.user_id === req.body.user_id ) {
+            Post.create(req.body, function (err, result) {
+                if(err){
+                    res.status(400);
+                    res.json(err);
+                    return;
+                }
+                res.json(result);
+            });
+        }
+        else{
+            res.status(401);
+            res.json({message: "Forbidden"})
+        }
+
     });
 
 //Create REST route for spesific posts

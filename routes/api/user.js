@@ -1,5 +1,5 @@
 var router = require('express').Router();
-var UserController = require("../../controllers/UserController");
+var UserController = require("../../controllers/user");
 router.route("/user")
     .post(function (req, res) {
         "use strict";
