@@ -16,7 +16,7 @@ router.route('/post')
     })
     .post(auth.isAuthenticated, function (req, res) {
         console.log(req.body);
-        if(req.user.user_id === req.body.user_id ) {
+        if(req.user.user_id == req.body.user_id ) {
             Post.create(req.body, function (err, result) {
                 if(err){
                     res.status(400);

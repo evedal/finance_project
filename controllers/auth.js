@@ -15,8 +15,10 @@ passport.use(new BasicStrategy(
             if (!user) {
                 return callback(null, false)
             }
-            bcrypt.compare(password, user.hash, function (err, isMatch) {
+            bcrypt.compare(password, user.password, function (err, isMatch) {
+                console.log("isMathc: "+isMatch)
                 if(err) return callback(err);
+                if(isMatch) return callback(null, user);
                 return callback(null, isMatch);
             });
         })

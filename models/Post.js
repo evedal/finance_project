@@ -41,6 +41,7 @@ function createPost(post_params, callback){
     "use strict";
     var query = db.getPool().query(sqlCreatePost, post_params, function (err, result) {
         if(err){
+            console.log(err);
             return callback(err);
         }
         post_params['post_id'] = result.insertId;
