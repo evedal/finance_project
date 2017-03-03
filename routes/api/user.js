@@ -1,5 +1,7 @@
 var router = require('express').Router();
 var UserController = require("../../controllers/user");
+var auth = require("../../controllers/auth");
+
 router.route("/user")
     .post(function (req, res) {
         "use strict";
@@ -9,7 +11,9 @@ router.route("/user")
                 res.json(err);
                 return;
             }
-            res.json(user);
+            //Add token to response for automatic login
+            var token = auth.generateToken(user.user_id);
+            res.json({user: user, token: token});
         })
     });
 

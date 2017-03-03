@@ -3,6 +3,7 @@ var db = require("../utils/db");
 const sqlCreateUser = "INSERT INTO user SET ?";
 const sqlDeleteUser = "DELETE FROM user WHERE user_id = ?";
 const sqlGetUserByEmail = "SELECT * FROM user WHERE email = ?";
+const sqlGetUserById = "SELECT * FROM user WHERE user_id = ?";
 
 function createUser(user, callback){
     "use strict";
@@ -36,8 +37,22 @@ function getUserByEmail(email, callback) {
         return callback(null, user[0]);
     })
 }
+function getUserById(email, callback) {
+    "use strict";
+    db.getPool().query(sqlGetUserById, user_id, function (err, user) {
+        if(err){
+            console.log(err);
+            return callback(err);
+        }
+        if(!user){
+            return callback(null, false);
+        }
+        return callback(null, user[0]);
+    })
+}
 module.exports = {
     create: createUser,
+    findById: getUserById,
     findByEmail: getUserByEmail,
     delete: deleteUser
 };

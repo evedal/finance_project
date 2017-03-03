@@ -20,7 +20,7 @@ class AddPost extends Component{
             company: {
 
             },
-        }
+        };
         this.handleUrlOnBlur = this.handleUrlOnBlur.bind(this);
         this.handleHeaderUpdate = this.handleHeaderUpdate.bind(this);
         this.handleUrlUpdate = this.handleUrlUpdate.bind(this);
@@ -79,7 +79,7 @@ class AddPost extends Component{
 
     }
     handleUrlUpdate(event){
-        console.log(event.target.value)
+        console.log(event.target.value);
         event.preventDefault();
         let post = this.state.post;
         post.url = event.target.value;
@@ -136,7 +136,8 @@ class AddPost extends Component{
         }
         let addPostHeaderData = {
             handleImgToggle: this.handleImgToggle,
-            url: this.state.post.imgUrl,
+            imgUrl: this.state.post.imgUrl,
+            url: this.state.post.url,
             cancelled: this.state.post.cancelled,
             header: this.state.post.header,
             handleUrlOnBlur: this.handleUrlOnBlur,
@@ -149,7 +150,7 @@ class AddPost extends Component{
             value: this.state.value,
             placeholder: "Skriv en tekst",
             submitText: "Publiser din post",
-        }
+        };
         return(
             <div className="container">
                 {header}

@@ -315,6 +315,7 @@ form input{
 }
 .btn-group{
     justify-content: center;
+    width: 100%;
 }
 .submit-btn{
     flex-basis: 80%;
@@ -373,7 +374,7 @@ form input{
 .flex-column{
     flex-direction: column;
 }
-input[type=text]{
+input[type=text], input[type=email], input[type=password]{
     width: 100%;
     height: 2rem;
     margin: 1rem;

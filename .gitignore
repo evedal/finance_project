@@ -38,3 +38,6 @@ jspm_packages
 
 # db info
 utils/dbConfig.js
+
+# general config
+config.js

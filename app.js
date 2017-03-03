@@ -16,6 +16,7 @@ var apiPost = require('./routes/api/post');
 var apiUser = require('./routes/api/user');
 var apiCompany = require('./routes/api/company');
 var apiSegment = require('./routes/api/segment');
+var apiAuth = require('./routes/api/auth');
 
 import { renderToString } from 'react-dom/server';
 import { match, RouterContext } from 'react-router';
@@ -44,9 +45,8 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 }));
-//Initalizes and sets passport session
+//Initalizes passport
 app.use(passport.initialize());
-app.use(passport.session());
 
 app.use('/', index);
 app.use('/api/', apiComment);
@@ -54,6 +54,7 @@ app.use('/api/', apiPost);
 app.use('/api/', apiUser);
 app.use('/api/', apiCompany);
 app.use('/api/', apiSegment);
+app.use('/api/', apiAuth);
 
 //Takes inital request and renders correct page from react router
 if(process.env.NODE_ENV !== 'test') {

@@ -4,13 +4,15 @@ import Home from './common/Home';
 import AddComment from './common/AddComment';
 import PostLayout from './common/PostLayout';
 import Layout from './common/Layout';
-import AddPost from './common/AddPost'
+import AddPost from './common/AddPost';
+import Login from './common/Login';
 import CompanyLayout from './common/CompanyLayout';
 import SegmentLayout from './common/SegmentLayout';
 
 const routes = (
     <Route path="/" component={Layout}>
         <IndexRoute component={Home}/>
+        <Route path="login" component={Login} />
         <Route path="user/:user_id" component={PostLayout}  />
         <Route path="segment/:name" component={SegmentLayout}  />
         <Route path="segment/:name/company/:ticker" component={CompanyLayout}  />
