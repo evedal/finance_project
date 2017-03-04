@@ -14,9 +14,12 @@ var params = {
 };
 
 //Creates a strategy that find the user and adds it to the request
-//Only id is stored in token, front-end gets user-object and stores in session
+//Only id is stored in token, front-end gets user-object and stores in session storage
+//Simplyfied passport strategy, do we need to find whether its a valid user?
+//TODO:
 passport.use(new JWTStrategy(params,
     function (jwt_payload, done) {
+    /*
         User.findById(jwt_payload.id, function (err, user) {
             if(err) return done(err);
             if(!user) {
@@ -24,9 +27,10 @@ passport.use(new JWTStrategy(params,
             }
             return done(null, user);
         })
-    }
+    }*/
+        return done(null, jwt_payload.id)
 
-));
+    }));
 
 //Used to authenticate user,
 function login(email, password, callback) {
@@ -39,6 +43,7 @@ function login(email, password, callback) {
         if (!user) {
             return callback(null, false)
         }
+        //Uses bcrypt to comare passwords, uses salt already stored in same string
         bcrypt.compare(password, user.password, function (err, isMatch) {
             console.log("isMatch: "+isMatch);
             if(err) return callback(err);

@@ -37,9 +37,9 @@ function getUserByEmail(email, callback) {
         return callback(null, user[0]);
     })
 }
-function getUserById(email, callback) {
+function getUserById(user_id, callback) {
     "use strict";
-    db.getPool().query(sqlGetUserById, user_id, function (err, user) {
+    var query = db.getPool().query(sqlGetUserById, user_id, function (err, user) {
         if(err){
             console.log(err);
             return callback(err);

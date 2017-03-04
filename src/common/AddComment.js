@@ -4,6 +4,7 @@ import Header from '../components/other/Header';
 import LargeTextField from '../components/forms/LargeTextField';
 
 import {get, post} from '../utils/APImanager';
+import User from '../models/User';
 
 class AddComment extends Component{
     constructor(){
@@ -14,6 +15,7 @@ class AddComment extends Component{
             post: {
 
             },
+            user: User.getUser(),
             value: "",
         }
         this.handleChange = this.handleChange.bind(this);
@@ -39,6 +41,10 @@ class AddComment extends Component{
             }
             this.setState({post: post[0]})
         }.bind(this));
+        User.on("change", (user) => {
+            this.setState({user: user})
+        });
+
     }
 
     handleChange(event){
@@ -54,9 +60,10 @@ class AddComment extends Component{
             let data = {
                 content: state.value,
                 post_id: state.post.post_id,
-                user_id: state.post.user_id,
+                user_id: state.user.user_id,
                 parent_comment_id: state.comment.comment_id
             };
+            console.log(this.state.user);
             post("/api/comment", data, (err, post) => {
                 if(err){
                     alert(err.message);

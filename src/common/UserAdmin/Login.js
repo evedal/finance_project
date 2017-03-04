@@ -2,11 +2,14 @@
  * Created by evend on 2/16/2017.
  */
 import React, { Component } from 'react';
-import InputField from '../components/forms/inputs/InputField';
-import Header from '../components/other/Header';
-import FormLayout from '../components/forms/FormLayout';
-import SubmitBtn from '../components/forms/buttons/SubmitBtn';
-import { post } from '../utils/APImanager';
+import { Link } from 'react-router';
+import InputField from '../../components/forms/inputs/InputField';
+import Header from '../../components/other/Header';
+import FormLayout from '../../components/forms/FormLayout';
+import SubmitBtn from '../../components/forms/buttons/SubmitBtn';
+import { post } from '../../utils/APImanager';
+import User from '../../models/User';
+import auth from '../../auth/authUtils'
 
 class Login extends Component{
     constructor(){
@@ -40,11 +43,20 @@ class Login extends Component{
             email: this.state.email,
             password: this.state.password
         };
-        post("/api/auth/login", payload, function (err, result) {
-            if(err) return console.log(err);
-            console.log(result)
 
-        })
+        //Sends call to api, gets back token or error
+        post("/api/auth/login", payload, function (err, result) {
+            if(err) return alert(err);
+            if(!result.success){
+                return alert("Brukernavn eller passord var feil")
+            }
+            User.setToken(result.token);
+            auth.isAuthenticated(function (err, user) {
+                if(err || !user) return console.log("Fant ikke bruker til token");
+                User.setUser(user);
+            })
+            this.props.router.push("/");
+        }.bind(this))
 
 
     }
@@ -66,6 +78,7 @@ class Login extends Component{
                                 value={this.state.password} type="password"/>
                     <SubmitBtn submitText="Logg inn" />
                 </FormLayout>
+                <p>Har du ikke bruker?<Link to="/register"> Registrer deg</Link></p>
             </div>
         );
     }

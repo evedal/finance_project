@@ -5,7 +5,7 @@ var passport = require('passport');
 
 function createUser(user, callback){
     "use strict";
-    if(!user.first_name || !user.last_name || !user.username || !user.email ||!user.password || user.password.length < 8){
+    if(!user.username || !user.email ||!user.password || user.password.length < 8){
         return callback({message: "Password too short", status : 400});
     }
     //Generate salt
