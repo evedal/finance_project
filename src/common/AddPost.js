@@ -4,7 +4,7 @@ import Header from '../components/other/Header'
 import LargeTextField from '../components/forms/LargeTextField'
 import validUrl from 'valid-url';
 import { get, post } from '../utils/APImanager';
-
+import User from '../models/User';
 
 class AddPost extends Component{
     constructor(){
@@ -20,7 +20,8 @@ class AddPost extends Component{
             company: {
 
             },
-        }
+            user: User.getUser()
+        };
         this.handleUrlOnBlur = this.handleUrlOnBlur.bind(this);
         this.handleHeaderUpdate = this.handleHeaderUpdate.bind(this);
         this.handleUrlUpdate = this.handleUrlUpdate.bind(this);
@@ -41,6 +42,10 @@ class AddPost extends Component{
             }
             this.setState({company: company[0]})
         }.bind(this));
+
+        User.on("change", function (user) {
+            this.setState({user: user})
+        }.bind(this))
     }
 
     // Handlers for markdown
@@ -79,7 +84,7 @@ class AddPost extends Component{
 
     }
     handleUrlUpdate(event){
-        console.log(event.target.value)
+        console.log(event.target.value);
         event.preventDefault();
         let post = this.state.post;
         post.url = event.target.value;
@@ -107,7 +112,7 @@ class AddPost extends Component{
             image_url: _post.imgUrl,
             link_url: _post.url,
             ticker: this.state.company.ticker,
-            user_id: 1, //TODO
+            user_id: this.state.user.user_id, //TODO
         };
         post("/api/post", data, (err, post) => {
             if(err){
@@ -136,7 +141,8 @@ class AddPost extends Component{
         }
         let addPostHeaderData = {
             handleImgToggle: this.handleImgToggle,
-            url: this.state.post.imgUrl,
+            imgUrl: this.state.post.imgUrl,
+            url: this.state.post.url,
             cancelled: this.state.post.cancelled,
             header: this.state.post.header,
             handleUrlOnBlur: this.handleUrlOnBlur,
@@ -149,7 +155,7 @@ class AddPost extends Component{
             value: this.state.value,
             placeholder: "Skriv en tekst",
             submitText: "Publiser din post",
-        }
+        };
         return(
             <div className="container">
                 {header}

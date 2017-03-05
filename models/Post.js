@@ -1,7 +1,4 @@
 var db = require("../utils/db");
-var pool = db.pool;
-console.log(db);
-
 
 const sqlCreatePost = "INSERT INTO post SET ?";
 
@@ -42,8 +39,9 @@ const sqlGetPostsByUser = "SELECT post.post_id, post.header, post.content, post.
 
 function createPost(post_params, callback){
     "use strict";
-    var query = pool.query(sqlCreatePost, post_params, function (err, result) {
+    var query = db.getPool().query(sqlCreatePost, post_params, function (err, result) {
         if(err){
+            console.log(err);
             return callback(err);
         }
         post_params['post_id'] = result.insertId;
@@ -54,7 +52,7 @@ function createPost(post_params, callback){
 }
 function getPosts(callback){
     "use strict";
-    pool.query(sqlGetPosts, function (err, result) {
+    db.getPool().query(sqlGetPosts, function (err, result) {
         if (err) {
             console.log(err);
             return callback(err)
@@ -64,7 +62,7 @@ function getPosts(callback){
 }
 function getPostById(post_id, callback){
     "use strict";
-    pool.query(sqlGetPostById, post_id, function (err, result) {
+    db.getPool().query(sqlGetPostById, post_id, function (err, result) {
         if(err){
             console.log(err);
             return callback(err);
@@ -84,7 +82,7 @@ function getPostByCompany(ticker, getDetails, callback) {
     "use strict";
     getDetails.sLimit = (getDetails.sLimit) ? getDetails.sLimit : 0;
     getDetails.eLimit = (getDetails.eLimit) ? getDetails.eLimit : getDetails.sLimit+30;
-    var query = pool.query(sqlGetPostsByCompany, [ticker, getDetails.sLimit,getDetails.eLimit], function (err, posts) {
+    var query = db.getPool().query(sqlGetPostsByCompany, [ticker, getDetails.sLimit,getDetails.eLimit], function (err, posts) {
         if(err){
             console.log(err);
             return callback(err);
@@ -104,7 +102,7 @@ function getPostBySegment(name, getDetails, callback) {
     "use strict";
     getDetails.sLimit = (getDetails.sLimit) ? getDetails.sLimit : 0;
     getDetails.eLimit = (getDetails.eLimit) ? getDetails.eLimit : getDetails.sLimit+30;
-    var query = pool.query(sqlGetPostsBySegment, [name, getDetails.sLimit,getDetails.eLimit], function (err, posts) {
+    var query = db.getPool().query(sqlGetPostsBySegment, [name, getDetails.sLimit,getDetails.eLimit], function (err, posts) {
         if(err){
             console.log(err);
             return callback(err);
@@ -114,7 +112,7 @@ function getPostBySegment(name, getDetails, callback) {
 }
 function updatePost(post_content, post_id, callback){
     "use strict";
-    var query = pool.query(sqlUpdatePost, [post_content,post_id], function (err, result) {
+    var query = db.getPool().query(sqlUpdatePost, [post_content,post_id], function (err, result) {
         if(err){
             return callback(err);
         }
@@ -125,7 +123,7 @@ function updatePost(post_content, post_id, callback){
 }
 function deletePost(post_id, callback){
     "use strict";
-    var query = pool.query(sqlDeletePost, post_id, function (err, result) {
+    var query = db.getPool().query(sqlDeletePost, post_id, function (err, result) {
         if(err){
 
             return callback(err);
@@ -149,7 +147,7 @@ function getPostByUser(user_id, getDetails, callback) {
     "use strict";
     getDetails.sLimit = (getDetails.sLimit) ? getDetails.sLimit : 0;
     getDetails.eLimit = (getDetails.eLimit) ? getDetails.eLimit : getDetails.sLimit+30;
-    var query = pool.query(sqlGetPostsByUser, [user_id, getDetails.sLimit,getDetails.eLimit], function (err, posts) {
+    var query = db.getPool().query(sqlGetPostsByUser, [user_id, getDetails.sLimit,getDetails.eLimit], function (err, posts) {
         if(err){
             console.log(err);
             return callback(err);

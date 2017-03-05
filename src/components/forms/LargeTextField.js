@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import TextInput from './TextInput';
+import TextInput from './inputs/TextInput';
 
 class LargeTextField extends Component{
     constructor(){

@@ -4,9 +4,7 @@ class ImageToggle extends Component{
     render(){
         let image = null;
         let data = this.props.data;
-        console.log(data)
         if(data.url){
-            console.log(data.cancelled)
             if(data.cancelled){
                 image = (
                     <button className="flex-center icon-button" type="button" onClick={data.handleImgToggle}>

@@ -1,4 +1,5 @@
-var pool = require("../utils/db").pool;
+
+var db = require("../utils/db");
 const sqlCreateComment = "INSERT INTO comment SET ?";
 const sqlGetCommentById = "SELECT comment.comment_id, comment.content, posted_datetime, post_id, " +
     "comment.user_id, username, parent_comment_id, COUNT(like_id) as like_count " +
@@ -11,7 +12,7 @@ const sqlGetCommentsByPost = "SELECT comment.comment_id, comment.content, posted
 
 function createComment(comment_data, callback){
     "use strict";
-    pool.query(sqlCreateComment, comment_data, function (err, result) {
+    db.getPool().query(sqlCreateComment, comment_data, function (err, result) {
         if (err) {
             console.log(err);
             return callback(err)
@@ -22,7 +23,7 @@ function createComment(comment_data, callback){
 }
 function getCommentById(comment_id, callback) {
     "use strict";
-    pool.query(sqlGetCommentById, comment_id, function (err, comment) {
+    db.getPool().query(sqlGetCommentById, comment_id, function (err, comment) {
         if (err) {
             console.log(err);
             return callback(err)
@@ -32,7 +33,7 @@ function getCommentById(comment_id, callback) {
 }
 function getCommentsByPost(post_id, callback){
     "use strict";
-    pool.query(sqlGetCommentsByPost, post_id, function (err, comments) {
+    db.getPool().query(sqlGetCommentsByPost, post_id, function (err, comments) {
         if(err){
             console.log(err);
             return callback(err);

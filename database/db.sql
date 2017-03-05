@@ -20,10 +20,9 @@ CREATE TABLE user(
     user_id INTEGER AUTO_INCREMENT,
     first_name VARCHAR(100),
     last_name VARCHAR(50),
-    username VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(100) UNIQUE,
-    hash VARCHAR(100),
-    salt VARCHAR(100),
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(1000),
     register_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     is_page_admin BOOLEAN DEFAULT TRUE,
     removed BOOLEAN DEFAULT FALSE,
@@ -132,6 +131,7 @@ CREATE TABLE comment_like(
     comment_id INTEGER NOT NULL
 );
 
+
 -- SET FOREIGN KEYS
 ALTER TABLE user_segment
   ADD CONSTRAINT fk1_user_segment FOREIGN KEY(user_id)
@@ -189,7 +189,8 @@ INSERT INTO segment VALUES(DEFAULT, 'Sjømat', DEFAULT, DEFAULT);
 INSERT INTO company VALUES('FAR', 'Farstad Shipping',DEFAULT, DEFAULT, 1);
 INSERT INTO company VALUES('HAVI', 'Havila Shipping ASA',DEFAULT, DEFAULT, 1);
 
-INSERT INTO user VALUES(DEFAULT, 'Ole', 'Gunnar', 'olegunnar', 'ole@gunnar.no', 'hash','salt',DEFAULT, DEFAULT, DEFAULT);
+-- Password = testeste
+INSERT INTO user VALUES(DEFAULT, 'Ole', 'Gunnar', 'olegunnar', 'ole@gunnar.no', '$2a$05$yusOM1B331.xPlHglrgNEOfgUEj37F4jeWydMaZ9Rvhtc66NGoIJ2',DEFAULT, DEFAULT, DEFAULT);
 
 INSERT INTO user_company VALUES(1, 1, DEFAULT);
 

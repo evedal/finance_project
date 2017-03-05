@@ -1,8 +1,10 @@
 var chai = require('chai');
 var assert = chai.assert;
-var User = require('../../controllers/UserController');
+var User = require('../../controllers/user');
+var UserModel = require('../../models/User');
+
 var createId;
-describe.skip('Create User', function () {
+describe('Create User', function () {
     it("should not be able to create empty", function (done) {
         User.create({}, function (result, err) {
             assert.isNotNull(err, "no error when creating empty post");
@@ -13,12 +15,13 @@ describe.skip('Create User', function () {
         var data = {
             'first_name' : 'Test',
             'last_name' : 'Test',
-            'mail' : 'test@test.no',
+            'email' : 'test2@test.no',
             'password' : 'testeste',
-            'username' : 'testeste'
+            'username' : 'testesten'
         };
         User.create(data, function (err, result) {
-            createId = result.insertId;
+            createId = result.user_id;
+            console.log(createId)
             assert.isNotNull(result, "error when creating user");
             done();
         });
@@ -27,7 +30,7 @@ describe.skip('Create User', function () {
         var data = {
             'first_name' : 'Test',
             'last_name' : 'Test',
-            'mail' : 'test@test.no',
+            'email' : 'test2@test.no',
             'password' : 'testeste',
             'username' : 'testeste'
         };
@@ -46,8 +49,25 @@ describe.skip('Create User', function () {
         };
         User.create(data, function (err, result) {
             assert.isNotNull(err, "Issue with create duplicate user");
+
             done()
         });
+    });
+    it("Should log in user", function (done) {
+        UserModel.delete(createId, function (err, result) {
+            assert.isNotNull(result, "Issue with deleting user");
+            done();
+        })
 
     });
+    it("Should delete user", function (done) {
+        console.log(createId)
+        if(createId){
+            UserModel.delete(createId, function (err, result) {
+                assert.isNotNull(result, "Issue with deleting user");
+                done();
+            })
+        }
+    })
+
 });

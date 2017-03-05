@@ -1,16 +1,27 @@
 import 'whatwg-fetch';
+import cookie from 'react-cookie';
 
+function addTokenToConfig(cfg) {
+    let token = cookie.load("access_token");
+    if(token){
+        cfg.headers.Authorization = "JWT "+token;
+    }
+    return cfg;
+}
 function getFromApi(url, callback) {
-    fetch(url, {
+
+    let config = addTokenToConfig({
         method: "GET",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         }
-    })
+    });
+    console.log(config.headers);
+    fetch(url, config)
         .then(function (response) {
             if(response.ok){
                 response.json().then((json) => {
-                    console.log(json)
+                    console.log(json);
                     console.log(json.length);
 
                     if(json.length > 0 || !(Object.keys(json).length == 0 && json.constructor === Object)) {
@@ -30,13 +41,16 @@ function getFromApi(url, callback) {
         })
 }
 function postToApi(url, payload, callback) {
-    fetch(url, {
-        method: 'POST',
+    let config = addTokenToConfig({
+        method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         },
         body: JSON.stringify(payload)
-    })
+
+    });
+    console.log(config)
+    fetch(url, config)
         .then(function (response) {
                 if(response.ok){
                     response.json().then((json) => {

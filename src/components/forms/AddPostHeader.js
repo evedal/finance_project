@@ -1,19 +1,23 @@
 import React, { Component } from 'react';
 import ImageToggle from './ImageToggle'
+import InputField from './inputs/InputField';
+
 class AddPostHeader extends Component{
     render(){
         let data = this.props.data;
-        console.log(data)
+        console.log(data);
         let imageData = {
             handleImgToggle: data.handleImgToggle,
-            url: data.url,
+            url: data.imgUrl,
             cancelled: data.cancelled
-        }
+        };
         return (
             <div className="flex-center flex-column">
-                <input onChange={data.handleUrlUpdate} name="url" type="text" className="form-control input-field" onBlur={data.handleUrlOnBlur}/>
-                <ImageToggle data = {data}/>
-                <input onChange={data.handleHeaderUpdate} name="header" type="text" className="form-control input-field" value={data.header}/>
+                <InputField onChange={data.handleUrlUpdate} onBlur={data.handleUrlOnBlur}
+                            placeholder="Link til artikkel, bloggpost e.l." name="url" value={data.url} />
+                <ImageToggle data = {imageData}/>
+                <InputField onChange={data.handleHeaderUpdate} value={data.header}
+                            placeholder="Legg inn overskrift" name="header" />
             </div>
             );
     }

@@ -2,8 +2,9 @@
  * Created by evend on 2/16/2017.
  */
 import React, { Component } from 'react';
-import TextInputPreview from './TextInputPreview';
-import InputHeader from './InputHeader';
+import TextInputPreview from '../markdown/TextInputPreview';
+import InputHeader from '../markdown/InputHeader';
+import SubmitBtn from '../buttons/SubmitBtn'
 
 class TextInput extends Component{
     constructor(){
@@ -122,9 +123,7 @@ class TextInput extends Component{
         return(
             <div>
                 {tabPresentation}
-                <div className="flex-center btn-group">
-                    <input className= "submit-btn" type="submit" value={this.props.data.submitText} />
-                </div>
+                <SubmitBtn submitText={this.props.data.submitText} />
             </div>
         );
     }
