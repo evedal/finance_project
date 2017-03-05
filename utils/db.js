@@ -1,6 +1,6 @@
 var mysql = require('mysql');
-var dbConfig = require('./dbConfig').module;
-var pool = mysql.createPool(dbConfig);
+var cfg = require('../config');
+var pool = mysql.createPool(cfg.dbConfig);
 module.exports = {
     getPool : function(){
         return pool;
