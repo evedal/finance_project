@@ -31,3 +31,5 @@ URL: https://finance-project.herokuapp.com/
 19. Add page for companies : DONE
 20. Add hot sorting for posts
 21. Add best sorting for comments
+22. Add profile page for users
+23. Add admin possibilities (user/pageadmin/siteadmim)
