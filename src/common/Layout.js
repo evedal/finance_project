@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import SiteNav from '../components/other/SiteNav'
+import SiteNav from '../components/navs/SiteNav'
 class Layout extends Component{
     constructor(){
         super();
