@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="9e604453-3d23-405c-9f0c-8ad8da50a087" name="Default" comment="Working with react components">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/navs/BasicDropdown.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/navs/MenuDropdown.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/components/navs/SettingsDropdown.js" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/components/other/SiteNav.js" afterPath="$PROJECT_DIR$/src/components/navs/SiteNav.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/build/bundle.js" afterPath="$PROJECT_DIR$/public/build/bundle.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/build/bundle.map" afterPath="$PROJECT_DIR$/public/build/bundle.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/stylesheets/style.css" afterPath="$PROJECT_DIR$/public/stylesheets/style.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/common/Layout.js" afterPath="$PROJECT_DIR$/src/common/Layout.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test/model-test/userTest.js" afterPath="$PROJECT_DIR$/test/model-test/userTest.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -28,7 +20,7 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-      <file leaf-file-name="SiteNav.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="SiteNav.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/navs/SiteNav.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="125">
@@ -84,18 +76,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Logout.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/common/UserAdmin/Logout.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="325">
-              <caret line="13" column="1" lean-forward="false" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
-              <folding>
-                <element signature="e#0#39#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="Register.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/common/UserAdmin/Register.js">
           <provider selected="true" editor-type-id="text-editor">
@@ -104,6 +84,16 @@
               <folding>
                 <element signature="e#42#83#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="userTest.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/test/model-test/userTest.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="550">
+              <caret line="32" column="28" lean-forward="false" selection-start-line="32" selection-start-column="28" selection-end-line="32" selection-end-column="28" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -178,7 +168,6 @@
       <list>
         <option value="$PROJECT_DIR$/utils/authentication/init.js" />
         <option value="$PROJECT_DIR$/controllers/UserController.js" />
-        <option value="$PROJECT_DIR$/test/model-test/userTest.js" />
         <option value="$PROJECT_DIR$/database/db.sql" />
         <option value="$PROJECT_DIR$/routes/api/post.js" />
         <option value="$PROJECT_DIR$/models/Post.js" />
@@ -227,6 +216,7 @@
         <option value="$PROJECT_DIR$/src/components/navs/SettingsDropdown.js" />
         <option value="$PROJECT_DIR$/src/components/navs/BasicDropdown.js" />
         <option value="$PROJECT_DIR$/src/components/navs/SiteNav.js" />
+        <option value="$PROJECT_DIR$/test/model-test/userTest.js" />
       </list>
     </option>
   </component>
@@ -718,7 +708,7 @@
       <workItem from="1487361683921" duration="4531000" />
       <workItem from="1487404194134" duration="190872000" />
       <workItem from="1488482116418" duration="13471000" />
-      <workItem from="1488563463685" duration="52233000" />
+      <workItem from="1488563463685" duration="52446000" />
     </task>
     <task id="LOCAL-00001" summary="FInished config of db and created new rest routes and queries">
       <created>1487084257593</created>
@@ -763,7 +753,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="376478000" />
+    <option name="totallyTimeSpent" value="376691000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-11" y="-11" width="1942" height="1042" extended-state="6" />
@@ -1060,14 +1050,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/test/model-test/userTest.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="450">
-          <caret line="18" column="34" lean-forward="false" selection-start-line="18" selection-start-column="26" selection-end-line="18" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/models/User.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
@@ -1282,6 +1264,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="125">
           <caret line="5" column="50" lean-forward="false" selection-start-line="5" selection-start-column="50" selection-end-line="5" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/test/model-test/userTest.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="550">
+          <caret line="32" column="28" lean-forward="false" selection-start-line="32" selection-start-column="28" selection-end-line="32" selection-end-column="28" />
           <folding />
         </state>
       </provider>

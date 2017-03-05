@@ -30,7 +30,7 @@ describe('Create User', function () {
         var data = {
             'first_name' : 'Test',
             'last_name' : 'Test',
-            'email' : 'test@test.no',
+            'email' : 'test2@test.no',
             'password' : 'testeste',
             'username' : 'testeste'
         };
