@@ -28,4 +28,6 @@ URL: https://finance-project.herokuapp.com/
 16. Add suggested articles
 17. Add dropdown for menu and settings : DONE
 18. Add page for segments
-19. Add page for companies
+19. Add page for companies : DONE
+20. Add hot sorting for posts
+21. Add best sorting for comments
