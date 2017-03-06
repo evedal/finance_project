@@ -28,12 +28,13 @@ class Home extends Component{
     }
     render(){
         let data = {
-            title: "Din forside",
-            titleLink: "#"
-        }
+            links: [{
+                title: "Din forside",
+            }]
+        };
         return(
                 <div>
-                    <Header data = {data} />
+                    <Header {...data} />
                     <HomePosts posts={this.state.posts} handleLike={this.handleLike}/>
                 </div>
         )

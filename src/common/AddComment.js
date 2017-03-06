@@ -100,10 +100,14 @@ class AddComment extends Component{
             let headerData = {
                 icon: "",
                 iconLink: "",
-                title: this.state.post.header,
-                titleLink: postLink
+                links: [
+                    {
+                    title: this.state.post.header,
+                    url: postLink
+                    }
+                ]
             };
-            headerPost = <Header data = {headerData}/>
+            headerPost = <Header {...headerData}/>
         }
 
         let textInputData = {

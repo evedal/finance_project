@@ -105,7 +105,7 @@ class TextInput extends Component{
         if(!this.props.data.writeTab){
             tabPresentation = (
                 <div>
-                    <InputHeader data = {headerData} />
+                    <InputHeader {...headerData} />
                     <TextInputPreview text={this.props.data.value} />
                 </div>
             )
@@ -113,7 +113,7 @@ class TextInput extends Component{
         else{
             tabPresentation = (
                 <div>
-                    <InputHeader data = {headerData} />
+                    <InputHeader {...headerData} />
                     <textarea id="textarea" className="form-control comment-textarea" placeholder={this.props.data.placeholder} value={this.props.data.value} onChange={this.props.data.handleChange} />
                 </div>
             )

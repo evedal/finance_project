@@ -59,10 +59,16 @@ class CompanyLayout extends Component{
             let headerData = {
                 icon: "add",
                 iconLink: segmentPath+"/company/"+params.ticker+"/post",
-                title: params.name,
-                titleLink: segmentPath
+                links: [
+                    {
+                    title: params.name,
+                    url: segmentPath
+                    }, {
+                    title: params.ticker,
+                    }
+                ]
             };
-            header = <Header data = {headerData}/>
+            header = <Header {...headerData}/>
         }
         return(
             <div className="container">

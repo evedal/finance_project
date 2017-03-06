@@ -2,6 +2,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS company;
+DROP TABLE IF EXISTS market;
 DROP TABLE IF EXISTS post;
 DROP TABLE IF EXISTS segment;
 DROP TABLE IF EXISTS user_segment;
@@ -32,12 +33,21 @@ CREATE TABLE user(
 ALTER TABLE user ADD UNIQUE INDEX (username);
 ALTER TABLE user ADD UNIQUE INDEX (email);
 
+-- MARKETS (ONLY FOR DROPDOWN WHEN CREATING SEGMENTS
+CREATE TABLE market(
+    market_id INTEGER AUTO_INCREMENT,
+    name VARCHAR(40) NOT NULL,
+    CONSTRAINT pk_market PRIMARY KEY(market_id)
+);
+
 -- SEGMENTS FOR COMPANY
 CREATE TABLE segment(
     segment_id INTEGER  AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL UNIQUE,
+    description VARCHAR (1000) NOT NULL,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     removed BOOLEAN DEFAULT FALSE,
+    market_id INTEGER NOT NULL,
     CONSTRAINT pk_segment PRIMARY KEY(segment_id)
 );
 
@@ -52,6 +62,7 @@ CREATE TABLE user_segment(
 CREATE TABLE company(
     ticker VARCHAR(10) NOT NULL,
     name VARCHAR(100) NOT NULL,
+    description VARCHAR (1000) NOT NULL,
     created_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     removed BOOLEAN DEFAULT FALSE,
     segment_id INTEGER NOT NULL,
@@ -139,6 +150,10 @@ REFERENCES user(user_id),
   ADD CONSTRAINT fk2_user_segment FOREIGN KEY(segment_id)
 REFERENCES segment(segment_id);
 
+ALTER TABLE segment
+  ADD CONSTRAINT fk_market FOREIGN KEY(market_id)
+REFERENCES market(market_id);
+
 
 
 ALTER TABLE user_company
@@ -180,14 +195,20 @@ REFERENCES comment(comment_id) ON DELETE CASCADE;
 
 -- Create test data
 
+
+-- MARKETS
+INSERT INTO market VALUES(DEFAULT, 'Oslo Børs');
+
 -- SEGMENTS
-INSERT INTO segment VALUES(DEFAULT, 'Shipping', DEFAULT, DEFAULT);
-INSERT INTO segment VALUES(DEFAULT, 'Energi', DEFAULT, DEFAULT);
-INSERT INTO segment VALUES(DEFAULT, 'Sjømat', DEFAULT, DEFAULT);
+INSERT INTO segment VALUES(DEFAULT, 'Shipping', 'Shipping er en viktig del av den norske industrien.',DEFAULT, DEFAULT, 1);
+INSERT INTO segment VALUES(DEFAULT, 'Energi', 'Norge er store innen energi, og dette er derfor stort på den norske børsen.', DEFAULT, DEFAULT, 1);
+INSERT INTO segment VALUES(DEFAULT, 'Sjømat', 'Oslo Børs har mange sjømatselskaper, dette er en kyst-nasjon.',DEFAULT, DEFAULT, 1);
 
 -- COMPANIES
-INSERT INTO company VALUES('FAR', 'Farstad Shipping',DEFAULT, DEFAULT, 1);
-INSERT INTO company VALUES('HAVI', 'Havila Shipping ASA',DEFAULT, DEFAULT, 1);
+INSERT INTO company VALUES('FAR', 'Farstad Shipping', 'Farstad Shipping har i dag en flåte på 56 skip (27 AHTS, 22 PSV og 7 SUBSEA). Selskapets aktiviteter drives fra Ålesund, Melbourne, Perth, Singapore, Macaé og Rio de Janeiro. Samlet antall ansatte på land og sjø er 1.500. Selskapets strategi er å være en langsiktig og betydelig leverandør av store, moderne offshore servicefartøyer til oljeindustrien internasjonalt.', DEFAULT, DEFAULT, 1);
+INSERT INTO company VALUES('HAVI', 'Havila Shipping ASA','Havila Shipping ASA er en ledende aktør for levering av offshore service fartøy tjenester til oljeselskap. Selskapets flåte består av 26 PSV/ AHTS/SubSea fartøy.
+
+',DEFAULT, DEFAULT, 1);
 
 -- Password = testeste
 INSERT INTO user VALUES(DEFAULT, 'Ole', 'Gunnar', 'olegunnar', 'ole@gunnar.no', '$2a$05$yusOM1B331.xPlHglrgNEOfgUEj37F4jeWydMaZ9Rvhtc66NGoIJ2',DEFAULT, DEFAULT, DEFAULT);

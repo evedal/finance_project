@@ -411,3 +411,6 @@ form img{
     font-size: 1rem;
     width: 100%;
 }
+.flex-start{
+    justify-content: flex-start;
+}

@@ -2102,32 +2102,81 @@ var Header = function (_Component) {
     }
 
     _createClass(Header, [{
+        key: 'createBreadcrumbs',
+        value: function createBreadcrumbs(links) {
+            if (!links) return null;
+            //Creates links for breadcrumbs in header
+            return links.map(function (link, i) {
+                // if last item or just one item, don't add /
+                var slash = null;
+                var out = null;
+                console.log(link);
+                console.log(links.length);
+                //If there are more than two links in the list
+                var aboveTwo = links.length > 2;
+                //If not the last link, add forward slash
+                if (i !== links.length - 1) {
+
+                    //If there are more than two links, add dots in between slashes
+                    if (i === 1 && aboveTwo) slash = _react2.default.createElement(
+                        'span',
+                        null,
+                        ' /... / '
+                    );
+                    //Else if there are less than two links, just add a slash
+                    else if (!aboveTwo) {
+                            slash = _react2.default.createElement(
+                                'span',
+                                null,
+                                ' / '
+                            );
+                        }
+                }
+                // If there are two or less links, or the first or last link of many, add the link
+                var lastLink = i === links.length - 1;
+                if (!aboveTwo || i === 0 || lastLink) {
+
+                    //If its the last link, this is the current page, and should not be clickable
+                    if (lastLink) out = _react2.default.createElement(
+                        'h2',
+                        null,
+                        link.title
+                    );else out = _react2.default.createElement(
+                        _reactRouter.Link,
+                        { to: link.url },
+                        _react2.default.createElement(
+                            'h2',
+                            null,
+                            link.title
+                        )
+                    );
+                }
+                return [out, slash];
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
             var icon = void 0;
-            if (this.props.data.icon) {
+            if (this.props.icon) {
                 icon = _react2.default.createElement(
                     _reactRouter.Link,
-                    { to: this.props.data.iconLink },
+                    { to: this.props.iconLink },
                     _react2.default.createElement(
                         'i',
                         { className: 'material-icons head-icon cursor-point' },
-                        this.props.data.icon
+                        this.props.icon
                     )
                 );
             }
-            console.log(this.props.data);
+            var links = this.createBreadcrumbs(this.props.links);
             return _react2.default.createElement(
                 'div',
                 { className: 'second-header flex-center' },
                 _react2.default.createElement(
-                    _reactRouter.Link,
-                    { to: this.props.data.titleLink },
-                    _react2.default.createElement(
-                        'h2',
-                        null,
-                        this.props.data.title
-                    )
+                    'div',
+                    { className: 'flex-start flex-center' },
+                    links
                 ),
                 icon
             );
@@ -16593,10 +16642,12 @@ var AddComment = function (_Component) {
                 var headerData = {
                     icon: "",
                     iconLink: "",
-                    title: this.state.post.header,
-                    titleLink: postLink
+                    links: [{
+                        title: this.state.post.header,
+                        url: postLink
+                    }]
                 };
-                headerPost = _react2.default.createElement(_Header2.default, { data: headerData });
+                headerPost = _react2.default.createElement(_Header2.default, headerData);
             }
 
             var textInputData = {
@@ -16817,10 +16868,12 @@ var AddPost = function (_Component) {
                 var headerData = {
                     icon: "",
                     iconLink: "",
-                    title: this.state.company.name,
-                    titleLink: titleLink
+                    links: [{
+                        title: this.state.company.name,
+                        url: titleLink
+                    }]
                 };
-                header = _react2.default.createElement(_Header2.default, { data: headerData });
+                header = _react2.default.createElement(_Header2.default, headerData);
             }
             var addPostHeaderData = {
                 handleImgToggle: this.handleImgToggle,
@@ -17015,10 +17068,14 @@ var CompanyLayout = function (_Component) {
                 var headerData = {
                     icon: "add",
                     iconLink: segmentPath + "/company/" + params.ticker + "/post",
-                    title: params.name,
-                    titleLink: segmentPath
+                    links: [{
+                        title: params.name,
+                        url: segmentPath
+                    }, {
+                        title: params.ticker
+                    }]
                 };
-                header = _react2.default.createElement(_Header2.default, { data: headerData });
+                header = _react2.default.createElement(_Header2.default, headerData);
             }
             return _react2.default.createElement(
                 'div',
@@ -17108,13 +17165,14 @@ var Home = function (_Component) {
         key: 'render',
         value: function render() {
             var data = {
-                title: "Din forside",
-                titleLink: "#"
+                links: [{
+                    title: "Din forside"
+                }]
             };
             return _react2.default.createElement(
                 'div',
                 null,
-                _react2.default.createElement(_Header2.default, { data: data }),
+                _react2.default.createElement(_Header2.default, data),
                 _react2.default.createElement(_HomePosts2.default, { posts: this.state.posts, handleLike: this.handleLike })
             );
         }
@@ -17300,10 +17358,17 @@ var PostLayout = function (_Component) {
                 var headerData = {
                     icon: "mode_edit",
                     iconLink: basePath + "/post/" + params.post_id + "/comment",
-                    title: params.ticker,
-                    titleLink: basePath
+                    links: [{
+                        title: params.name,
+                        url: "/segment/" + params.name
+                    }, {
+                        title: params.ticker,
+                        url: basePath
+                    }, {
+                        title: post.header
+                    }]
                 };
-                header = _react2.default.createElement(_Header2.default, { data: headerData });
+                header = _react2.default.createElement(_Header2.default, headerData);
             }
             return _react2.default.createElement(
                 'div',
@@ -17427,10 +17492,12 @@ var SegmentLayout = function (_Component) {
             }
             if (this.state.segment) {
                 var headerData = {
-                    title: this.state.segment.name,
-                    titleLink: pathname
+                    links: [{
+                        title: this.state.segment.name,
+                        url: pathname
+                    }]
                 };
-                header = _react2.default.createElement(_Header2.default, { data: headerData });
+                header = _react2.default.createElement(_Header2.default, headerData);
             }
             return _react2.default.createElement(
                 'div',
@@ -18348,14 +18415,14 @@ var TextInput = function (_Component) {
                 tabPresentation = _react2.default.createElement(
                     'div',
                     null,
-                    _react2.default.createElement(_InputHeader2.default, { data: headerData }),
+                    _react2.default.createElement(_InputHeader2.default, headerData),
                     _react2.default.createElement(_TextInputPreview2.default, { text: this.props.data.value })
                 );
             } else {
                 tabPresentation = _react2.default.createElement(
                     'div',
                     null,
-                    _react2.default.createElement(_InputHeader2.default, { data: headerData }),
+                    _react2.default.createElement(_InputHeader2.default, headerData),
                     _react2.default.createElement('textarea', { id: 'textarea', className: 'form-control comment-textarea', placeholder: this.props.data.placeholder, value: this.props.data.value, onChange: this.props.data.handleChange })
                 );
             }
@@ -18416,19 +18483,19 @@ var InputHeader = function (_Component) {
         key: 'render',
         value: function render() {
             var navigation = void 0;
-            if (this.props.data.writeTab) {
+            if (this.props.writeTab) {
                 navigation = _react2.default.createElement(
                     'nav',
                     null,
                     _react2.default.createElement(
                         'button',
-                        { id: 'write', type: 'button', className: 'active icon-button', onClick: this.props.data.handleTabChange
+                        { id: 'write', type: 'button', className: 'active icon-button', onClick: this.props.handleTabChange
                         },
                         'Skriv'
                     ),
                     _react2.default.createElement(
                         'button',
-                        { id: 'prev', type: 'button', className: 'icon-button', onClick: this.props.data.handleTabChange },
+                        { id: 'prev', type: 'button', className: 'icon-button', onClick: this.props.handleTabChange },
                         'Forh\xE5ndsvis'
                     )
                 );
@@ -18438,13 +18505,13 @@ var InputHeader = function (_Component) {
                     null,
                     _react2.default.createElement(
                         'button',
-                        { id: 'write', type: 'button', className: 'icon-button', onClick: this.props.data.handleTabChange
+                        { id: 'write', type: 'button', className: 'icon-button', onClick: this.props.handleTabChange
                         },
                         'Skriv'
                     ),
                     _react2.default.createElement(
                         'button',
-                        { className: 'active icon-button', id: 'prev', type: 'button', onClick: this.props.data.handleTabChange },
+                        { className: 'active icon-button', id: 'prev', type: 'button', onClick: this.props.handleTabChange },
                         'Forh\xE5ndsvis'
                     )
                 );
@@ -18459,10 +18526,10 @@ var InputHeader = function (_Component) {
                     _react2.default.createElement(
                         'div',
                         null,
-                        _react2.default.createElement(_InputHeaderPopup2.default, { popup: this.props.data.popup, isOpen: this.props.data.popup, handlePopup: this.props.data.handlePopup, handleHeaders: this.props.data.handleHeaders }),
+                        _react2.default.createElement(_InputHeaderPopup2.default, { popup: this.props.popup, isOpen: this.props.popup, handlePopup: this.props.handlePopup, handleHeaders: this.props.handleHeaders }),
                         _react2.default.createElement(
                             'button',
-                            { type: 'button', className: 'icon-button', onClick: this.props.data.handleBold },
+                            { type: 'button', className: 'icon-button', onClick: this.props.handleBold },
                             _react2.default.createElement(
                                 'i',
                                 { className: 'material-icons' },
@@ -18471,7 +18538,7 @@ var InputHeader = function (_Component) {
                         ),
                         _react2.default.createElement(
                             'button',
-                            { type: 'button', className: 'icon-button', onClick: this.props.data.handleItalic },
+                            { type: 'button', className: 'icon-button', onClick: this.props.handleItalic },
                             _react2.default.createElement(
                                 'i',
                                 { className: 'material-icons' },
@@ -18484,7 +18551,7 @@ var InputHeader = function (_Component) {
                         null,
                         _react2.default.createElement(
                             'button',
-                            { type: 'button', className: 'icon-button', onClick: this.props.data.handleLink },
+                            { type: 'button', className: 'icon-button', onClick: this.props.handleLink },
                             _react2.default.createElement(
                                 'i',
                                 { className: 'material-icons' },
@@ -18497,7 +18564,7 @@ var InputHeader = function (_Component) {
                         null,
                         _react2.default.createElement(
                             'button',
-                            { type: 'button', className: 'icon-button', onClick: this.props.data.handleBulleted },
+                            { type: 'button', className: 'icon-button', onClick: this.props.handleBulleted },
                             _react2.default.createElement(
                                 'i',
                                 { className: 'material-icons' },
@@ -18506,7 +18573,7 @@ var InputHeader = function (_Component) {
                         ),
                         _react2.default.createElement(
                             'button',
-                            { type: 'button', className: 'icon-button', onClick: this.props.data.handleNumbered },
+                            { type: 'button', className: 'icon-button', onClick: this.props.handleNumbered },
                             _react2.default.createElement(
                                 'i',
                                 { className: 'material-icons' },
@@ -18829,7 +18896,7 @@ var MenuDropdown = function (_Component) {
     _createClass(MenuDropdown, [{
         key: 'render',
         value: function render() {
-            var links = [{ url: "/segments", name: "Segmenter" }, { url: "/companies", name: "Selskaper" }];
+            var links = [{ url: "/", name: "Hjem" }, { url: "/segment", name: "Segmenter" }, { url: "/company", name: "Selskaper" }];
             return _react2.default.createElement(_BasicDropdown2.default, { links: links, toggleDropdown: this.props.toggleDropdown });
         }
     }]);
@@ -19349,6 +19416,18 @@ var _Register = __webpack_require__(144);
 
 var _Register2 = _interopRequireDefault(_Register);
 
+var _Companies = __webpack_require__(311);
+
+var _Companies2 = _interopRequireDefault(_Companies);
+
+var _Segments = __webpack_require__(313);
+
+var _Segments2 = _interopRequireDefault(_Segments);
+
+var _AddCompany = __webpack_require__(315);
+
+var _AddCompany2 = _interopRequireDefault(_AddCompany);
+
 var _CompanyLayout = __webpack_require__(137);
 
 var _CompanyLayout2 = _interopRequireDefault(_CompanyLayout);
@@ -19366,7 +19445,10 @@ var routes = _react2.default.createElement(
     _react2.default.createElement(_reactRouter.Route, { path: 'login', component: _Login2.default, onEnter: _authUtils2.default.requireNotAuth }),
     _react2.default.createElement(_reactRouter.Route, { path: 'logout', component: _Logout2.default, onEnter: _authUtils2.default.requireAuth }),
     _react2.default.createElement(_reactRouter.Route, { path: 'register', component: _Register2.default, onEnter: _authUtils2.default.requireNotAuth }),
+    _react2.default.createElement(_reactRouter.Route, { path: 'company', components: _Companies2.default }),
+    _react2.default.createElement(_reactRouter.Route, { path: 'company/create', components: _AddCompany2.default, onEnter: _authUtils2.default.requireAuth }),
     _react2.default.createElement(_reactRouter.Route, { path: 'user/:user_id', component: _PostLayout2.default }),
+    _react2.default.createElement(_reactRouter.Route, { path: 'segment', components: _Segments2.default }),
     _react2.default.createElement(_reactRouter.Route, { path: 'segment/:name', component: _SegmentLayout2.default }),
     _react2.default.createElement(_reactRouter.Route, { path: 'segment/:name/company/:ticker', component: _CompanyLayout2.default }),
     _react2.default.createElement(_reactRouter.Route, { path: 'segment/:name/company/:ticker/post', component: _AddPost2.default, onEnter: _authUtils2.default.requireAuth }),
@@ -40095,6 +40177,912 @@ var SettingsDropdown = function (_Component) {
 }(_react.Component);
 
 exports.default = SettingsDropdown;
+
+/***/ }),
+/* 311 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _CompanyPosts = __webpack_require__(156);
+
+var _CompanyPosts2 = _interopRequireDefault(_CompanyPosts);
+
+var _Header = __webpack_require__(18);
+
+var _Header2 = _interopRequireDefault(_Header);
+
+var _Dropdown = __webpack_require__(90);
+
+var _Dropdown2 = _interopRequireDefault(_Dropdown);
+
+var _APImanager = __webpack_require__(13);
+
+var _Company = __webpack_require__(312);
+
+var _Company2 = _interopRequireDefault(_Company);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Companies = function (_Component) {
+    _inherits(Companies, _Component);
+
+    function Companies() {
+        _classCallCheck(this, Companies);
+
+        var _this = _possibleConstructorReturn(this, (Companies.__proto__ || Object.getPrototypeOf(Companies)).call(this));
+
+        _this.state = {
+            companies: []
+        };
+        return _this;
+    }
+    /*
+     Gets data for company with segment name.
+     */
+
+
+    _createClass(Companies, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            (0, _APImanager.get)('/api/company/', function (err, companies) {
+                console.log(companies);
+                if (err) {
+                    console.log(err.message);
+                    return;
+                }
+                this.setState({ companies: companies });
+            }.bind(this));
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var companies = this.state.companies.map(function (company) {
+                var desc = void 0;
+                if (company.description.length > 150) {
+                    desc = company.description.slice(0, 150) + "...";
+                } else {
+                    desc = company.description;
+                }
+                var data = {
+                    company: {
+                        ticker: company.ticker,
+                        name: company.name,
+                        url: "/segment/" + company.segment_name + "/company/" + company.ticker,
+                        description: desc
+                    },
+                    segment: {
+                        name: company.segment_name
+                    }
+                };
+                return _react2.default.createElement(_Company2.default, data);
+            });
+            var headerData = {
+                icon: "add",
+                iconLink: "/company/create",
+                links: [{
+                    title: "Selskaper",
+                    url: "#"
+                }]
+            };
+            return _react2.default.createElement(
+                'div',
+                { className: 'container' },
+                _react2.default.createElement(_Header2.default, headerData),
+                companies
+            );
+        }
+    }]);
+
+    return Companies;
+}(_react.Component);
+
+exports.default = Companies;
+
+/***/ }),
+/* 312 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = __webpack_require__(8);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Company = function (_Component) {
+    _inherits(Company, _Component);
+
+    function Company() {
+        _classCallCheck(this, Company);
+
+        return _possibleConstructorReturn(this, (Company.__proto__ || Object.getPrototypeOf(Company)).apply(this, arguments));
+    }
+
+    _createClass(Company, [{
+        key: 'render',
+        value: function render() {
+            console.log(this.props);
+            var company = this.props.company;
+            var segment = this.props.segment;
+            var header = void 0;
+            var content = void 0;
+            if (segment && segment.name) {
+                header = _react2.default.createElement(
+                    _reactRouter.Link,
+                    { to: "/segment/" + segment.name },
+                    _react2.default.createElement(
+                        'div',
+                        { className: 'post-head' },
+                        _react2.default.createElement(
+                            'h3',
+                            null,
+                            segment.name
+                        )
+                    )
+                );
+            }
+            if (company && company.ticker) {
+                content = _react2.default.createElement(
+                    _reactRouter.Link,
+                    { to: company.url },
+                    _react2.default.createElement(
+                        'h5',
+                        null,
+                        company.ticker
+                    ),
+                    _react2.default.createElement(
+                        'p',
+                        null,
+                        company.description
+                    )
+                );
+            }
+            return _react2.default.createElement(
+                'div',
+                { className: 'post' },
+                header,
+                _react2.default.createElement(
+                    'div',
+                    { className: 'post-content' },
+                    content
+                )
+            );
+        }
+    }]);
+
+    return Company;
+}(_react.Component);
+
+exports.default = Company;
+
+/***/ }),
+/* 313 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _CompanyPosts = __webpack_require__(156);
+
+var _CompanyPosts2 = _interopRequireDefault(_CompanyPosts);
+
+var _Header = __webpack_require__(18);
+
+var _Header2 = _interopRequireDefault(_Header);
+
+var _Dropdown = __webpack_require__(90);
+
+var _Dropdown2 = _interopRequireDefault(_Dropdown);
+
+var _APImanager = __webpack_require__(13);
+
+var _Segment = __webpack_require__(314);
+
+var _Segment2 = _interopRequireDefault(_Segment);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Segments = function (_Component) {
+    _inherits(Segments, _Component);
+
+    function Segments() {
+        _classCallCheck(this, Segments);
+
+        var _this = _possibleConstructorReturn(this, (Segments.__proto__ || Object.getPrototypeOf(Segments)).call(this));
+
+        _this.state = {
+            segments: []
+        };
+        return _this;
+    }
+    /*
+        Gets all segments
+     */
+
+
+    _createClass(Segments, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            (0, _APImanager.get)('/api/segment/', function (err, segments) {
+                console.log(segments);
+                if (err) {
+                    console.log(err.message);
+                    return;
+                }
+                this.setState({ segments: segments });
+            }.bind(this));
+        }
+    }, {
+        key: 'formatSegments',
+        value: function formatSegments(segments) {
+            return segments.map(function (segment, i) {
+                var data = {
+                    segment: {
+                        name: segment.name,
+                        desc: segment.description,
+                        market_name: segment.market_name,
+                        url: "/segment/" + segment.name
+
+                    }
+                };
+                return _react2.default.createElement(_Segment2.default, data);
+            });
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var segments = this.formatSegments(this.state.segments);
+            var headerData = {
+                icon: "add",
+                iconLink: "/segment/create",
+                links: [{
+                    title: "Segmenter",
+                    url: "#"
+                }]
+            };
+
+            return _react2.default.createElement(
+                'div',
+                { className: 'container' },
+                _react2.default.createElement(_Header2.default, headerData),
+                segments
+            );
+        }
+    }]);
+
+    return Segments;
+}(_react.Component);
+
+exports.default = Segments;
+
+/***/ }),
+/* 314 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRouter = __webpack_require__(8);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Segment = function (_Component) {
+    _inherits(Segment, _Component);
+
+    function Segment() {
+        _classCallCheck(this, Segment);
+
+        return _possibleConstructorReturn(this, (Segment.__proto__ || Object.getPrototypeOf(Segment)).apply(this, arguments));
+    }
+
+    _createClass(Segment, [{
+        key: 'render',
+        value: function render() {
+            var segment = this.props.segment;
+            var header = void 0;
+            var content = void 0;
+            if (segment && segment.name) {
+                header = _react2.default.createElement(
+                    'div',
+                    { className: 'post-head' },
+                    _react2.default.createElement(
+                        'h3',
+                        null,
+                        segment.market_name
+                    )
+                );
+                content = _react2.default.createElement(
+                    _reactRouter.Link,
+                    { to: segment.url },
+                    _react2.default.createElement(
+                        'h5',
+                        null,
+                        segment.name
+                    ),
+                    _react2.default.createElement(
+                        'p',
+                        null,
+                        segment.desc
+                    )
+                );
+            }
+            console.log(this.props.segment);
+            return _react2.default.createElement(
+                'div',
+                { className: 'post' },
+                header,
+                _react2.default.createElement(
+                    'div',
+                    { className: 'post-content' },
+                    content
+                )
+            );
+        }
+    }]);
+
+    return Segment;
+}(_react.Component);
+
+exports.default = Segment;
+
+/***/ }),
+/* 315 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Comment = __webpack_require__(86);
+
+var _Comment2 = _interopRequireDefault(_Comment);
+
+var _Header = __webpack_require__(18);
+
+var _Header2 = _interopRequireDefault(_Header);
+
+var _LargeTextField = __webpack_require__(89);
+
+var _LargeTextField2 = _interopRequireDefault(_LargeTextField);
+
+var _reactDropdown = __webpack_require__(317);
+
+var _reactDropdown2 = _interopRequireDefault(_reactDropdown);
+
+var _APImanager = __webpack_require__(13);
+
+var _User = __webpack_require__(16);
+
+var _User2 = _interopRequireDefault(_User);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var AddCompany = function (_Component) {
+    _inherits(AddCompany, _Component);
+
+    function AddCompany() {
+        _classCallCheck(this, AddCompany);
+
+        var _this = _possibleConstructorReturn(this, (AddCompany.__proto__ || Object.getPrototypeOf(AddCompany)).call(this));
+
+        _this.state = {
+            company: {
+                ticker: "",
+                name: "",
+                description: "",
+                segment_id: ""
+            },
+            dropdown: {
+                segments: [],
+                selected: {
+                    value: null,
+                    label: null
+                },
+                isDisabled: false
+            },
+            user: _User2.default.getUser()
+        };
+
+        _this.handleSubmit = _this.handleSubmit.bind(_this);
+        _this.handleDesc = _this.handleDesc.bind(_this);
+        _this.handleName = _this.handleName.bind(_this);
+        _this.handleSegment = _this.handleSegment.bind(_this);
+        _this.handleTicker = _this.handleTicker.bind(_this);
+
+        return _this;
+    }
+    //Possible to add segment as prop, then the dropdown will be disabled and that segment will be default value
+    //Default is stored as the first element in segments state
+
+
+    _createClass(AddCompany, [{
+        key: 'componentDidMount',
+        value: function componentDidMount() {
+            var _this2 = this;
+
+            if (this.props.segment && this.props.segment.segment_id) {
+                this.setState({ segments: [this.props.segment], dropdownDisabled: true });
+            } else {
+                (0, _APImanager.get)("/api/segment", function (err, segments) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    _this2.setState({ segments: segments });
+                });
+            }
+
+            _User2.default.on("change", function (user) {
+                _this2.setState({ user: user });
+            });
+        }
+    }, {
+        key: 'handleSegment',
+        value: function handleSegment(option) {
+            var dropdown = this.state.dropdown;
+            var company = this.state.company;
+            dropdown.selected = option;
+            company.segment_id = option.value;
+            this.setState({ company: company, dropdown: dropdown });
+        }
+    }, {
+        key: 'handleTicker',
+        value: function handleTicker(e) {
+            e.preventDefault();
+            var company = this.state.company;
+            company.ticker = e.target.value;
+            this.setState({ company: company });
+        }
+    }, {
+        key: 'handleName',
+        value: function handleName(e) {
+            e.preventDefault();
+            var company = this.state.company;
+            company.name = e.target.value;
+            this.setState({ company: company });
+        }
+    }, {
+        key: 'handleDesc',
+        value: function handleDesc(e) {
+            e.preventDefault();
+            var company = this.state.company;
+            company.description = e.target.value;
+            this.setState({ company: company });
+        }
+    }, {
+        key: 'handleSubmit',
+        value: function handleSubmit(e) {
+            var _this3 = this;
+
+            e.preventDefault();
+            var state = this.state;
+            var params = this.props.params;
+            if (state.value != "") {
+                var data = {
+                    content: state.value,
+                    post_id: state.post.post_id,
+                    user_id: state.user.user_id,
+                    parent_comment_id: state.comment.comment_id
+                };
+                console.log(this.state.user);
+                (0, _APImanager.post)("/api/comment", data, function (err, post) {
+                    if (err) {
+                        alert(err.message);
+                        return;
+                    }
+                    console.log(post);
+                    _this3.props.router.push(redirectPath);
+                });
+            } else {
+                alert("Du må skrive inn noe tekst");
+            }
+        }
+    }, {
+        key: 'updateValue',
+        value: function updateValue(newValue, callback) {
+            this.setState({ value: newValue }, callback);
+        }
+    }, {
+        key: 'dropdownOptions',
+        value: function dropdownOptions(segments) {
+            var dropdown = { options: [], defaultOption: null };
+            if (!segments || segments.length < 1) {
+                return dropdown;
+            }
+            dropdown.options = segments.map(function (segment) {
+                return { value: segment.segment_id, label: segment.name };
+            });
+            dropdown.defaultOption = dropdown.options[0];
+            return dropdown;
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            var comment = void 0;
+            var headerPost = void 0;
+            var params = this.props.params;
+
+            var dropdown = this.dropdownOptions(this.state.segments);
+            var options = dropdown.options;
+            var defaultOption = dropdown.defaultOption;
+
+            return _react2.default.createElement(
+                'div',
+                { className: 'container' },
+                _react2.default.createElement(
+                    'form',
+                    { onSubmit: this.handleSubmit },
+                    _react2.default.createElement(_reactDropdown2.default, { options: options, onChange: this.handleSegment,
+                        value: this.state.dropdown.selected, placeholder: 'Velg ett segment' })
+                )
+            );
+        }
+    }]);
+
+    return AddCompany;
+}(_react.Component);
+
+exports.default = AddCompany;
+
+/***/ }),
+/* 316 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+  Copyright (c) 2016 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/
+/* global define */
+
+(function () {
+	'use strict';
+
+	var hasOwn = {}.hasOwnProperty;
+
+	function classNames () {
+		var classes = [];
+
+		for (var i = 0; i < arguments.length; i++) {
+			var arg = arguments[i];
+			if (!arg) continue;
+
+			var argType = typeof arg;
+
+			if (argType === 'string' || argType === 'number') {
+				classes.push(arg);
+			} else if (Array.isArray(arg)) {
+				classes.push(classNames.apply(null, arg));
+			} else if (argType === 'object') {
+				for (var key in arg) {
+					if (hasOwn.call(arg, key) && arg[key]) {
+						classes.push(key);
+					}
+				}
+			}
+		}
+
+		return classes.join(' ');
+	}
+
+	if (typeof module !== 'undefined' && module.exports) {
+		module.exports = classNames;
+	} else if (true) {
+		// register as 'classnames', consistent with npm package name
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+			return classNames;
+		}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	} else {
+		window.classNames = classNames;
+	}
+}());
+
+
+/***/ }),
+/* 317 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(1);
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactDom = __webpack_require__(205);
+
+var _reactDom2 = _interopRequireDefault(_reactDom);
+
+var _classnames = __webpack_require__(316);
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var DEFAULT_PLACEHOLDER_STRING = 'Select...';
+
+var Dropdown = function (_Component) {
+  _inherits(Dropdown, _Component);
+
+  function Dropdown(props) {
+    _classCallCheck(this, Dropdown);
+
+    var _this = _possibleConstructorReturn(this, (Dropdown.__proto__ || Object.getPrototypeOf(Dropdown)).call(this, props));
+
+    _this.state = {
+      selected: props.value || {
+        label: props.placeholder || DEFAULT_PLACEHOLDER_STRING,
+        value: ''
+      },
+      isOpen: false
+    };
+    _this.mounted = true;
+    _this.handleDocumentClick = _this.handleDocumentClick.bind(_this);
+    _this.fireChangeEvent = _this.fireChangeEvent.bind(_this);
+    return _this;
+  }
+
+  _createClass(Dropdown, [{
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(newProps) {
+      if (newProps.value && newProps.value !== this.state.selected) {
+        this.setState({ selected: newProps.value });
+      } else if (!newProps.value && newProps.placeholder) {
+        this.setState({ selected: { label: newProps.placeholder, value: '' } });
+      } else {
+        this.setState({ selected: { label: DEFAULT_PLACEHOLDER_STRING, value: '' } });
+      }
+    }
+  }, {
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      document.addEventListener('click', this.handleDocumentClick, false);
+      document.addEventListener('touchend', this.handleDocumentClick, false);
+    }
+  }, {
+    key: 'componentWillUnmount',
+    value: function componentWillUnmount() {
+      this.mounted = false;
+      document.removeEventListener('click', this.handleDocumentClick, false);
+      document.removeEventListener('touchend', this.handleDocumentClick, false);
+    }
+  }, {
+    key: 'handleMouseDown',
+    value: function handleMouseDown(event) {
+      if (event.type === 'mousedown' && event.button !== 0) return;
+      event.stopPropagation();
+      event.preventDefault();
+
+      if (!this.props.disabled) {
+        this.setState({
+          isOpen: !this.state.isOpen
+        });
+      }
+    }
+  }, {
+    key: 'setValue',
+    value: function setValue(value, label) {
+      var newState = {
+        selected: {
+          value: value,
+          label: label
+        },
+        isOpen: false
+      };
+      this.fireChangeEvent(newState);
+      this.setState(newState);
+    }
+  }, {
+    key: 'fireChangeEvent',
+    value: function fireChangeEvent(newState) {
+      if (newState.selected !== this.state.selected && this.props.onChange) {
+        this.props.onChange(newState.selected);
+      }
+    }
+  }, {
+    key: 'renderOption',
+    value: function renderOption(option) {
+      var _classNames;
+
+      var optionClass = (0, _classnames2.default)((_classNames = {}, _defineProperty(_classNames, this.props.baseClassName + '-option', true), _defineProperty(_classNames, 'is-selected', option === this.state.selected), _classNames));
+
+      var value = option.value || option.label || option;
+      var label = option.label || option.value || option;
+
+      return _react2.default.createElement(
+        'div',
+        {
+          key: value,
+          className: optionClass,
+          onMouseDown: this.setValue.bind(this, value, label),
+          onClick: this.setValue.bind(this, value, label) },
+        label
+      );
+    }
+  }, {
+    key: 'buildMenu',
+    value: function buildMenu() {
+      var _this2 = this;
+
+      var _props = this.props,
+          options = _props.options,
+          baseClassName = _props.baseClassName;
+
+      var ops = options.map(function (option) {
+        if (option.type === 'group') {
+          var groupTitle = _react2.default.createElement(
+            'div',
+            { className: baseClassName + '-title' },
+            option.name
+          );
+          var _options = option.items.map(function (item) {
+            return _this2.renderOption(item);
+          });
+
+          return _react2.default.createElement(
+            'div',
+            { className: baseClassName + '-group', key: option.name },
+            groupTitle,
+            _options
+          );
+        } else {
+          return _this2.renderOption(option);
+        }
+      });
+
+      return ops.length ? ops : _react2.default.createElement(
+        'div',
+        { className: baseClassName + '-noresults' },
+        'No options found'
+      );
+    }
+  }, {
+    key: 'handleDocumentClick',
+    value: function handleDocumentClick(event) {
+      if (this.mounted) {
+        if (!_reactDom2.default.findDOMNode(this).contains(event.target)) {
+          this.setState({ isOpen: false });
+        }
+      }
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _classNames2;
+
+      var baseClassName = this.props.baseClassName;
+
+      var disabledClass = this.props.disabled ? 'Dropdown-disabled' : '';
+      var placeHolderValue = typeof this.state.selected === 'string' ? this.state.selected : this.state.selected.label;
+      var value = _react2.default.createElement(
+        'div',
+        { className: baseClassName + '-placeholder' },
+        placeHolderValue
+      );
+      var menu = this.state.isOpen ? _react2.default.createElement(
+        'div',
+        { className: baseClassName + '-menu' },
+        this.buildMenu()
+      ) : null;
+
+      var dropdownClass = (0, _classnames2.default)((_classNames2 = {}, _defineProperty(_classNames2, baseClassName + '-root', true), _defineProperty(_classNames2, 'is-open', this.state.isOpen), _classNames2));
+
+      return _react2.default.createElement(
+        'div',
+        { className: dropdownClass },
+        _react2.default.createElement(
+          'div',
+          { className: baseClassName + '-control ' + disabledClass, onMouseDown: this.handleMouseDown.bind(this), onTouchEnd: this.handleMouseDown.bind(this) },
+          value,
+          _react2.default.createElement('span', { className: baseClassName + '-arrow' })
+        ),
+        menu
+      );
+    }
+  }]);
+
+  return Dropdown;
+}(_react.Component);
+
+Dropdown.defaultProps = { baseClassName: 'Dropdown' };
+exports.default = Dropdown;
+
 
 /***/ })
 /******/ ]);

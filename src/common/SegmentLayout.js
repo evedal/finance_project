@@ -60,10 +60,14 @@ class SegmentLayout extends Component{
         }
         if(this.state.segment){
             let headerData = {
-                title: this.state.segment.name,
-                titleLink: pathname
+                links: [
+                    {
+                        title: this.state.segment.name,
+                        url: pathname
+                    }
+                ]
             };
-            header = <Header data = {headerData}/>
+            header = <Header {...headerData}/>
         }
         return(
             <div className="container">

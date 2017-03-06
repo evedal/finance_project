@@ -81,10 +81,22 @@ class PostLayout extends Component{
             let headerData = {
                 icon: "mode_edit",
                 iconLink: basePath+"/post/"+params.post_id+"/comment",
-                title: params.ticker,
-                titleLink: basePath
+                links: [
+                    {
+                        title: params.name,
+                        url: "/segment/"+params.name
+                    },
+                    {
+                        title: params.ticker,
+                        url: basePath
+                    },
+                    {
+                        title: post.header
+                    }
+
+                ]
             };
-            header = <Header data = {headerData}/>
+            header = <Header {...headerData}/>
         }
         return(
             <div className="container">
