@@ -76,7 +76,7 @@ class Login extends Component{
                                 value={this.state.email} type="text"/>
                     <InputField onChange={this.handlePassUpdate} placeholder="Passord" name="password"
                                 value={this.state.password} type="password"/>
-                    <SubmitBtn submitText="Logg inn" />
+                    <SubmitBtn value="Logg inn" />
                 </FormLayout>
                 <p>Har du ikke bruker?<Link to="/register"> Registrer deg</Link></p>
             </div>

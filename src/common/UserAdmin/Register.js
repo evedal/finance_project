@@ -123,7 +123,7 @@ class Register extends Component{
                                 value={this.state.user.password} type="password"/>
                     <InputField onChange={this.handlePassReUpdate} placeholder="Skriv passord igjen" name="passwordRe"
                                 value={this.state.user.passwordRe} type="password"/>
-                    <SubmitBtn submitText="Registrer deg" />
+                    <SubmitBtn value="Registrer deg" />
                 </FormLayout>
                 <p>Har du allerede en bruker?<Link to="/login"> Logg inn</Link></p>
 
