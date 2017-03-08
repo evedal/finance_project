@@ -6,12 +6,14 @@ class InputField extends Component{
         this.shouldCallEventListener = this.shouldCallEventListener.bind(this);
     }
     shouldCallEventListener(){
-        if(!this.props.wasValid && this.props.isValid){
+        console.log(this.props)
+        if(!this.props.wasValid && this.props.error.isValid()){
             this.props.onValid();
         }
-        else if(this.props.wasValid && !this.props.isValid){
+        else if(this.props.wasValid && !this.props.error.isValid()) {
             this.props.onInvalid();
         }
+        console.log(this.props.wasValid);
     }
     componentWillUpdate(){
         this.shouldCallEventListener();

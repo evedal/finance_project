@@ -10,12 +10,14 @@ class FormLayout extends Component{
 
             ],
             allValid: false
-        }
+        };
+        this.handleValid = this.handleValid.bind(this);
+        this.handleInvalid = this.handleInvalid.bind(this)
     }
     componentDidMount(){
+        //If an error has been spesified, checks if children are valid from rule
         let validChildren = React.Children.map(this.props.children, (child, i) => {
-            console.log(child.props);
-            return !child.props.error ? true : child.props.error.isValid;
+            return (child.props.error) ? child.props.error.isValid() : true;
             }
         );
         this.setState({validChildren: validChildren});
@@ -27,6 +29,7 @@ class FormLayout extends Component{
         let allValid = true;
         //Checks wether all children now are valid
         for(let isValid of validChildren){
+            console.log("Valid:"+isValid)
             if(!isValid) {
                 allValid = false;
                 break;
@@ -34,6 +37,7 @@ class FormLayout extends Component{
         }
         let newState;
         //If the all inputs in form are valid, call parent eventHandler
+        console.log("Allvalid: "+allValid +"Was;"+this.state.allValid)
         if(allValid && allValid !== this.state.allValid) {
             newState = {allValid: true, validChildren: validChildren};
             this.props.onValid();
@@ -46,28 +50,33 @@ class FormLayout extends Component{
         let validChildren = this.state.validChildren;
         validChildren[i] = false;
         let newState;
+        console.log("Allvalid"+this.state.allValid)
         if(this.state.allValid){
-            newState = {validChildren: validChildren, allValid: false};
+            console.log("Dette skal være riktig")
             this.props.onInvalid();
+            this.setState({validChildren: validChildren, allValid: false});
+
         }
-        else newState = {validChildren: validChildren};
-        this.setState({newState})
+        else this.setState({validChildren: validChildren});
     }
-    renderChildren(props){
-        React.Children.forEach(this.props.children, (child, i) => {
+    renderChildren(props, validChildren){
+        return React.Children.map(props.children, (child, i) => {
+
             let newProps = {
-                onValid: this.handleIsValid.bind(null, i),
+                onValid: this.handleValid.bind(null, i),
                 onInvalid: this.handleInvalid.bind(null, i),
-                wasValid: this.state.validChildren[i]
+                wasValid: validChildren[i]
             };
+            console.log(validChildren);
             return React.cloneElement(child, newProps)
         })
     }
     render(){
+        console.log(this.state);
         return (
             <form onSubmit={this.props.onSubmit}>
                 <div className="flex-center flex-column">
-                    { this.props.children }
+                    { this.renderChildren(this.props, this.state.validChildren) }
                 </div>
             </form>
         )

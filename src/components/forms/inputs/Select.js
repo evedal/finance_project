@@ -3,6 +3,17 @@ import Select2 from 'react-select';
 
 class Select extends Component{
 
+    shouldCallEventListener(){
+        if(!this.props.wasValid && this.props.error.isValid()){
+            this.props.onValid();
+        }
+        else if(this.props.wasValid && !this.props.error.isValid()) {
+            this.props.onInvalid();
+        }
+    }
+    componentWillUpdate(){
+        this.shouldCallEventListener();
+    }
     render(){
         let dropdownData = {
             options: this.props.options,

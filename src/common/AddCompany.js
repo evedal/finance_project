@@ -73,11 +73,13 @@ class AddCompany extends Component{
     handleValid(){
         let form = this.state.form;
         form.allValid = true;
+        alert("ALL VALID!!!!");
         this.setState({form: form})
     }
     handleInvalid(){
         let form = this.state.form;
         form.allValid = false;
+        alert("FORM ER BLITT INVALID")
         this.setState({form: form})
     }
     handleSegment(option){
@@ -169,9 +171,9 @@ class AddCompany extends Component{
             value: this.state.company.ticker,
             error: {
                 showError: this.state.form.showError,
-                rule: () => {
+                isValid: () => {
                     let field = this.state.company.ticker;
-                    return field && field.length > 0 && field.length < 10 && !/[^A-Z0-9]/.test(company.ticker)
+                    return field.length > 0 && field.length < 10 && !/[^A-Z0-9]/.test(field)
                 },
                 message: ErrorMessage.company.wrongTickerFormat
             }
@@ -186,7 +188,7 @@ class AddCompany extends Component{
                 showError: this.state.form.showError,
                 isValid: () => {
                     let field = this.state.company.name;
-                    return field && field.length > 0 && field.length < 50;
+                    return field.length > 0 && field.length < 50;
                 },
                 message: ErrorMessage.company.wrongNameFormat
             }
@@ -200,7 +202,8 @@ class AddCompany extends Component{
                 showError: this.state.form.showError,
                 isValid: () => {
                     let field = this.state.company.description;
-                    return field && field.length > 50 && field.length < 1000;
+                    console.log(field);
+                    return field.length > 50 && field.length < 1000;
                 },
                 message: ErrorMessage.company.wrongDescFormat
             }
@@ -215,6 +218,10 @@ class AddCompany extends Component{
             options: options,
             error: {
                 showError: this.state.form.showError,
+                isValid: () => {
+                    let field = this.state.dropdown.selected;
+                    return this.state.dropdown.selected.value > 0
+                },
                 message: ErrorMessage.company.wrongDescFormat
             }
         };
