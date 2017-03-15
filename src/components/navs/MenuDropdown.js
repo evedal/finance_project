@@ -6,10 +6,11 @@ class MenuDropdown extends Component{
 
     render(){
         let links = [
-            {url: "/segments", name: "Segmenter"},
-            {url: "/companies", name: "Selskaper"}
+            {url: "/", name: "Hjem"},
+            {url: "/segment", name: "Segmenter"},
+            {url: "/company", name: "Selskaper"}
         ];
-        return <BasicDropdown links={links} toggleDropdown={this.props.toggleDropdown}/>
+        return <BasicDropdown links={links} {...this.props}/>
     }
 }
 export default MenuDropdown;

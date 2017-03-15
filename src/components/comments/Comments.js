@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import CommentsRecursive from './CommentsRecursive';
 import {get} from '../../utils/APImanager'
 import commentSort from '../../utils/commentSort';
+import Loader from '../other/Loader';
 
 class Comments extends Component{
     constructor(){
@@ -9,7 +10,8 @@ class Comments extends Component{
         this.state = {
             comments: [
 
-            ]
+            ],
+            isLoaded: false
         }
     }
     componentDidMount(){
@@ -18,7 +20,7 @@ class Comments extends Component{
                 console.log(err.message);
                 return;
             }
-            this.setState({comments: comments})
+            this.setState({comments: commentSort(comments), isLoaded: true})
         }.bind(this));
 
     }
@@ -30,16 +32,18 @@ class Comments extends Component{
         let basePath = "/segment/"+params.name+"/company/"+params.ticker+"/post/"+params.post_id;
 
         if(this.state.comments.length > 0) {
-            let sorted = commentSort(this.state.comments);
             commentList = (
-                    <CommentsRecursive basePath={basePath} comments={sorted}/>
+                    <CommentsRecursive basePath={basePath} comments={this.state.comments}/>
             )
         }
 
         return(
-            <div className="all-comments">
-                { commentList }
-            </div>
+            <Loader isLoaded={this.state.isLoaded}>
+                <div className="all-comments">
+                    { commentList }
+                </div>
+            </Loader>
+
         )
     }
 }

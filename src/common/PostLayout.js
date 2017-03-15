@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import DetailedPost from '../components/posts/DetailedPost';
 import Comments from '../components/comments/Comments'
 import Header from '../components/other/Header';
-import {get} from '../utils/APImanager'
-
+import {get, post} from '../utils/APImanager'
+import User from '../models/User';
+import APIRoute from '../utils/messages/APIRoute';
 class PostLayout extends Component{
     constructor(){
         super();
@@ -16,7 +17,8 @@ class PostLayout extends Component{
             },
             comments: [
 
-            ]
+            ],
+            user: User.getUser()
         };
         this.handleLike = this.handleLike.bind(this);
     }
@@ -25,7 +27,20 @@ class PostLayout extends Component{
         let updatedPost = this.state.post;
         updatedPost.liked = !this.state.post.liked;
         updatedPost.like_count = updatedPost.liked ? ++updatedPost.like_count : --updatedPost.like_count;
-        this.setState({post: updatedPost});
+        this.setState({post: updatedPost}, () => {
+            post(APIRoute.post.like(this.state.post.post_id, this.state.user.user_id),
+                {liked: this.state.post.liked}, (err, result) => {
+                    if (err) {
+                        let reversedPost = this.state.post;
+                        reversedPost.liked = !this.state.post.liked;
+                        reversedPost.like_count = reversedPost.liked ? ++reversedPost.like_count : --reversedPost.like_count;
+                        return this.setState({post: reversedPost});
+                    }
+                    console.log(result);
+                });
+        });
+
+
     }
     componentDidMount(){
         console.log(this.props.params)
@@ -44,10 +59,7 @@ class PostLayout extends Component{
                 this.props.router.push(pathWithSlug);
             }
 
-
-
         }.bind(this));
-
         //Get company, set state and add slug to path
 
         get('/api/company/'+this.props.params.ticker, function (err, company) {
@@ -60,8 +72,15 @@ class PostLayout extends Component{
 
         }.bind(this));
 
+        //Set eventlistener for userchanges
+        User.on('change', (user) => {
+            this.setState({user: user});
+        })
     }
-
+    componentWillUnmount(){
+        //remove eventlistener for user
+        User.removeAllListeners('change');
+    }
 
     render(){
         let postInfo;
@@ -81,10 +100,18 @@ class PostLayout extends Component{
             let headerData = {
                 icon: "mode_edit",
                 iconLink: basePath+"/post/"+params.post_id+"/comment",
-                title: params.ticker,
-                titleLink: basePath
+                links: [
+                    {
+                        title: params.ticker,
+                        url: basePath
+                    },
+                    {
+                        title: post.header
+                    }
+
+                ]
             };
-            header = <Header data = {headerData}/>
+            header = <Header {...headerData}/>
         }
         return(
             <div className="container">

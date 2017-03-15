@@ -3,6 +3,7 @@ import CompanyPosts from '../components/posts/CompanyPosts';
 import Header from '../components/other/Header';
 import Dropdown from '../components/other/Dropdown'
 import {get} from '../utils/APImanager'
+import Loader from '../components/other/Loader';
 class CompanyLayout extends Component{
     constructor(){
         super();
@@ -10,9 +11,11 @@ class CompanyLayout extends Component{
             posts: [
 
             ],
+            post_loaded: false,
             company: {
 
-            }
+            },
+            company_loaded: false
         };
         this.handleLike = this.handleLike.bind(this)
     }
@@ -27,7 +30,7 @@ class CompanyLayout extends Component{
                 console.log(err.message);
                 return;
             }
-            this.setState({posts: posts})
+            this.setState({posts: posts, post_loaded: true})
         }.bind(this));
         get('/api/company/'+ticker, function (err, company) {
             console.log(company);
@@ -35,7 +38,7 @@ class CompanyLayout extends Component{
                 console.log(err.message);
                 return;
             }
-            this.setState({company: company[0]})
+            this.setState({company: company[0], company_loaded: true})
         }.bind(this));
 
     }
@@ -59,16 +62,26 @@ class CompanyLayout extends Component{
             let headerData = {
                 icon: "add",
                 iconLink: segmentPath+"/company/"+params.ticker+"/post",
-                title: params.name,
-                titleLink: segmentPath
+                links: [
+                    {
+                    title: params.name,
+                    url: segmentPath
+                    }, {
+                    title: params.ticker,
+                    }
+                ]
             };
-            header = <Header data = {headerData}/>
+            header = <Header {...headerData}/>
         }
         return(
             <div className="container">
+                <Loader isLoaded={this.state.company_loaded}>
                 {header}
+                </Loader>
                 <Dropdown title="Selskapsinformasjon"/>
-                {posts}
+                <Loader isLoaded={this.state.post_loaded}>
+                    {posts}
+                </Loader>
             </div>
         )
     }

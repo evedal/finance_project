@@ -9,6 +9,9 @@ import AddPost from './common/AddPost';
 import Login from './common/UserAdmin/Login';
 import Logout from './common/UserAdmin/Logout';
 import Register from './common/UserAdmin/Register';
+import Companies from './common/Companies';
+import Segments from './common/Segments';
+import AddCompany from './common/AddCompany';
 
 import CompanyLayout from './common/CompanyLayout';
 import SegmentLayout from './common/SegmentLayout';
@@ -20,7 +23,10 @@ const routes = (
         <Route path="logout" component={Logout} onEnter={auth.requireAuth} />
         <Route path="register" component={Register} onEnter={auth.requireNotAuth} />
 
+        <Route path="company" components={Companies}/>
+        <Route path="company/create" components={AddCompany} onEnter={auth.requireAuth}/>
         <Route path="user/:user_id" component={PostLayout}  />
+        <Route path="segment" components={Segments} />
         <Route path="segment/:name" component={SegmentLayout}  />
         <Route path="segment/:name/company/:ticker" component={CompanyLayout}  />
         <Route path="segment/:name/company/:ticker/post" component={AddPost} onEnter = {auth.requireAuth} />

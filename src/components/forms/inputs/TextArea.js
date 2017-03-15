@@ -1,45 +1,34 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react'
 import classNames from 'classnames';
 
-class InputField extends Component{
-    constructor(){
+class TextArea extends Component{
+    constructor() {
         super();
-
-        //If component is blurred
         this.state = {
             showFieldStatus: false
         };
-        this.shouldCallEventListener = this.shouldCallEventListener.bind(this);
         this.onBlur = this.onBlur.bind(this);
     }
     shouldCallEventListener(){
-        console.log(this.props);
-        if(this.props.error) {
-            if (!this.props.wasValid && this.props.error.isValid()) {
-                this.props.onValid();
-            }
-            else if (this.props.wasValid && !this.props.error.isValid()) {
+        if(!this.props.wasValid && this.props.error.isValid()){
+            this.props.onValid();
+        }
+
+        else if(this.props.wasValid && !this.props.error.isValid()) {
+                console.log("was"+this.props.wasValid+"is"+this.props.error.isValid());
                 this.props.onInvalid();
-            }
-            console.log(this.props.wasValid);
         }
     }
-    componentWillUpdate(){
+    componentDidUpdate(){
         this.shouldCallEventListener();
     }
     onBlur(){
-        if(this.props.onBlur){
-            this.props.onBlur(this);
-        }
-        console.log(this.state);
-        if(this.props.value && !this.state.showFieldStatus)
+        console.log("FIELDSTATUS"+this.state.showFieldStatus)
+        if(!this.state.showFieldStatus)
             this.setState({showFieldStatus: true});
     }
+
     render(){
-        let onChange;
-        if(this.props.onChange){
-            onChange = this.props.onChange.bind(this);
-        }
         //Props error tells if an error is defined, state showFieldStatus tells if the field has been
         // blurred(should show error or valid)
         let shouldShowError = this.props.error && this.state.showFieldStatus && this.props.value;
@@ -47,28 +36,36 @@ class InputField extends Component{
         // If error should not be showed, there is no need to calculate whether it's valid, and
         // we set default to false
         let isValid = shouldShowError ? this.props.error.isValid() : false;
+
         let classes = classNames({
             'form-control': true,
-            'input-field': true,
+            'comment-textarea': true,
             'error': shouldShowError && !isValid,
             'valid': shouldShowError && isValid
         });
+        console.log(this.props.error)
+        console.log(this.props)
+        console.log(this.state.showFieldStatus)
+
+        let textAreaData = {
+            className: classes,
+            placeholder: this.props.placeholder,
+            value: this.props.value,
+            onChange: this.props.onChange,
+            onBlur: this.onBlur
+        };
         let errorMessage = null;
         if(shouldShowError && !isValid && this.props.error && this.props.error.message){
             errorMessage = (
                 <p className="error-message">{this.props.error.message}</p>
             )
         }
-        //Set default type to text if type is not defined
-        let type = this.props.type ? this.props.type : "text";
         return (
             <div className="input-container">
-                <input onChange={onChange} onBlur={this.onBlur} name={this.props.name}
-                       placeholder={this.props.placeholder} type={type}
-                       className={classes} value={this.props.value}/>
+                <textarea {...textAreaData} />
                 {errorMessage}
             </div>
-        );
+        )
     }
 }
-export default InputField;
+export default TextArea;

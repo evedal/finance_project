@@ -18,7 +18,7 @@ const sqlUpdatePost = "UPDATE post SET content=? WHERE post_id = ?";
 
 
 const sqlGetPostsByCompany = "SELECT post.post_id, post.header, SUBSTRING(post.content, 1, 100) as content, post.created_date, post.user_id, " +
-    "ticker, post.image_url, post.link_url, username, COUNT(like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
+    "ticker, post.image_url, post.link_url, username, COUNT(post_like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
     "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN post_like ON post.post_id = post_like.post_id " +
     "LEFT JOIN comment ON comment.post_id = post.post_id WHERE post.ticker = ? GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
 
@@ -30,7 +30,7 @@ const sqlGetPostsBySegment = "SELECT post.post_id, post.header, post.content, po
     "WHERE name = ?) GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
 
 const sqlGetPostsByUser = "SELECT post.post_id, post.header, post.content, post.created_date, post.user_id, " +
-    "company.ticker, post.image_url, post.link_url, segment.name, username, COUNT(like_id) as like_count, " +
+    "company.ticker, post.image_url, post.link_url, segment.name, username, COUNT(post_like_id) as like_count, " +
     "COUNT(comment_id) as comment_count FROM post LEFT JOIN user ON post.user_id = user.user_id " +
     "LEFT JOIN post_like ON post.post_id = post_like.post_id LEFT JOIN comment ON comment.post_id = post.post_id " +
     "JOIN company ON post.ticker= company.ticker LEFT JOIN segment ON segment.segment_id = company.segment_id " +

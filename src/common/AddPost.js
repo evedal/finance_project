@@ -134,10 +134,12 @@ class AddPost extends Component{
             let headerData = {
                 icon: "",
                 iconLink: "",
-                title: this.state.company.name,
-                titleLink: titleLink
+                links: [{
+                    title: this.state.company.name,
+                    url: titleLink
+                }]
             };
-            header = <Header data = {headerData}/>
+            header = <Header {...headerData}/>
         }
         let addPostHeaderData = {
             handleImgToggle: this.handleImgToggle,

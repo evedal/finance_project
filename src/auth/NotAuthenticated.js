@@ -26,7 +26,9 @@ class NotAuthenticated extends Component{
 
 
     }
-
+    componentWillUnmount(){
+        User.removeAllListeners('change');
+    }
     render(){
         let user = User.getUser();
         return !user ? this.props.children : null;
