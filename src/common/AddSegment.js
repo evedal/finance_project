@@ -14,7 +14,7 @@ import ErrorMessage from '../utils/messages/ErrorMessage';
 import APIRoutes from "../utils/messages/APIRoute";
 import Path from "../utils/messages/Path";
 
-class AddCompany extends Component{
+class AddSegment extends Component{
     constructor(){
         super();
         this.state = {
@@ -73,11 +73,13 @@ class AddCompany extends Component{
     handleValid(){
         let form = this.state.form;
         form.allValid = true;
+        alert("ALL VALID!!!!");
         this.setState({form: form})
     }
     handleInvalid(){
         let form = this.state.form;
         form.allValid = false;
+        alert("FORM ER BLITT INVALID")
         this.setState({form: form})
     }
     handleSegment(option){
@@ -145,7 +147,12 @@ class AddCompany extends Component{
 
 
 
+        let textAreaData = {
+            placeholder: "Skriv en beskrivelse av selskapet",
+            value: this.state.company.description,
+            onChange: this.handleDesc
 
+        };
         let headerData = {
             links: [{
                 title: "Legg til nytt selskap",
@@ -183,7 +190,7 @@ class AddCompany extends Component{
             onChange: this.handleDesc,
             name: "desc",
             placeholder: Placeholders.company.desc,
-            value: this.state.company.description,
+            value: this.state.company.desc,
             error: {
                 isValid: () => {
                     let field = this.state.company.description;
@@ -224,10 +231,10 @@ class AddCompany extends Component{
                     <InputField {...nameField} />
                     <Select {...selectField} />
                     <TextArea {...descField} />
-                    <SubmitBtn value={Placeholders.company.submit} disabled={!this.state.form.allValid}/>
+                    <SubmitBtn value={Placeholders.company.submit} disabled={this.state.allValid}/>
                 </FormLayout>
             </div>
         )
     }
 }
-export default AddCompany;
+export default AddSegment;

@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import SegmentPosts from '../components/posts/SegmentPosts';
 import Header from '../components/other/Header';
 import Dropdown from '../components/other/Dropdown'
-import {get} from '../utils/APImanager'
+import {get} from '../utils/APImanager';
+import Loader from '../components/other/Loader';
 class SegmentLayout extends Component{
     constructor(){
         super();
@@ -10,6 +11,7 @@ class SegmentLayout extends Component{
             posts: [
 
             ],
+            posts_loaded: false,
             segment: {
 
             },
@@ -26,7 +28,7 @@ class SegmentLayout extends Component{
                 console.log(err.message);
                 return;
             }
-            this.setState({posts: posts})
+            this.setState({posts: posts, posts_loaded: true})
         }.bind(this));
         get('/api/segment/'+segmentName, function (err, segment) {
             console.log(segment);
@@ -55,6 +57,7 @@ class SegmentLayout extends Component{
         let header;
         let posts;
         let pathname = "/segment/"+this.props.params.name;
+        console.log(this.state);
         if(this.state.posts.length > 0){
             posts = <SegmentPosts basePath = {pathname} posts = {this.state.posts} handleLike={this.handleLike}/>
         }
@@ -73,7 +76,9 @@ class SegmentLayout extends Component{
             <div className="container">
                 {header}
                 <Dropdown title="Segment-informasjon"/>
+                <Loader isLoaded={this.state.posts_loaded}>
                 {posts}
+                </Loader>
             </div>
         )
     }

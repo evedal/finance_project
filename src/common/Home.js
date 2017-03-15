@@ -2,23 +2,44 @@ import React, { Component } from 'react';
 import HomePosts from '../components/posts/HomePosts';
 import Header from '../components/other/Header';
 import {get} from '../utils/APImanager';
+import User from '../models/User';
+
 
 class Home extends Component{
     constructor(){
         super();
         this.state = {
-            posts: []
-        }
+            posts: [],
+            user: User.getUser()
+        };
         this.handleLike = this.handleLike.bind(this)
     }
     componentDidMount(){
-        get('/api/post/user/'+1, function (err, posts) {
-            if(err){
-                console.log(err.message);
-                return;
-            }
-            this.setState({posts: posts})
-        }.bind(this));
+        let user = this.state.user;
+        if(this.state.user.user_id) {
+            get('/api/post/user/'+user.user_id, function (err, posts) {
+                if (err) {
+                    console.log(err.message);
+                    return;
+                }
+                this.setState({posts: posts})
+            }.bind(this));
+        }
+        else{
+            get('/api/post/', function (err, posts) {
+                if (err) {
+                    console.log(err.message);
+                    return;
+                }
+                this.setState({posts: posts})
+            }.bind(this));
+        }
+        User.on("change", (user) => {
+            this.setState({user: user})
+        })
+    }
+    componentWillUnmount(){
+        User.removeAllListeners('change');
     }
     handleLike(index){
         let updatedPosts = this.state.posts;

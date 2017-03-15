@@ -10,7 +10,7 @@ export default new class User extends events.EventEmitter{
     }
     setUser(user){
         user = user ? JSON.stringify(user) : "";
-        console.log(user)
+        console.log(user);
         sessionStorage.setItem("user", user);
         this.emit('change', user);
 

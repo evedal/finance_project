@@ -9,7 +9,8 @@ class SettingsDropdown extends Component{
             {url: "/register", name: "Registrer deg", notAuth: true},
             {url: "/logout", name: "Logg ut", auth: true}
         ];
-        return <BasicDropdown links={links} toggleDropdown={this.props.toggleDropdown}/>
+        console.log(this.props)
+        return <BasicDropdown links={links} {...this.props} />
     }
 }
 export default SettingsDropdown;

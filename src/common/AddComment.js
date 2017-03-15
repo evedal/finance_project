@@ -46,7 +46,9 @@ class AddComment extends Component{
         });
 
     }
-
+    componentWillUnmount(){
+        User.removeAllListeners('change')
+    }
     handleChange(event){
         event.preventDefault();
         this.setState({value: event.target.value});

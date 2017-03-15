@@ -12,7 +12,6 @@ DROP TABLE IF EXISTS message;
 DROP TABLE IF EXISTS comment;
 DROP TABLE IF EXISTS user_message;
 DROP TABLE IF EXISTS post;
-DROP TABLE IF EXISTS _like;
 DROP TABLE IF EXISTS comment_like;
 DROP TABLE IF EXISTS post_like;
 
@@ -113,19 +112,15 @@ CREATE TABLE user_message(
     CONSTRAINT pk_user_message PRIMARY KEY(user_id, message_id)
 );
 
--- PARENT LIKE FOR BOTH POSTS AND COMMENTS
-CREATE TABLE _like(
-    like_id INTEGER AUTO_INCREMENT,
-    message_id INTEGER,
-    received TIMESTAMP,
-    user_id INTEGER,
-    CONSTRAINT pk__like PRIMARY KEY(like_id)
-);
 
 -- LIKE CONNECTED TO POST
 CREATE TABLE post_like(
-    like_id INTEGER,
-    post_id INTEGER NOT NULL
+    post_like_id INTEGER,
+    user_id INTEGER NOT NULL,
+    post_id INTEGER NOT NULL,
+    received TIMESTAMP,
+    liked BOOLEAN DEFAULT TRUE,
+    CONSTRAINT pk_post_like PRIMARY KEY(post_like_id)
 );
 CREATE TABLE comment(
     comment_id INTEGER AUTO_INCREMENT,
@@ -138,8 +133,13 @@ CREATE TABLE comment(
 );
 -- LIKE CONNECTED TO COMMENT
 CREATE TABLE comment_like(
-    like_id INTEGER,
-    comment_id INTEGER NOT NULL
+    comment_like_id INTEGER,
+    user_id INTEGER NOT NULL,
+    comment_id INTEGER NOT NULL,
+    received TIMESTAMP,
+    liked BOOLEAN DEFAULT TRUE,
+    CONSTRAINT pk_comment_like PRIMARY KEY(comment_like_id)
+
 );
 
 
@@ -181,17 +181,19 @@ REFERENCES user(user_id),
   ADD CONSTRAINT fk2_comment FOREIGN KEY(parent_comment_id)
 REFERENCES comment(comment_id);
 
-ALTER TABLE _like
-  ADD CONSTRAINT fk_like FOREIGN KEY(user_id)
-REFERENCES user(user_id);
 
 ALTER TABLE post_like
   ADD CONSTRAINT fk_post_like FOREIGN KEY(post_id)
-REFERENCES post(post_id) ON DELETE CASCADE;
+REFERENCES post(post_id) ON DELETE CASCADE,
+  ADD CONSTRAINT fk2_post_like FOREIGN KEY(user_id)
+REFERENCES user(user_id) ON DELETE CASCADE;
+
 
 ALTER TABLE comment_like
   ADD CONSTRAINT fk_comment_like FOREIGN KEY(comment_id)
-REFERENCES comment(comment_id) ON DELETE CASCADE;
+REFERENCES comment(comment_id) ON DELETE CASCADE,
+  ADD CONSTRAINT fk2_comment_like FOREIGN KEY(user_id)
+REFERENCES user(user_id) ON DELETE CASCADE;
 
 -- Create test data
 

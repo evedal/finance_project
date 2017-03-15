@@ -14,23 +14,22 @@ class Authenticated extends Component{
         }
     }
     componentDidMount(){
-        console.log("HIEHEI")
         //Sets event listener for when user is changed
         User.on('change', function (user) {
-            console.log("WIll change")
             this.setState({user: user});
         }.bind(this))
 
         //Returns false if not authorized, user if is
         auth.isAuthenticated(function(err, user){
             if(err || !user)return;
-            console.log("Is authenticated");
             this.setState({user: user});
         }.bind(this));
 
 
     }
-
+    componentWillUnmount(){
+        User.removeAllListeners('change');
+    }
     render(){
         let user = User.getUser();
         return user ? this.props.children : null;

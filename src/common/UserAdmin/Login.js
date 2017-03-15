@@ -9,18 +9,24 @@ import FormLayout from '../../components/forms/FormLayout';
 import SubmitBtn from '../../components/forms/buttons/SubmitBtn';
 import { post } from '../../utils/APImanager';
 import User from '../../models/User';
-import auth from '../../auth/authUtils'
+import auth from '../../auth/authUtils';
+import Placeholder from '../../utils/messages/Placeholder';
+import ErrorMessage from '../../utils/messages/ErrorMessage';
+import Text from '../../utils/messages/Text';
 
 class Login extends Component{
     constructor(){
         super();
         this.state = {
             email: "",
-            password: ""
+            password: "",
+            allValid: false
         };
         this.handleEmailUpdate = this.handleEmailUpdate.bind(this);
         this.handlePassUpdate = this.handlePassUpdate.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.onValid = this.onValid.bind(this);
+        this.onInvalid = this.onInvalid.bind(this);
 
 
     }
@@ -33,11 +39,18 @@ class Login extends Component{
         this.setState({password: e.target.value});
 
     }
+    onValid(){
+        if(!this.state.allValid)
+            this.setState({allValid: true});
+    }
+    onInvalid(){
+        if(this.state.allValid)
+            this.setState({allValid: false});
+    }
     handleSubmit(e){
         e.preventDefault();
-        if(!this.state.email || !this.state.password) {
-            console.log("Må skrive inn passord og email");
-            return;
+        if(!this.state.allValid){
+            return
         }
         let payload = {
             email: this.state.email,
@@ -54,7 +67,7 @@ class Login extends Component{
             auth.isAuthenticated(function (err, user) {
                 if(err || !user) return console.log("Fant ikke bruker til token");
                 User.setUser(user);
-            })
+            });
             this.props.router.push("/");
         }.bind(this))
 
@@ -67,18 +80,45 @@ class Login extends Component{
             titleLink: "#"
         };
 
+        let emailData = {
+            onChange: this.handleEmailUpdate,
+            placeholder: Placeholder.login.email,
+            name: "email",
+            value: this.state.email,
+            type: "email",
+            error: {
+                isValid: () => {
+                    let field = this.state.email;
+                    //TODO: ADD EMAIL REGEX
+                    return field.length > 5 && field.length < 100;
+                },
+                message: ErrorMessage.missingInput(),
+            }
+        };
+        let passData = {
+            onChange: this.handlePassUpdate,
+            placeholder: Placeholder.login.password,
+            name: "password",
+            value: this.state.password,
+            type: "password",
+            error: {
+                isValid: () => {
+                    let field = this.state.password;
+                    return field.length > 0;
+                },
+                message: ErrorMessage.missingInput(),
+            }
+        };
 
         return(
             <div>
-                <Header data={headerData}/>
-                <FormLayout onSubmit={this.handleSubmit}>
-                    <InputField onChange={this.handleEmailUpdate} placeholder="Email" name="email"
-                                value={this.state.email} type="text"/>
-                    <InputField onChange={this.handlePassUpdate} placeholder="Passord" name="password"
-                                value={this.state.password} type="password"/>
-                    <SubmitBtn value="Logg inn" />
+                <Header data={headerData} />
+                <FormLayout onSubmit={this.handleSubmit} onValid={this.onValid} onInvalid={this.onInvalid}>
+                    <InputField {...emailData} />
+                    <InputField {...passData} />
+                    <SubmitBtn value={Placeholder.login.submit} disabled={!this.state.allValid}/>
                 </FormLayout>
-                <p>Har du ikke bruker?<Link to="/register"> Registrer deg</Link></p>
+                <p>{Text.login.registerLabel}<Link to="/register"> {Text.login.registerLink}</Link></p>
             </div>
         );
     }

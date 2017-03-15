@@ -8,6 +8,9 @@ import Header from '../../components/other/Header';
 import FormLayout from '../../components/forms/FormLayout';
 import SubmitBtn from '../../components/forms/buttons/SubmitBtn';
 import { post } from '../../utils/APImanager';
+import Placeholder from '../../utils/messages/Placeholder';
+import ErrorMessage from '../../utils/messages/ErrorMessage';
+import Text from '../../utils/messages/Text';
 
 class Register extends Component{
     constructor(){
@@ -20,7 +23,8 @@ class Register extends Component{
                 lastName: "",
                 password: "",
                 passwordRe: ""
-            }
+            },
+            allValid: false
         };
         this.handleEmailUpdate = this.handleEmailUpdate.bind(this);
         this.handleFirstNameUpdate = this.handleFirstNameUpdate.bind(this);
@@ -28,7 +32,8 @@ class Register extends Component{
         this.handleUsernameUpdate = this.handleUsernameUpdate.bind(this);
         this.handlePassUpdate = this.handlePassUpdate.bind(this);
         this.handlePassReUpdate = this.handlePassReUpdate.bind(this);
-
+        this.onValid = this.onValid.bind(this);
+        this.onInvalid = this.onInvalid.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
 
 
@@ -69,7 +74,16 @@ class Register extends Component{
         user.passwordRe = e.target.value;
         this.setState({user: user});
     }
-
+    onValid(){
+        if(!this.state.allValid){
+            this.setState({allValid: true});
+        }
+    }
+    onInvalid(){
+        if(this.state.allValid){
+            this.setState({allValid: false});
+        }
+    }
     handleSubmit(e){
         e.preventDefault();
         let user = this.state.user;
@@ -104,28 +118,90 @@ class Register extends Component{
             title: "Registrer deg",
             titleLink: "#"
         };
+        let usernameData = {
+            onChange: this.handleUsernameUpdate,
+            placeholder: Placeholder.register.username,
+            name: "username",
+            value: this.state.user.username,
+            error: {
+                isValid: () => {
+                    let field = this.state.user.username;
+                    return field.length > 4 && field.length < 100;
+                },
+                message: ErrorMessage.missingInput()
+            }
+        }
+        let firstNameData = {
+            onChange: this.handleFirstNameUpdate,
+            placeholder: Placeholder.register.firstName,
+            name: "firstName",
+            value: this.state.user.firstName,
+        }
+        let lastNameData = {
+            onChange: this.handleLastNameUpdate,
+            placeholder: Placeholder.register.lastName,
+            name: "lastName",
+            value: this.state.user.lastName,
+        }
+        let emailData = {
+            onChange: this.handleEmailUpdate,
+            placeholder: Placeholder.register.email,
+            name: "email",
+            value: this.state.user.email,
+            type: "email",
+            error: {
+                isValid: () => {
+                    let field = this.state.user.email;
+                    //TODO: ADD EMAIL REGEX
+                    return field.length > 4 && field.length < 300;
+                },
+                message: ErrorMessage.missingInput()
+            }
+        }
+        let passwordData = {
+            onChange: this.handlePassUpdate,
+            placeholder: Placeholder.register.password,
+            name: "password",
+            value: this.state.user.password,
+            type: "password",
+            error: {
+                isValid: () => {
+                    let field = this.state.user.password;
+                    return field.length > 7 && field.length < 200;
+                },
+                message: ErrorMessage.userAdmin.password
+            }
+        }
+        let passwordReData = {
+            onChange: this.handlePassReUpdate,
+            placeholder: Placeholder.register.passwordRe,
+            name: "passwordRe",
+            value: this.state.user.passwordRe,
+            type: "password",
+            error: {
+                isValid: () => {
+                    let field = this.state.user.passwordRe;
+                    return field > 7 && field === this.state.user.password;
+                },
+                message: ErrorMessage.userAdmin.passwordRe
+            }
+        }
 
 
         return(
             <div>
                 <Header data={headerData}/>
-                <FormLayout onSubmit={this.handleSubmit}>
+                <FormLayout onSubmit={this.handleSubmit} onValid={this.onValid} onInvalid={this.onInvalid}>
 
-                    <InputField onChange={this.handleUsernameUpdate} placeholder="Brukernavn" name="username"
-                                value={this.state.user.username} type="text"/>
-                    <InputField onChange={this.handleFirstNameUpdate} placeholder="Fornavn" name="firstName"
-                                value={this.state.user.firstName} type="text"/>
-                    <InputField onChange={this.handleLastNameUpdate} placeholder="Etternavn" name="lastName"
-                                value={this.state.user.lastName} type="text"/>
-                    <InputField onChange={this.handleEmailUpdate} placeholder="Email" name="email"
-                                value={this.state.user.email} type="email"/>
-                    <InputField onChange={this.handlePassUpdate} placeholder="Passord" name="password"
-                                value={this.state.user.password} type="password"/>
-                    <InputField onChange={this.handlePassReUpdate} placeholder="Skriv passord igjen" name="passwordRe"
-                                value={this.state.user.passwordRe} type="password"/>
-                    <SubmitBtn value="Registrer deg" />
+                    <InputField {...usernameData}/>
+                    <InputField {...firstNameData}/>
+                    <InputField {...lastNameData} />
+                    <InputField {...emailData}/>
+                    <InputField {...passwordData}/>
+                    <InputField {...passwordReData}/>
+                    <SubmitBtn value={Placeholder.register.submit} />
                 </FormLayout>
-                <p>Har du allerede en bruker?<Link to="/login"> Logg inn</Link></p>
+                <p>{Text.register.loginLabel}<Link to="/login"> {Text.register.loginLink}</Link></p>
 
             </div>
         );

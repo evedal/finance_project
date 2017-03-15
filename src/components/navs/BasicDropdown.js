@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Authenticated from '../../auth/Authenticated';
 import NotAuthenticated from '../../auth/NotAuthenticated';
-
 import { Link } from 'react-router';
+
 class BasicDropdown extends Component{
 
     /*
@@ -14,31 +14,42 @@ class BasicDropdown extends Component{
                 * notAuth: should it be displayed only to unauthenticated users?
         * Means not required, will be showed to all users
      */
+
+
+
+    componentDidMount () {
+        document.addEventListener('click', this.props.handleDocumentClick, false)
+    }
+    componentWillUnmount () {
+        document.removeEventListener('click', this.props.handleDocumentClick, false)
+    }
+
+
     render(){
         let links = this.props.links.map((link) => {
             if(link.auth){
                 return (
                     <Authenticated>
-                        <Link to={link.url} onClick={this.props.toggleDropdown}>{link.name}</Link>
+                        <Link key={link.url} to={link.url} onClick={this.props.toggleDropdown}>{link.name}</Link>
                     </Authenticated>
                 )
             }
             else if (link.notAuth){
                 return (
                     <NotAuthenticated>
-                        <Link to={link.url} onClick={this.props.toggleDropdown}>{link.name}</Link>
+                        <Link to={link.url} key={link.url} onClick={this.props.toggleDropdown}>{link.name}</Link>
                     </NotAuthenticated>
                 )
             }
-            return <Link to={link.url} onClick={this.props.toggleDropdown}>{link.name}</Link>
+            return <Link to={link.url} key={link.url} onClick={this.props.toggleDropdown}>{link.name}</Link>
 
         });
         return(
-            <nav className="navDropdown box-shadow">
-                <li className="flex-center flex-column">
-                    {links}
-                </li>
-            </nav>
+                <nav className="navDropdown box-shadow">
+                    <li className="flex-center flex-column">
+                        {links}
+                    </li>
+                </nav>
 
         )
     }

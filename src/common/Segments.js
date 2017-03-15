@@ -4,12 +4,14 @@ import Header from '../components/other/Header';
 import Dropdown from '../components/other/Dropdown'
 import {get} from '../utils/APImanager'
 import Segment from '../components/segment/Segment';
+import Loader from '../components/other/Loader'
 
 class Segments extends Component{
     constructor() {
         super();
         this.state = {
-            segments: []
+            segments: [],
+            segm_isloaded: false
         };
     }
     /*
@@ -22,7 +24,7 @@ class Segments extends Component{
                 console.log(err.message);
                 return;
             }
-            this.setState({segments: segments});
+            this.setState({segments: segments, segm_isloaded: true});
         }.bind(this));
 
     }
@@ -54,7 +56,9 @@ class Segments extends Component{
         return(
             <div className="container">
                 <Header {...headerData}/>
+                <Loader isLoaded={this.state.segm_isloaded}>
                 {segments}
+                </Loader>
             </div>
         )
     }

@@ -61,14 +61,19 @@ class FormLayout extends Component{
     }
     renderChildren(props, validChildren){
         return React.Children.map(props.children, (child, i) => {
-
-            let newProps = {
-                onValid: this.handleValid.bind(null, i),
-                onInvalid: this.handleInvalid.bind(null, i),
-                wasValid: validChildren[i]
-            };
-            console.log(validChildren);
+            let newProps;
+            console.log(child.props)
+            if(child.props.error) {
+                newProps = {
+                    onValid: this.handleValid.bind(null, i),
+                    onInvalid: this.handleInvalid.bind(null, i),
+                    wasValid: validChildren[i],
+                    showError: this.props.showError
+                };
+                console.log(validChildren);
+            }
             return React.cloneElement(child, newProps)
+
         })
     }
     render(){
