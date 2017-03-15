@@ -19,11 +19,16 @@ class Header extends Component{
 
                 //If there are more than two links, add dots in between slashes
                 if(i === 1 && aboveTwo)
-                    slash = <span> /... / </span>;
+                    slash = <span className="link-divider">/... /</span>;
                     //Else if there are less than two links, just add a slash
                 else if(!aboveTwo) {
-                    slash = <span> / </span>
+                    slash = <span className="link-divider">/</span>
                 }
+            }
+
+            //Shorten the title if its longer than a value
+            if(link.title && link.title.length > 20){
+                link.title = link.title.slice(0,20) + " ..."
             }
             // If there are two or less links, or the first or last link of many, add the link
             let lastLink = i === links.length - 1;
@@ -32,13 +37,11 @@ class Header extends Component{
                 //If its the last link, this is the current page, and should not be clickable
                 if (lastLink)
                     out = (
-                            <h2>{link.title}</h2>
+                            <h2 className="breadcrumb-end">{link.title}</h2>
                     );
                 else
                     out = (
-                            <Link to={link.url}>
-                                <h2>{link.title}</h2>
-                            </Link>
+                            <Link to={link.url}>{link.title}</Link>
                     );
             }
             return [out, slash];

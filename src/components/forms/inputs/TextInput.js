@@ -76,10 +76,10 @@ class TextInput extends Component{
     handleLink(event) {
         this.handleSimpleMarkdown(event, "[", 1, false, "](url)")
     }
-    handleBulleted(){
+    handleBulleted(event){
         this.handleSimpleMarkdown(event, "- ", 2, false, false, true);
     }
-    handleNumbered(){
+    handleNumbered(event){
         this.handleSimpleMarkdown(event, "1. ", 3);
     }
 

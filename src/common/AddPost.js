@@ -5,6 +5,7 @@ import LargeTextField from '../components/forms/LargeTextField'
 import validUrl from 'valid-url';
 import { get, post } from '../utils/APImanager';
 import User from '../models/User';
+import Text from '../utils/messages/Text';
 
 class AddPost extends Component{
     constructor(){
@@ -137,7 +138,10 @@ class AddPost extends Component{
                 links: [{
                     title: this.state.company.name,
                     url: titleLink
-                }]
+                },
+                    {
+                        title: Text.headers.addPost
+                    }]
             };
             header = <Header {...headerData}/>
         }
@@ -161,10 +165,12 @@ class AddPost extends Component{
         return(
             <div className="container">
                 {header}
-                <form onSubmit={this.handleSubmit}>
-                    <AddPostHeader data={addPostHeaderData}/>
-                    <LargeTextField data = {textInputData}/>
-                </form>
+                <div className="content-wrap">
+                    <form onSubmit={this.handleSubmit}>
+                        <AddPostHeader data={addPostHeaderData}/>
+                        <LargeTextField data = {textInputData}/>
+                    </form>
+                </div>
             </div>
         )
     }

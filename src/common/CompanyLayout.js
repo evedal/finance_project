@@ -78,7 +78,6 @@ class CompanyLayout extends Component{
                 <Loader isLoaded={this.state.company_loaded}>
                 {header}
                 </Loader>
-                <Dropdown title="Selskapsinformasjon"/>
                 <Loader isLoaded={this.state.post_loaded}>
                     {posts}
                 </Loader>

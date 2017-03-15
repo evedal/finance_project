@@ -13,6 +13,8 @@ import Placeholders from '../utils/messages/Placeholder';
 import ErrorMessage from '../utils/messages/ErrorMessage';
 import APIRoutes from "../utils/messages/APIRoute";
 import Path from "../utils/messages/Path";
+import Text from "../utils/messages/Text";
+
 
 class AddCompany extends Component{
     constructor(){
@@ -147,9 +149,13 @@ class AddCompany extends Component{
 
 
         let headerData = {
-            links: [{
-                title: "Legg til nytt selskap",
-                url: "#"
+            links: [
+                {
+                    title: Text.headers.home,
+                    url: Path.companies
+                },
+                {
+                title: Text.headers.addCompany,
             }]
         };
         let tickerField = {
@@ -219,13 +225,15 @@ class AddCompany extends Component{
         return(
             <div className="container">
                 <Header {...headerData} />
-                <FormLayout {...formValues} >
-                    <InputField {...tickerField} />
-                    <InputField {...nameField} />
-                    <Select {...selectField} />
-                    <TextArea {...descField} />
-                    <SubmitBtn value={Placeholders.company.submit} disabled={!this.state.form.allValid}/>
-                </FormLayout>
+                <div className="content-wrap">
+                    <FormLayout {...formValues} >
+                        <InputField {...tickerField} />
+                        <InputField {...nameField} />
+                        <Select {...selectField} />
+                        <TextArea {...descField} />
+                        <SubmitBtn value={Placeholders.company.submit} disabled={!this.state.form.allValid}/>
+                    </FormLayout>
+                </div>
             </div>
         )
     }

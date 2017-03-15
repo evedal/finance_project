@@ -6,7 +6,7 @@ const sqlCreatePost = "INSERT INTO post SET ?";
 const sqlGetPosts = "SELECT * FROM post";
 
 const sqlGetPostById = "SELECT post.post_id, post.header, SUBSTRING(post.content, 1, 100) as content, post.created_date, post.user_id, " +
-    "post.ticker, company.name, post.image_url, post.link_url, username, COUNT(like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
+    "post.ticker, company.name, post.image_url, post.link_url, username, COUNT(post_like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
     "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN post_like ON post.post_id = post_like.post_id " +
     "LEFT JOIN comment ON comment.post_id = post.post_id JOIN company ON post.ticker = company.ticker " +
     "WHERE post.post_id = ? GROUP BY post_id";
@@ -24,7 +24,7 @@ const sqlGetPostsByCompany = "SELECT post.post_id, post.header, SUBSTRING(post.c
 
 
 const sqlGetPostsBySegment = "SELECT post.post_id, post.header, post.content, post.created_date, post.user_id, " +
-    "ticker, post.image_url, post.link_url, username, COUNT(like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
+    "ticker, post.image_url, post.link_url, username, COUNT(post_like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
     "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN post_like ON post.post_id = post_like.post_id " +
     "LEFT JOIN comment ON comment.post_id = post.post_id WHERE ticker IN (SELECT ticker FROM segment " +
     "WHERE name = ?) GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";

@@ -5,6 +5,7 @@ import LargeTextField from '../components/forms/LargeTextField';
 
 import {get, post} from '../utils/APImanager';
 import User from '../models/User';
+import Text from '../utils/messages/Text';
 
 class AddComment extends Component{
     constructor(){
@@ -104,9 +105,13 @@ class AddComment extends Component{
                 iconLink: "",
                 links: [
                     {
-                    title: this.state.post.header,
-                    url: postLink
+                        title: this.state.post.header,
+                        url: postLink
+                    },
+                    {
+                        title: Text.headers.addComment
                     }
+
                 ]
             };
             headerPost = <Header {...headerData}/>
@@ -122,10 +127,12 @@ class AddComment extends Component{
         return(
             <div className="container">
                 {headerPost}
-                {comment}
-                <form onSubmit={this.handleSubmit}>
-                    <LargeTextField data = {textInputData} />
-                </form>
+                <div className="content-wrap">
+                    {comment}
+                    <form onSubmit={this.handleSubmit}>
+                        <LargeTextField data = {textInputData} />
+                    </form>
+                </div>
             </div>
         )
     }

@@ -4,7 +4,7 @@ import cookie from 'react-cookie';
 function addTokenToConfig(cfg) {
     let token = cookie.load("access_token");
     if(token){
-        cfg.headers.Authorization = "JWT "+token;
+        cfg.headers.authorization = "JWT "+token;
     }
     return cfg;
 }

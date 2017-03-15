@@ -40,12 +40,12 @@ h2 {
 h3{
     margin: 0;
     font-weight: normal;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
 }
 h5{
     margin: 0;
     padding: 0;
-    font-size: 0.8rem;
+    font-size: 1rem;
 }
 a {
     text-decoration: none;
@@ -107,7 +107,7 @@ a.white {
     -webkit-box-shadow: 0px 12px 16px 5px rgba(0,0,0,0.58);
     -moz-box-shadow: 0px 12px 16px 5px rgba(0,0,0,0.58);
     box-shadow: 0px 1px 15px 5px rgba(0,0,0,0.20);
-    z-index: 1;
+    z-index: 600;
     position: relative;
 }
 input[type=submit]{
@@ -135,7 +135,6 @@ textarea{
     font-family: inherit;
 }
 header {
-    z-index: 600;
     background: #034584;
     color: #ffffff;
     display: -webkit-box;
@@ -190,14 +189,15 @@ header h1 a:last-child {
 
 }
 .second-header{
-
+    padding: 0.5rem;
     background-color: white;
+    margin-bottom: 1rem;
+    height: 4rem;
 }
 .second-header h2{
     margin: 0;
-    font-weight: normal;
+    font-weight: bold;
     font-size: 1rem;
-    padding: 1rem 0.5rem;
 }
 .second-header i{
     padding: 0 0.5rem;
@@ -320,17 +320,9 @@ header h1 a:last-child {
     height: 100%;
     cursor: default;
 }
-.input-header nav .active:before {
-    content: ' ';
-    position: absolute;
-    width: 0;
-    height: 0;
-    left: 0;
-    top: 2.1rem;
-    border: 0.3rem solid;
-    border-color: #034584 transparent transparent #034584;
-}
-.comment-textarea{
+
+.content-wrap{
+    margin: 0.5rem;
 }
 .format-buttons{
     flex-grow: 1;
@@ -381,6 +373,9 @@ form input{
 
 .show {display:block;}
 
+.markdown p{
+    font-size: 1rem;
+}
 .markdown h1{
     font-size: 1.4rem;
     font-weight: 500;
@@ -400,6 +395,13 @@ form input{
 }
 .markdown a:hover{
     text-decoration: underline;
+}
+form .markdown{
+    padding: 0.5rem;
+    background: white;
+    -webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,0.075);
+    -moz-box-shadow: inset 0 2px 4px rgba(0,0,0,0.075);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.075);
 }
 .flex-column{
     flex-direction: column;
@@ -421,27 +423,29 @@ input[type=text], input[type=email], input[type=password]{
     text-decoration: underline;
 }
 form {
-    padding: 0.5rem;
+    padding: 0.5rem 0;
 }
 form img{
     margin: 1rem;
-    max-width:100%;
-    max-height:100%;
+    max-width:200px;
+    max-height:200px;
 }
 .navDropdown{
-    position: fixed;
+    position: absolute;
     width:100%;
     background:#F6F5F5;
     overflow: hidden;
     z-index: 999;
     -webkit-transition: heigth 0.3s; /* Safari */
-    transition: heigth 0.3s;}
+    transition: heigth 0.3s;
+}
 
 .navDropdown a{
     padding:1rem;
     font-weight: 400;
     font-size: 1rem;
     width: 100%;
+    z-index: 999;
 }
 .flex-start{
     justify-content: flex-start;
@@ -936,15 +940,17 @@ form .valid {
     max-height: 200px;
     transition: max-height 300ms ease-in;
 }
+
 .menu-leave{
     max-height: 200px;
-    z-index: 9999;
+    z-index: 999;
 }
 .menu-leave.menu-leave-active{
-    z-index: 9999;
-    max-height: 0px;
+    z-index: 999;
+    max-height: 0;
     transition: max-height 300ms ease-out;
 }
+
 
 /*SETTINGS ICON*/
 
@@ -974,3 +980,28 @@ form .valid {
     opacity:0.8;
     z-index:500;
 }
+/*OVERLAY ANIMATION*/
+.overlay-enter{
+    opacity: 0;
+}
+.overlay-enter.overlay-enter-active{
+    opacity: 0.8;
+    transition: opacity 300ms;
+}
+.overlay-leave{
+    opacity: 0.8;
+}
+.overlay-leave.overlay-leave-active{
+    opacity: 0;
+    transition: opacity 300ms;
+}
+
+.message-wrap{
+    margin: 1rem auto;
+}
+
+/* BREADCRUMB LINKS */
+.link-divider{
+    margin: 0 0.5rem 0 0.6rem;
+}
+

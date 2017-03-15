@@ -3,7 +3,8 @@ import CommentsRecursive from './CommentsRecursive';
 import {get} from '../../utils/APImanager'
 import commentSort from '../../utils/commentSort';
 import Loader from '../other/Loader';
-
+import ComponentReplacer from '../other/ComponentReplacer';
+import Text from '../../utils/messages/Text';
 class Comments extends Component{
     constructor(){
         super();
@@ -35,6 +36,13 @@ class Comments extends Component{
             commentList = (
                     <CommentsRecursive basePath={basePath} comments={this.state.comments}/>
             )
+        }
+        else {
+            let replaceData = {
+                message: Text.messages.noComments,
+                link: basePath + "/comment"
+            }
+            commentList = <ComponentReplacer {...replaceData}/>
         }
 
         return(

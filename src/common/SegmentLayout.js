@@ -75,7 +75,6 @@ class SegmentLayout extends Component{
         return(
             <div className="container">
                 {header}
-                <Dropdown title="Segment-informasjon"/>
                 <Loader isLoaded={this.state.posts_loaded}>
                 {posts}
                 </Loader>

@@ -15,8 +15,10 @@ router.route('/post')
         });
     })
     .post(auth.isAuthenticated, function (req, res) {
+        console.log("VIKTIG!!!!")
         console.log(req.body);
-        if(req.user.user_id == req.body.user_id ) {
+        console.log(req.user);
+        if(req.user == req.body.user_id ) {
             Post.create(req.body, function (err, result) {
                 if(err){
                     res.status(400);
