@@ -33,3 +33,5 @@ URL: https://finance-project.herokuapp.com/
 21. Add best sorting for comments
 22. Add profile page for users
 23. Add admin possibilities (user/pageadmin/siteadmim)
+24. Fix design for markdown dropdown
+25. Alter db to new local changes
