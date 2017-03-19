@@ -64,8 +64,31 @@ function postToApi(url, payload, callback) {
                 return(err.message);
             })
 }
+function putToApi(url, payload, callback) {
+    let config = addTokenToConfig({
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload)
 
+    });
+    fetch(url, config)
+        .then(function (response) {
+                if(response.ok){
+                    response.json().then((json) => {
+                        return callback(null, json)
+                    });
+                    return ({message: "Unable to parse JSON"})
+                }
+                return(response)
+            },
+            function (err) {
+                return(err.message);
+            })
+}
 export {
     getFromApi as get,
-    postToApi as post
+    postToApi as post,
+    putToApi as put
 }

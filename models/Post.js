@@ -3,14 +3,27 @@ var db = require("../utils/db");
 const sqlCreatePost = "INSERT INTO post SET ?";
 
 
-const sqlGetPosts = "SELECT * FROM post";
+const sqlGetPosts = "SELECT post.post_id, post.header, post.content, post.created_date, post.user_id, " +
+    "company.ticker, post.image_url, post.link_url, segment.name, username, like_count, " +
+    "COUNT(comment_id) as comment_count FROM post LEFT JOIN user ON post.user_id = user.user_id " +
+    "LEFT JOIN (SELECT post_id, SUM(liked) as like_count FROM post_like GROUP BY post_id) as pl_sum ON pl_sum.post_id = post.post_id" +
+    " LEFT JOIN comment ON comment.post_id = post.post_id " +
+    "JOIN company ON post.ticker= company.ticker LEFT JOIN segment ON segment.segment_id = company.segment_id " +
+    "GROUP BY post_id " +
+    "ORDER BY created_date DESC LIMIT ?,?";
 
 const sqlGetPostById = "SELECT post.post_id, post.header, SUBSTRING(post.content, 1, 100) as content, post.created_date, post.user_id, " +
-    "post.ticker, company.name, post.image_url, post.link_url, username, COUNT(post_like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
-    "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN post_like ON post.post_id = post_like.post_id " +
+    "post.ticker, company.name, post.image_url, post.link_url, username, like_count, COUNT(comment_id) as comment_count FROM post " +
+    "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN (SELECT post_id, SUM(liked) as like_count FROM post_like GROUP BY post_id) as pl_sum ON pl_sum.post_id = post.post_id " +
     "LEFT JOIN comment ON comment.post_id = post.post_id JOIN company ON post.ticker = company.ticker " +
-    "WHERE post.post_id = ? GROUP BY post_id";
+    "WHERE post.post_id = ? GROUP BY post.post_id LIMIT 1";
 
+const sqlGetPostByIdAndUser = "SELECT post.post_id, post.header, SUBSTRING(post.content, 1, 100) as content, post.created_date, post.user_id, " +
+    "post.ticker, company.name, post.image_url, post.link_url, username, like_count, COUNT(comment_id) as comment_count, " +
+    "IF((select count(*) from post_like WHERE post_like.post_id = post.post_id AND user_id = ? AND liked = 1) = 1, true, false) as liked FROM post " +
+    "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN (SELECT post_id, SUM(liked) as like_count FROM post_like GROUP BY post_id) as pl_sum ON pl_sum.post_id = post.post_id " +
+    "LEFT JOIN comment ON comment.post_id = post.post_id JOIN company ON post.ticker = company.ticker " +
+    "WHERE post.post_id = ? GROUP BY post.post_id";
 const sqlDeletePost = "DELETE FROM post WHERE post_id = ?";
 
 
@@ -18,24 +31,38 @@ const sqlUpdatePost = "UPDATE post SET content=? WHERE post_id = ?";
 
 
 const sqlGetPostsByCompany = "SELECT post.post_id, post.header, SUBSTRING(post.content, 1, 100) as content, post.created_date, post.user_id, " +
-    "ticker, post.image_url, post.link_url, username, COUNT(post_like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
-    "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN post_like ON post.post_id = post_like.post_id " +
+    "ticker, post.image_url, post.link_url, username, like_count, COUNT(comment_id) as comment_count FROM post " +
+    "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN (SELECT post_id, SUM(liked) as like_count FROM post_like GROUP BY post_id) as pl_sum ON pl_sum.post_id = post.post_id " +
+    "LEFT JOIN comment ON comment.post_id = post.post_id WHERE post.ticker = ? GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
+
+const sqlGetPostsByCompanyAndUser = "SELECT post.post_id, post.header, SUBSTRING(post.content, 1, 100) as content, post.created_date, post.user_id, " +
+    "ticker, post.image_url, post.link_url, username, like_count, COUNT(comment_id) as comment_count, " +
+    "IF((select count(*) from post_like WHERE post_id = post.post_id AND user_id = ? AND liked = 1) = 1, true, false) as liked FROM post " +
+    "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN (SELECT post_id, SUM(liked) as like_count FROM post_like GROUP BY post_id) as pl_sum ON pl_sum.post_id = post.post_id " +
     "LEFT JOIN comment ON comment.post_id = post.post_id WHERE post.ticker = ? GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
 
 
 const sqlGetPostsBySegment = "SELECT post.post_id, post.header, post.content, post.created_date, post.user_id, " +
-    "ticker, post.image_url, post.link_url, username, COUNT(post_like_id) as like_count, COUNT(comment_id) as comment_count FROM post " +
-    "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN post_like ON post.post_id = post_like.post_id " +
+    "ticker, post.image_url, post.link_url, username, like_count, COUNT(comment_id) as comment_count FROM post " +
+    "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN (SELECT post_id, SUM(liked) as like_count FROM post_like GROUP BY post_id) as pl_sum ON pl_sum.post_id = post.post_id " +
     "LEFT JOIN comment ON comment.post_id = post.post_id WHERE ticker IN (SELECT ticker FROM segment " +
     "WHERE name = ?) GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
 
+const sqlGetPostsBySegmentAndUser = "SELECT post.post_id, post.header, post.content, post.created_date, post.user_id, " +
+    "ticker, post.image_url, post.link_url, username, like_count, COUNT(comment_id) as comment_count, " +
+    "IF((select count(*) from post_like WHERE post_id = post.post_id AND user_id = ? AND liked = 1) = 1, true, false) as liked  FROM post " +
+    "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN (SELECT post_id, SUM(liked) as like_count FROM post_like GROUP BY post_id) as pl_sum ON pl_sum.post_id = post.post_id " +
+    "LEFT JOIN comment ON comment.post_id = post.post_id WHERE ticker IN (select c.ticker from segment s LEFT JOIN company c ON c.segment_id = s.segment_id where s.name = ?) "+
+    "GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
+
 const sqlGetPostsByUser = "SELECT post.post_id, post.header, post.content, post.created_date, post.user_id, " +
-    "company.ticker, post.image_url, post.link_url, segment.name, username, COUNT(post_like_id) as like_count, " +
-    "COUNT(comment_id) as comment_count FROM post LEFT JOIN user ON post.user_id = user.user_id " +
-    "LEFT JOIN post_like ON post.post_id = post_like.post_id LEFT JOIN comment ON comment.post_id = post.post_id " +
+    "company.ticker, post.image_url, post.link_url, segment.name, username, like_count, " +
+    "COUNT(comment_id) as comment_count, IF((select count(*) from post_like WHERE post_id = post.post_id AND user_id = ? AND liked = 1) = 1, true, false) as liked " +
+    "FROM post LEFT JOIN user ON post.user_id = user.user_id " +
+    "LEFT JOIN (SELECT post_id, SUM(liked) as like_count FROM post_like GROUP BY post_id) as pl_sum ON pl_sum.post_id = post.post_id LEFT JOIN comment ON comment.post_id = post.post_id " +
     "JOIN company ON post.ticker= company.ticker LEFT JOIN segment ON segment.segment_id = company.segment_id " +
-    "WHERE post.ticker IN (SELECT ticker FROM user_company WHERE user_id = ?) GROUP BY post_id " +
-    "ORDER BY created_date DESC LIMIT ?,?";
+    "WHERE post.ticker IN (select c.ticker from segment s LEFT JOIN company c ON c.segment_id = s.segment_id where s.name = ?) " +
+    "GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
 
 function createPost(post_params, callback){
     "use strict";
@@ -52,7 +79,8 @@ function createPost(post_params, callback){
 }
 function getPosts(callback){
     "use strict";
-    db.getPool().query(sqlGetPosts, function (err, result) {
+    let limits = [0, 30];
+    db.getPool().query(sqlGetPosts,limits,  function (err, result) {
         if (err) {
             console.log(err);
             return callback(err)
@@ -60,9 +88,20 @@ function getPosts(callback){
         return callback(err, result);
     });
 }
-function getPostById(post_id, callback){
+function getPostById(post_id, user_id, callback){
     "use strict";
-    db.getPool().query(sqlGetPostById, post_id, function (err, result) {
+    let sqlPayload;
+    let sql;
+    if(user_id){
+        sqlPayload = [user_id, post_id];
+        sql = sqlGetPostByIdAndUser;
+    }
+    else{
+        sqlPayload = [post_id];
+        sql = sqlGetPostById;
+    }
+    var query = db.getPool().query(sql, sqlPayload, function (err, result) {
+        console.log(query.sql);
         if(err){
             console.log(err);
             return callback(err);
@@ -78,11 +117,22 @@ function getPostById(post_id, callback){
  }
  Order by is hardcoded to created_date
  */
-function getPostByCompany(ticker, getDetails, callback) {
+function getPostByCompany(ticker, user_id, getDetails, callback) {
     "use strict";
-    getDetails.sLimit = (getDetails.sLimit) ? getDetails.sLimit : 0;
-    getDetails.eLimit = (getDetails.eLimit) ? getDetails.eLimit : getDetails.sLimit+30;
-    var query = db.getPool().query(sqlGetPostsByCompany, [ticker, getDetails.sLimit,getDetails.eLimit], function (err, posts) {
+    "use strict";
+    let sqlPayload;
+    let sql;
+    if(user_id){
+        sqlPayload = [user_id, ticker];
+        sql = sqlGetPostsByCompanyAndUser;
+    }
+    else{
+        sqlPayload = [ticker];
+        sql = sqlGetPostsByCompany;
+    }
+    let index = sqlPayload.push((getDetails.sLimit) ? getDetails.sLimit : 0);
+    sqlPayload.push((getDetails.eLimit) ? getDetails.eLimit : sqlPayload[index-1]+30)
+    var query = db.getPool().query(sql, sqlPayload, function (err, posts) {
         if(err){
             console.log(err);
             return callback(err);
@@ -98,11 +148,22 @@ function getPostByCompany(ticker, getDetails, callback) {
  }
  Order by is hardcoded to created_date
  */
-function getPostBySegment(name, getDetails, callback) {
+function getPostBySegment(name, user_id, getDetails, callback) {
     "use strict";
-    getDetails.sLimit = (getDetails.sLimit) ? getDetails.sLimit : 0;
-    getDetails.eLimit = (getDetails.eLimit) ? getDetails.eLimit : getDetails.sLimit+30;
-    var query = db.getPool().query(sqlGetPostsBySegment, [name, getDetails.sLimit,getDetails.eLimit], function (err, posts) {
+    let sqlPayload;
+    let sql;
+    if(user_id){
+        sqlPayload = [user_id, name];
+        sql = sqlGetPostsBySegmentAndUser;
+    }
+    else{
+        sqlPayload = [name];
+        sql = sqlGetPostsBySegment;
+    }
+    let index = sqlPayload.push((getDetails.sLimit) ? getDetails.sLimit : 0);
+    sqlPayload.push((getDetails.eLimit) ? getDetails.eLimit : sqlPayload[index-1]+30)
+    var query = db.getPool().query(sql, sqlPayload, function (err, posts) {
+        console.log(query.sql)
         if(err){
             console.log(err);
             return callback(err);
@@ -118,8 +179,6 @@ function updatePost(post_content, post_id, callback){
         }
         return callback(null, result);
     });
-    console.log(query)
-
 }
 function deletePost(post_id, callback){
     "use strict";
@@ -147,7 +206,7 @@ function getPostByUser(user_id, getDetails, callback) {
     "use strict";
     getDetails.sLimit = (getDetails.sLimit) ? getDetails.sLimit : 0;
     getDetails.eLimit = (getDetails.eLimit) ? getDetails.eLimit : getDetails.sLimit+30;
-    var query = db.getPool().query(sqlGetPostsByUser, [user_id, getDetails.sLimit,getDetails.eLimit], function (err, posts) {
+    var query = db.getPool().query(sqlGetPostsByUser, [user_id, user_id, getDetails.sLimit,getDetails.eLimit], function (err, posts) {
         if(err){
             console.log(err);
             return callback(err);

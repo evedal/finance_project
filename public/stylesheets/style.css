@@ -189,14 +189,14 @@ header h1 a:last-child {
 
 }
 .second-header{
-    padding: 0.5rem;
+    padding: 1rem;
     background-color: white;
     margin-bottom: 1rem;
     height: 4rem;
 }
 .second-header h2{
     margin: 0;
-    font-weight: bold;
+    font-weight: 400;
     font-size: 1rem;
 }
 .second-header i{
@@ -238,11 +238,14 @@ header h1 a:last-child {
 .post-content img{
     padding: 0.8rem 0 0 0;
     margin: 0;
-    max-width: 100%;
+    width: 100%;
 }
 .post-content p{
     padding: 0.4rem 0;
     margin: 0;
+}
+.post-main{
+    max-width: 80%;
 }
 .post-footer i{
     font-size: 1rem;
@@ -254,7 +257,7 @@ header h1 a:last-child {
     font-size: 0.8rem;
 }
 .post-likes{
-    padding: 0 0 0 0.5rem;
+    padding: 0 0 0 1rem;
     align-items: center;
 }
 .liked span{
@@ -264,7 +267,7 @@ header h1 a:last-child {
     color: #CB7800;
 }
 .comments{
-    margin-top: 0.5rem;
+    margin-top: 1rem;
     margin-left: 1rem;
 
 }
@@ -301,7 +304,7 @@ header h1 a:last-child {
 }
 .input-header{
     background: #F6F5F5;
-    padding: 0.5rem 0;
+    padding: 1rem 0;
     flex-wrap: wrap;
 
 }
@@ -310,7 +313,7 @@ header h1 a:last-child {
     position: relative;
 }
 .input-header nav{
-    padding: 0.5rem 0;
+    padding: 0 0 1rem 0;
 }
 .input-header nav .active{
     background-color: #034584;
@@ -322,7 +325,7 @@ header h1 a:last-child {
 }
 
 .content-wrap{
-    margin: 0.5rem;
+    margin: 1rem;
 }
 .format-buttons{
     flex-grow: 1;
@@ -353,7 +356,7 @@ form input{
     min-width: 5rem;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
-    padding: 0.5rem;
+    padding: 1rem;
     left: 1rem;
 }
 
@@ -397,7 +400,7 @@ form input{
     text-decoration: underline;
 }
 form .markdown{
-    padding: 0.5rem;
+    padding: 1rem;
     background: white;
     -webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,0.075);
     -moz-box-shadow: inset 0 2px 4px rgba(0,0,0,0.075);
@@ -423,7 +426,7 @@ input[type=text], input[type=email], input[type=password]{
     text-decoration: underline;
 }
 form {
-    padding: 0.5rem 0;
+    padding: 0 0 1rem 0;
 }
 form img{
     margin: 1rem;

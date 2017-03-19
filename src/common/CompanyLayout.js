@@ -4,6 +4,8 @@ import Header from '../components/other/Header';
 import Dropdown from '../components/other/Dropdown'
 import {get} from '../utils/APImanager'
 import Loader from '../components/other/Loader';
+import helpers from '../utils/helpers';
+import User from '../models/User';
 class CompanyLayout extends Component{
     constructor(){
         super();
@@ -15,7 +17,8 @@ class CompanyLayout extends Component{
             company: {
 
             },
-            company_loaded: false
+            company_loaded: false,
+            user: User.getUser()
         };
         this.handleLike = this.handleLike.bind(this)
     }
@@ -40,13 +43,38 @@ class CompanyLayout extends Component{
             }
             this.setState({company: company[0], company_loaded: true})
         }.bind(this));
+        //Listen for user changes
+        User.on('change', (user) => {
+            this.setState({user: user})
+        })
 
     }
+    componentWillUnmount(){
+        User.removeAllListeners('change');
+    }
     handleLike(index){
-        let updatedPosts = this.state.posts;
-        updatedPosts[index].liked = !updatedPosts[index].liked;
-        updatedPosts[index].like_count = updatedPosts[index].liked ? ++updatedPosts[index].like_count : --updatedPosts[index].like_count;
-        this.setState({posts : updatedPosts})
+        console.log(this.state.user)
+        if(this.state.user && this.state.user.user_id){
+            let posts = this.state.posts;
+            let updatedPost = posts[index];
+            updatedPost.liked = !updatedPost.liked;
+            updatedPost.like_count = updatedPost.liked ? ++updatedPost.like_count : --updatedPost.like_count;
+            posts[index] = updatedPost;
+            this.setState({posts: posts}, () => {
+                let reversedPost = this.state.posts[index];
+                helpers.handleLike(reversedPost.post_id, reversedPost.liked, (err, result) => {
+                    if (err) {
+                        let posts = this.state.posts;
+                        reversedPost.liked = !reversedPost.liked;
+                        reversedPost.like_count = reversedPost.liked ? ++reversedPost.like_count : --reversedPost.like_count;
+                        posts[index] = reversedPost;
+                        return this.setState({posts: posts});
+                    }
+                    console.log(result);
+                });
+            });
+        }
+        else alert("You need to be logged in");
     }
 
     render(){

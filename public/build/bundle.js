@@ -938,7 +938,7 @@ module.exports = invariant;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-exports.post = exports.get = undefined;
+exports.put = exports.post = exports.get = undefined;
 
 __webpack_require__(93);
 
@@ -1005,9 +1005,30 @@ function postToApi(url, payload, callback) {
         return err.message;
     });
 }
+function putToApi(url, payload, callback) {
+    var config = addTokenToConfig({
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
 
+    });
+    fetch(url, config).then(function (response) {
+        if (response.ok) {
+            response.json().then(function (json) {
+                return callback(null, json);
+            });
+            return { message: "Unable to parse JSON" };
+        }
+        return response;
+    }, function (err) {
+        return err.message;
+    });
+}
 exports.get = getFromApi;
 exports.post = postToApi;
+exports.put = putToApi;
 
 /***/ }),
 /* 11 */
@@ -5061,6 +5082,8 @@ var _reactRouter = __webpack_require__(7);
 
 var _format = __webpack_require__(98);
 
+var _format2 = _interopRequireDefault(_format);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -5090,10 +5113,10 @@ var Post = function (_Component) {
         value: function render() {
             console.log(this.props);
             var post = this.props.currentPost;
-            var timePresentation = (0, _format.timeSincePosted)(post.created_date);
+            var timePresentation = _format2.default.timeSincePosted(post.created_date);
             var content = void 0;
             var likeContent = void 0;
-            var encodedHeader = encodeURI(post.header);
+            var encodedHeader = _format2.default.formatUrl(post.header);
             var contentPath = this.props.basePath + "/post/" + post.post_id + "/" + encodedHeader;
             if (post.image_url) {
                 content = _react2.default.createElement(
@@ -7662,6 +7685,8 @@ var _reactRouter = __webpack_require__(7);
 
 var _format = __webpack_require__(98);
 
+var _format2 = _interopRequireDefault(_format);
+
 var _reactMarkdown = __webpack_require__(83);
 
 var _reactMarkdown2 = _interopRequireDefault(_reactMarkdown);
@@ -7692,7 +7717,7 @@ var Comment = function (_Component) {
         value: function render() {
             var comment = this.props.currentComment;
             console.log(comment);
-            var timeFormatted = (0, _format.timeSincePosted)(comment.posted_datetime);
+            var timeFormatted = _format2.default.timeSincePosted(comment.posted_datetime);
             return _react2.default.createElement(
                 'div',
                 { className: 'comment' },
@@ -12128,10 +12153,6 @@ var _CommentWithFooter = __webpack_require__(159);
 
 var _CommentWithFooter2 = _interopRequireDefault(_CommentWithFooter);
 
-var _reactMarkdown = __webpack_require__(83);
-
-var _reactMarkdown2 = _interopRequireDefault(_reactMarkdown);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -12140,12 +12161,9 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-;
-
 /*
     Adds new comments recursivly with children
  */
-
 var CommentsRecursive = function (_Component) {
     _inherits(CommentsRecursive, _Component);
 
@@ -12164,8 +12182,10 @@ var CommentsRecursive = function (_Component) {
                 commentList = props.comments.map(function (comment) {
                     console.log(comment.children);
                     return _react2.default.createElement(_CommentWithFooter2.default, { basePath: props.basePath, currentComment: comment.value,
+                        key: comment.value.comment_id,
+                        handleLike: props.handleLike,
                         childComments: _react2.default.createElement(CommentsRecursive, { comments: comment.children,
-                            basePath: props.basePath }) });
+                            basePath: props.basePath, handleLike: props.handleLike }) });
                 });
             }
             return _react2.default.createElement(
@@ -12310,6 +12330,10 @@ Object.defineProperty(exports, "__esModule", {
 /**
  * Created by evend on 2/18/2017.
  */
+String.prototype.replaceAll = function (search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
 function getTimeSincePosted(datePosted) {
     "use strict";
 
@@ -12337,7 +12361,21 @@ function getTimeSincePosted(datePosted) {
     }
     return timeFormatted;
 }
-exports.timeSincePosted = getTimeSincePosted;
+function formatUrl(url) {
+    //Remove spaces
+    var fUrl = url.replaceAll(' ', "-");
+    //Remove capital letters
+    fUrl = fUrl.toLowerCase();
+    //Set non-UTF letters to replacements
+    fUrl = fUrl.replaceAll('å', 'aa').replaceAll('ø', 'o').replaceAll('æ', 'ae');
+    console.log(fUrl);
+    //Fix edge cases
+    return encodeURI(fUrl);
+}
+exports.default = {
+    timeSincePosted: getTimeSincePosted,
+    formatUrl: formatUrl
+};
 
 /***/ }),
 /* 99 */
@@ -12365,6 +12403,8 @@ exports.default = {
         addCompany: "Nytt selskap",
         companies: "Selskaper",
         segments: "Segmenter",
+        login: "Logg inn",
+        register: "Registrer deg",
         home: "Hjem"
     },
     messages: {
@@ -12372,6 +12412,9 @@ exports.default = {
         noPosts: "Legg til den første posten!",
         noCompany: "Legg til det første selskapet!",
         noSegment: "Legg til det første segmentet!"
+    },
+    comment: {
+        commentLabel: "Kommentarer"
     }
 };
 
@@ -19388,6 +19431,14 @@ var _Loader = __webpack_require__(336);
 
 var _Loader2 = _interopRequireDefault(_Loader);
 
+var _helpers = __webpack_require__(355);
+
+var _helpers2 = _interopRequireDefault(_helpers);
+
+var _User = __webpack_require__(17);
+
+var _User2 = _interopRequireDefault(_User);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -19408,7 +19459,8 @@ var CompanyLayout = function (_Component) {
             posts: [],
             post_loaded: false,
             company: {},
-            company_loaded: false
+            company_loaded: false,
+            user: _User2.default.getUser()
         };
         _this.handleLike = _this.handleLike.bind(_this);
         return _this;
@@ -19422,6 +19474,8 @@ var CompanyLayout = function (_Component) {
     _createClass(CompanyLayout, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
+            var _this2 = this;
+
             var ticker = this.props.params.ticker;
             (0, _APImanager.get)('/api/post/company/' + ticker, function (err, posts) {
                 if (err) {
@@ -19438,14 +19492,42 @@ var CompanyLayout = function (_Component) {
                 }
                 this.setState({ company: company[0], company_loaded: true });
             }.bind(this));
+            //Listen for user changes
+            _User2.default.on('change', function (user) {
+                _this2.setState({ user: user });
+            });
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            _User2.default.removeAllListeners('change');
         }
     }, {
         key: 'handleLike',
         value: function handleLike(index) {
-            var updatedPosts = this.state.posts;
-            updatedPosts[index].liked = !updatedPosts[index].liked;
-            updatedPosts[index].like_count = updatedPosts[index].liked ? ++updatedPosts[index].like_count : --updatedPosts[index].like_count;
-            this.setState({ posts: updatedPosts });
+            var _this3 = this;
+
+            console.log(this.state.user);
+            if (this.state.user && this.state.user.user_id) {
+                var posts = this.state.posts;
+                var updatedPost = posts[index];
+                updatedPost.liked = !updatedPost.liked;
+                updatedPost.like_count = updatedPost.liked ? ++updatedPost.like_count : --updatedPost.like_count;
+                posts[index] = updatedPost;
+                this.setState({ posts: posts }, function () {
+                    var reversedPost = _this3.state.posts[index];
+                    _helpers2.default.handleLike(reversedPost.post_id, reversedPost.liked, function (err, result) {
+                        if (err) {
+                            var _posts = _this3.state.posts;
+                            reversedPost.liked = !reversedPost.liked;
+                            reversedPost.like_count = reversedPost.liked ? ++reversedPost.like_count : --reversedPost.like_count;
+                            _posts[index] = reversedPost;
+                            return _this3.setState({ posts: _posts });
+                        }
+                        console.log(result);
+                    });
+                });
+            } else alert("You need to be logged in");
         }
     }, {
         key: 'render',
@@ -19524,6 +19606,10 @@ var _User = __webpack_require__(17);
 
 var _User2 = _interopRequireDefault(_User);
 
+var _helpers = __webpack_require__(355);
+
+var _helpers2 = _interopRequireDefault(_helpers);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -19554,7 +19640,7 @@ var Home = function (_Component) {
             var _this2 = this;
 
             var user = this.state.user;
-            if (this.state.user.user_id) {
+            if (user.user_id) {
                 (0, _APImanager.get)('/api/post/user/' + user.user_id, function (err, posts) {
                     if (err) {
                         console.log(err.message);
@@ -19583,10 +19669,29 @@ var Home = function (_Component) {
     }, {
         key: 'handleLike',
         value: function handleLike(index) {
-            var updatedPosts = this.state.posts;
-            updatedPosts[index].liked = !updatedPosts[index].liked;
-            updatedPosts[index].like_count = updatedPosts[index].liked ? ++updatedPosts[index].like_count : --updatedPosts[index].like_count;
-            this.setState({ posts: updatedPosts });
+            var _this3 = this;
+
+            console.log(this.state.user);
+            if (this.state.user && this.state.user.user_id) {
+                var posts = this.state.posts;
+                var updatedPost = posts[index];
+                updatedPost.liked = !updatedPost.liked;
+                updatedPost.like_count = updatedPost.liked ? ++updatedPost.like_count : --updatedPost.like_count;
+                posts[index] = updatedPost;
+                this.setState({ posts: posts }, function () {
+                    var reversedPost = _this3.state.posts[index];
+                    _helpers2.default.handleLike(reversedPost.post_id, reversedPost.liked, function (err, result) {
+                        if (err) {
+                            var _posts = _this3.state.posts;
+                            reversedPost.liked = !reversedPost.liked;
+                            reversedPost.like_count = reversedPost.liked ? ++reversedPost.like_count : --reversedPost.like_count;
+                            _posts[index] = reversedPost;
+                            return _this3.setState({ posts: _posts });
+                        }
+                        console.log(result);
+                    });
+                });
+            } else alert("You need to be logged in");
         }
     }, {
         key: 'render',
@@ -19710,6 +19815,14 @@ var _APIRoute = __webpack_require__(180);
 
 var _APIRoute2 = _interopRequireDefault(_APIRoute);
 
+var _helpers = __webpack_require__(355);
+
+var _helpers2 = _interopRequireDefault(_helpers);
+
+var _Text = __webpack_require__(99);
+
+var _Text2 = _interopRequireDefault(_Text);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -19741,20 +19854,22 @@ var PostLayout = function (_Component) {
         value: function handleLike() {
             var _this2 = this;
 
-            var updatedPost = this.state.post;
-            updatedPost.liked = !this.state.post.liked;
-            updatedPost.like_count = updatedPost.liked ? ++updatedPost.like_count : --updatedPost.like_count;
-            this.setState({ post: updatedPost }, function () {
-                (0, _APImanager.post)(_APIRoute2.default.post.like(_this2.state.post.post_id, _this2.state.user.user_id), { liked: _this2.state.post.liked }, function (err, result) {
-                    if (err) {
-                        var reversedPost = _this2.state.post;
-                        reversedPost.liked = !_this2.state.post.liked;
-                        reversedPost.like_count = reversedPost.liked ? ++reversedPost.like_count : --reversedPost.like_count;
-                        return _this2.setState({ post: reversedPost });
-                    }
-                    console.log(result);
+            if (this.state.user && this.state.user.user_id) {
+                var updatedPost = this.state.post;
+                updatedPost.liked = !this.state.post.liked;
+                updatedPost.like_count = updatedPost.liked ? ++updatedPost.like_count : --updatedPost.like_count;
+                this.setState({ post: updatedPost }, function () {
+                    var reversedPost = _this2.state.post;
+                    _helpers2.default.handleLike(reversedPost.post_id, reversedPost.liked, function (err, result) {
+                        if (err) {
+                            reversedPost.liked = !_this2.state.post.liked;
+                            reversedPost.like_count = reversedPost.liked ? ++reversedPost.like_count : --reversedPost.like_count;
+                            return _this2.setState({ post: reversedPost });
+                        }
+                        console.log(result);
+                    });
                 });
-            });
+            } else alert("You need to be logged in");
         }
     }, {
         key: 'componentDidMount',
@@ -19768,14 +19883,15 @@ var PostLayout = function (_Component) {
                     console.log(err.message);
                     return;
                 }
-                this.setState({ post: post[0] });
                 var encodedSlug = encodeURI(post[0].header);
                 var pathname = this.props.location.pathname;
+                console.log(post[0]);
                 if (!params.slug) {
                     if (pathname.slice(-1) != "/") pathname += "/";
                     var pathWithSlug = this.props.location.pathname + encodedSlug;
                     this.props.router.push(pathWithSlug);
                 }
+                this.setState({ post: post[0] });
             }.bind(this));
             //Get company, set state and add slug to path
 
@@ -19877,6 +19993,18 @@ var _Loader = __webpack_require__(336);
 
 var _Loader2 = _interopRequireDefault(_Loader);
 
+var _Text = __webpack_require__(99);
+
+var _Text2 = _interopRequireDefault(_Text);
+
+var _Path = __webpack_require__(181);
+
+var _Path2 = _interopRequireDefault(_Path);
+
+var _User = __webpack_require__(17);
+
+var _User2 = _interopRequireDefault(_User);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -19896,7 +20024,8 @@ var SegmentLayout = function (_Component) {
         _this.state = {
             posts: [],
             posts_loaded: false,
-            segment: {}
+            segment: {},
+            user: _User2.default.getUser()
         };
         _this.handleLike = _this.handleLike.bind(_this);
         return _this;
@@ -19909,6 +20038,8 @@ var SegmentLayout = function (_Component) {
     _createClass(SegmentLayout, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
+            var _this2 = this;
+
             var segmentName = this.props.params.name;
             (0, _APImanager.get)('/api/post/segment/' + segmentName, function (err, posts) {
                 if (err) {
@@ -19925,6 +20056,16 @@ var SegmentLayout = function (_Component) {
                 }
                 this.setState({ segment: segment[0] });
             }.bind(this));
+
+            //Listen for user changes
+            _User2.default.on('change', function (user) {
+                _this2.setState({ user: user });
+            });
+        }
+    }, {
+        key: 'componentWillUnmount',
+        value: function componentWillUnmount() {
+            _User2.default.removeAllListeners('change');
         }
         /*
             Sets post like to the opposite of its previous state.
@@ -19934,10 +20075,29 @@ var SegmentLayout = function (_Component) {
     }, {
         key: 'handleLike',
         value: function handleLike(index) {
-            var updatedPosts = this.state.posts;
-            updatedPosts[index].liked = !updatedPosts[index].liked;
-            updatedPosts[index].like_count = updatedPosts[index].liked ? ++updatedPosts[index].like_count : --updatedPosts[index].like_count;
-            this.setState({ posts: updatedPosts });
+            var _this3 = this;
+
+            console.log(this.state.user);
+            if (this.state.user && this.state.user.user_id) {
+                var posts = this.state.posts;
+                var updatedPost = posts[index];
+                updatedPost.liked = !updatedPost.liked;
+                updatedPost.like_count = updatedPost.liked ? ++updatedPost.like_count : --updatedPost.like_count;
+                posts[index] = updatedPost;
+                this.setState({ posts: posts }, function () {
+                    var reversedPost = _this3.state.posts[index];
+                    helpers.handleLike(reversedPost.post_id, reversedPost.liked, function (err, result) {
+                        if (err) {
+                            var _posts = _this3.state.posts;
+                            reversedPost.liked = !reversedPost.liked;
+                            reversedPost.like_count = reversedPost.liked ? ++reversedPost.like_count : --reversedPost.like_count;
+                            _posts[index] = reversedPost;
+                            return _this3.setState({ posts: _posts });
+                        }
+                        console.log(result);
+                    });
+                });
+            } else alert("You need to be logged in");
         }
         /*
             Renders header, dropdown and posts, and adds information to children and links
@@ -19956,6 +20116,9 @@ var SegmentLayout = function (_Component) {
             if (this.state.segment) {
                 var headerData = {
                     links: [{
+                        title: _Text2.default.headers.segments,
+                        url: _Path2.default.segments
+                    }, {
                         title: this.state.segment.name,
                         url: pathname
                     }]
@@ -20168,6 +20331,10 @@ var _Text = __webpack_require__(99);
 
 var _Text2 = _interopRequireDefault(_Text);
 
+var _Path = __webpack_require__(181);
+
+var _Path2 = _interopRequireDefault(_Path);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -20255,8 +20422,12 @@ var Login = function (_Component) {
             var _this2 = this;
 
             var headerData = {
-                title: "Logg inn",
-                titleLink: "#"
+                links: [{
+                    title: _Text2.default.headers.home,
+                    url: "/"
+                }, {
+                    title: _Text2.default.headers.login
+                }]
             };
 
             var emailData = {
@@ -20292,23 +20463,27 @@ var Login = function (_Component) {
             return _react2.default.createElement(
                 'div',
                 null,
-                _react2.default.createElement(_Header2.default, { data: headerData }),
+                _react2.default.createElement(_Header2.default, headerData),
                 _react2.default.createElement(
-                    _FormLayout2.default,
-                    { onSubmit: this.handleSubmit, onValid: this.onValid, onInvalid: this.onInvalid },
-                    _react2.default.createElement(_InputField2.default, emailData),
-                    _react2.default.createElement(_InputField2.default, passData),
-                    _react2.default.createElement(_SubmitBtn2.default, { value: _Placeholder2.default.login.submit, disabled: !this.state.allValid })
-                ),
-                _react2.default.createElement(
-                    'p',
-                    null,
-                    _Text2.default.login.registerLabel,
+                    'div',
+                    { className: 'content-wrap' },
                     _react2.default.createElement(
-                        _reactRouter.Link,
-                        { to: '/register' },
-                        ' ',
-                        _Text2.default.login.registerLink
+                        _FormLayout2.default,
+                        { onSubmit: this.handleSubmit, onValid: this.onValid, onInvalid: this.onInvalid },
+                        _react2.default.createElement(_InputField2.default, emailData),
+                        _react2.default.createElement(_InputField2.default, passData),
+                        _react2.default.createElement(_SubmitBtn2.default, { value: _Placeholder2.default.login.submit, disabled: !this.state.allValid })
+                    ),
+                    _react2.default.createElement(
+                        'p',
+                        null,
+                        _Text2.default.login.registerLabel,
+                        _react2.default.createElement(
+                            _reactRouter.Link,
+                            { to: '/register' },
+                            ' ',
+                            _Text2.default.login.registerLink
+                        )
                     )
                 )
             );
@@ -20565,8 +20740,12 @@ var Register = function (_Component) {
             var _this2 = this;
 
             var headerData = {
-                title: "Registrer deg",
-                titleLink: "#"
+                links: [{
+                    title: _Text2.default.headers.home,
+                    url: "/"
+                }, {
+                    title: _Text2.default.headers.register
+                }]
             };
             var usernameData = {
                 onChange: this.handleUsernameUpdate,
@@ -20640,27 +20819,31 @@ var Register = function (_Component) {
             return _react2.default.createElement(
                 'div',
                 null,
-                _react2.default.createElement(_Header2.default, { data: headerData }),
+                _react2.default.createElement(_Header2.default, headerData),
                 _react2.default.createElement(
-                    _FormLayout2.default,
-                    { onSubmit: this.handleSubmit, onValid: this.onValid, onInvalid: this.onInvalid },
-                    _react2.default.createElement(_InputField2.default, usernameData),
-                    _react2.default.createElement(_InputField2.default, firstNameData),
-                    _react2.default.createElement(_InputField2.default, lastNameData),
-                    _react2.default.createElement(_InputField2.default, emailData),
-                    _react2.default.createElement(_InputField2.default, passwordData),
-                    _react2.default.createElement(_InputField2.default, passwordReData),
-                    _react2.default.createElement(_SubmitBtn2.default, { value: _Placeholder2.default.register.submit })
-                ),
-                _react2.default.createElement(
-                    'p',
-                    null,
-                    _Text2.default.register.loginLabel,
+                    'div',
+                    { className: 'content-wrap' },
                     _react2.default.createElement(
-                        _reactRouter.Link,
-                        { to: '/login' },
-                        ' ',
-                        _Text2.default.register.loginLink
+                        _FormLayout2.default,
+                        { onSubmit: this.handleSubmit, onValid: this.onValid, onInvalid: this.onInvalid },
+                        _react2.default.createElement(_InputField2.default, usernameData),
+                        _react2.default.createElement(_InputField2.default, firstNameData),
+                        _react2.default.createElement(_InputField2.default, lastNameData),
+                        _react2.default.createElement(_InputField2.default, emailData),
+                        _react2.default.createElement(_InputField2.default, passwordData),
+                        _react2.default.createElement(_InputField2.default, passwordReData),
+                        _react2.default.createElement(_SubmitBtn2.default, { value: _Placeholder2.default.register.submit })
+                    ),
+                    _react2.default.createElement(
+                        'p',
+                        null,
+                        _Text2.default.register.loginLabel,
+                        _react2.default.createElement(
+                            _reactRouter.Link,
+                            { to: '/login' },
+                            ' ',
+                            _Text2.default.register.loginLink
+                        )
                     )
                 )
             );
@@ -20695,6 +20878,10 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouter = __webpack_require__(7);
 
+var _classnames = __webpack_require__(23);
+
+var _classnames2 = _interopRequireDefault(_classnames);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -20717,7 +20904,12 @@ var CommentWithFooter = function (_Component) {
         value: function render() {
             var comment = this.props.currentComment;
             var children = this.props.childComments;
-            console.log("heihei");
+            var iconClasses = (0, _classnames2.default)({
+                "flex-center": true,
+                "comment-like": true,
+                "liked": comment.liked
+            });
+            console.log(this.props.handleLike);
             return _react2.default.createElement(_Comment2.default, { currentComment: comment, childComments: children, footer: _react2.default.createElement(
                     'div',
                     { className: 'flex-center comment-footer' },
@@ -20735,7 +20927,7 @@ var CommentWithFooter = function (_Component) {
                         ),
                         _react2.default.createElement(
                             'div',
-                            { className: 'flex-center comment-like' },
+                            { className: iconClasses, onClick: this.props.handleLike, 'data-id': comment.comment_id },
                             _react2.default.createElement(
                                 'span',
                                 null,
@@ -20785,6 +20977,10 @@ var _CommentsRecursive2 = _interopRequireDefault(_CommentsRecursive);
 
 var _APImanager = __webpack_require__(10);
 
+var _APIRoute = __webpack_require__(180);
+
+var _APIRoute2 = _interopRequireDefault(_APIRoute);
+
 var _commentSort = __webpack_require__(178);
 
 var _commentSort2 = _interopRequireDefault(_commentSort);
@@ -20800,6 +20996,18 @@ var _ComponentReplacer2 = _interopRequireDefault(_ComponentReplacer);
 var _Text = __webpack_require__(99);
 
 var _Text2 = _interopRequireDefault(_Text);
+
+var _authUtils = __webpack_require__(40);
+
+var _authUtils2 = _interopRequireDefault(_authUtils);
+
+var _helpers = __webpack_require__(355);
+
+var _helpers2 = _interopRequireDefault(_helpers);
+
+var _traverse = __webpack_require__(356);
+
+var _traverse2 = _interopRequireDefault(_traverse);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -20821,6 +21029,7 @@ var Comments = function (_Component) {
             comments: [],
             isLoaded: false
         };
+        _this.handleLike = _this.handleLike.bind(_this);
         return _this;
     }
 
@@ -20836,6 +21045,54 @@ var Comments = function (_Component) {
             }.bind(this));
         }
     }, {
+        key: 'updateComments',
+        value: function updateComments(comments, targetId) {
+
+            for (var i = 0; i < comments.length; ++i) {
+                console.log(targetId);
+
+                console.log(comments[i].value);
+                if (comments[i].value.comment_id == targetId) {
+                    comments[i].value.liked = !comments[i].value.liked;
+                    comments[i].value.like_count = comments[i].value.liked ? ++comments[i].value.like_count : --comments[i].value.like_count;
+                    return comments[i];
+                }
+                if (comments[i].children && comments[i].children.length > 0) {
+                    var targetComment = this.updateComments(comments[i].children, targetId);
+                    if (targetComment) return targetComment;
+                }
+            }
+            return false;
+        }
+    }, {
+        key: 'handleLike',
+        value: function handleLike(event) {
+            var _this2 = this;
+
+            _authUtils2.default.isAuthenticated(function (err, user) {
+                if (err) return alert(err);
+                if (user) {
+                    var comments = _this2.state.comments;
+                    var targetId = event.currentTarget.dataset.id;
+                    var comment = _this2.updateComments(comments, targetId);
+                    console.log(comment);
+                    if (comment) {
+                        var editedComment = comment.value;
+                        _this2.setState({ comments: comments }, function () {
+                            (0, _APImanager.put)(_APIRoute2.default.comment.like(editedComment.comment_id), { liked: editedComment.liked }, function (err, result) {
+                                if (err) {
+                                    var revertedComments = _this2.state.comments;
+                                    _this2.updateComments(revertedComments, targetId);
+                                    _this2.setState({ comments: revertedComments });
+                                }
+                                console.log(result);
+                            });
+                        });
+                    }
+                } else alert("Du er ikke logget inn");
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
             var commentList = void 0;
@@ -20844,7 +21101,7 @@ var Comments = function (_Component) {
             var basePath = "/segment/" + params.name + "/company/" + params.ticker + "/post/" + params.post_id;
 
             if (this.state.comments.length > 0) {
-                commentList = _react2.default.createElement(_CommentsRecursive2.default, { basePath: basePath, comments: this.state.comments });
+                commentList = _react2.default.createElement(_CommentsRecursive2.default, { basePath: basePath, comments: this.state.comments, handleLike: this.handleLike });
             } else {
                 var replaceData = {
                     message: _Text2.default.messages.noComments,
@@ -22691,8 +22948,21 @@ exports.default = {
         base: "/api/company"
     },
     post: {
-        like: function like(post_id, user_id) {
-            return "api/post/" + post_id + "/user/" + user_id;
+        like: function like(post_id) {
+            return "/api/like/post/" + post_id;
+        },
+        post: function post(post_id) {
+            "use strict";
+
+            if (post_id) {
+                return "/api/post" + post_id;
+            }
+            return "/api/post";
+        }
+    },
+    comment: {
+        like: function like(comment_id) {
+            return "/api/like/comment/" + comment_id;
         }
     }
 };
@@ -22714,7 +22984,8 @@ exports.default = {
         if (!segment_name) return "/";
         return company_ticker ? "/segment/" + segment_name : "/segment/" + segment_name + "/company/" + company_ticker;
     },
-    companies: "/company"
+    companies: "/company",
+    segments: "/segment"
 };
 
 /***/ }),
@@ -46600,6 +46871,359 @@ var ComponentReplacer = function (_Component) {
 }(_react.Component);
 
 exports.default = ComponentReplacer;
+
+/***/ }),
+/* 355 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _APImanager = __webpack_require__(10);
+
+var _APIRoute = __webpack_require__(180);
+
+var _APIRoute2 = _interopRequireDefault(_APIRoute);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+exports.default = {
+    handleLike: function handleLike(post_id, liked, callback) {
+        var payload = {
+            liked: liked
+        };
+        (0, _APImanager.put)(_APIRoute2.default.post.like(post_id), payload, function (err, result) {
+            if (err) {
+                return callback(err);
+            }
+            return callback(null, result);
+        });
+    }
+};
+
+/***/ }),
+/* 356 */
+/***/ (function(module, exports) {
+
+var traverse = module.exports = function (obj) {
+    return new Traverse(obj);
+};
+
+function Traverse (obj) {
+    this.value = obj;
+}
+
+Traverse.prototype.get = function (ps) {
+    var node = this.value;
+    for (var i = 0; i < ps.length; i ++) {
+        var key = ps[i];
+        if (!node || !hasOwnProperty.call(node, key)) {
+            node = undefined;
+            break;
+        }
+        node = node[key];
+    }
+    return node;
+};
+
+Traverse.prototype.has = function (ps) {
+    var node = this.value;
+    for (var i = 0; i < ps.length; i ++) {
+        var key = ps[i];
+        if (!node || !hasOwnProperty.call(node, key)) {
+            return false;
+        }
+        node = node[key];
+    }
+    return true;
+};
+
+Traverse.prototype.set = function (ps, value) {
+    var node = this.value;
+    for (var i = 0; i < ps.length - 1; i ++) {
+        var key = ps[i];
+        if (!hasOwnProperty.call(node, key)) node[key] = {};
+        node = node[key];
+    }
+    node[ps[i]] = value;
+    return value;
+};
+
+Traverse.prototype.map = function (cb) {
+    return walk(this.value, cb, true);
+};
+
+Traverse.prototype.forEach = function (cb) {
+    this.value = walk(this.value, cb, false);
+    return this.value;
+};
+
+Traverse.prototype.reduce = function (cb, init) {
+    var skip = arguments.length === 1;
+    var acc = skip ? this.value : init;
+    this.forEach(function (x) {
+        if (!this.isRoot || !skip) {
+            acc = cb.call(this, acc, x);
+        }
+    });
+    return acc;
+};
+
+Traverse.prototype.paths = function () {
+    var acc = [];
+    this.forEach(function (x) {
+        acc.push(this.path); 
+    });
+    return acc;
+};
+
+Traverse.prototype.nodes = function () {
+    var acc = [];
+    this.forEach(function (x) {
+        acc.push(this.node);
+    });
+    return acc;
+};
+
+Traverse.prototype.clone = function () {
+    var parents = [], nodes = [];
+    
+    return (function clone (src) {
+        for (var i = 0; i < parents.length; i++) {
+            if (parents[i] === src) {
+                return nodes[i];
+            }
+        }
+        
+        if (typeof src === 'object' && src !== null) {
+            var dst = copy(src);
+            
+            parents.push(src);
+            nodes.push(dst);
+            
+            forEach(objectKeys(src), function (key) {
+                dst[key] = clone(src[key]);
+            });
+            
+            parents.pop();
+            nodes.pop();
+            return dst;
+        }
+        else {
+            return src;
+        }
+    })(this.value);
+};
+
+function walk (root, cb, immutable) {
+    var path = [];
+    var parents = [];
+    var alive = true;
+    
+    return (function walker (node_) {
+        var node = immutable ? copy(node_) : node_;
+        var modifiers = {};
+        
+        var keepGoing = true;
+        
+        var state = {
+            node : node,
+            node_ : node_,
+            path : [].concat(path),
+            parent : parents[parents.length - 1],
+            parents : parents,
+            key : path.slice(-1)[0],
+            isRoot : path.length === 0,
+            level : path.length,
+            circular : null,
+            update : function (x, stopHere) {
+                if (!state.isRoot) {
+                    state.parent.node[state.key] = x;
+                }
+                state.node = x;
+                if (stopHere) keepGoing = false;
+            },
+            'delete' : function (stopHere) {
+                delete state.parent.node[state.key];
+                if (stopHere) keepGoing = false;
+            },
+            remove : function (stopHere) {
+                if (isArray(state.parent.node)) {
+                    state.parent.node.splice(state.key, 1);
+                }
+                else {
+                    delete state.parent.node[state.key];
+                }
+                if (stopHere) keepGoing = false;
+            },
+            keys : null,
+            before : function (f) { modifiers.before = f },
+            after : function (f) { modifiers.after = f },
+            pre : function (f) { modifiers.pre = f },
+            post : function (f) { modifiers.post = f },
+            stop : function () { alive = false },
+            block : function () { keepGoing = false }
+        };
+        
+        if (!alive) return state;
+        
+        function updateState() {
+            if (typeof state.node === 'object' && state.node !== null) {
+                if (!state.keys || state.node_ !== state.node) {
+                    state.keys = objectKeys(state.node)
+                }
+                
+                state.isLeaf = state.keys.length == 0;
+                
+                for (var i = 0; i < parents.length; i++) {
+                    if (parents[i].node_ === node_) {
+                        state.circular = parents[i];
+                        break;
+                    }
+                }
+            }
+            else {
+                state.isLeaf = true;
+                state.keys = null;
+            }
+            
+            state.notLeaf = !state.isLeaf;
+            state.notRoot = !state.isRoot;
+        }
+        
+        updateState();
+        
+        // use return values to update if defined
+        var ret = cb.call(state, state.node);
+        if (ret !== undefined && state.update) state.update(ret);
+        
+        if (modifiers.before) modifiers.before.call(state, state.node);
+        
+        if (!keepGoing) return state;
+        
+        if (typeof state.node == 'object'
+        && state.node !== null && !state.circular) {
+            parents.push(state);
+            
+            updateState();
+            
+            forEach(state.keys, function (key, i) {
+                path.push(key);
+                
+                if (modifiers.pre) modifiers.pre.call(state, state.node[key], key);
+                
+                var child = walker(state.node[key]);
+                if (immutable && hasOwnProperty.call(state.node, key)) {
+                    state.node[key] = child.node;
+                }
+                
+                child.isLast = i == state.keys.length - 1;
+                child.isFirst = i == 0;
+                
+                if (modifiers.post) modifiers.post.call(state, child);
+                
+                path.pop();
+            });
+            parents.pop();
+        }
+        
+        if (modifiers.after) modifiers.after.call(state, state.node);
+        
+        return state;
+    })(root).node;
+}
+
+function copy (src) {
+    if (typeof src === 'object' && src !== null) {
+        var dst;
+        
+        if (isArray(src)) {
+            dst = [];
+        }
+        else if (isDate(src)) {
+            dst = new Date(src.getTime ? src.getTime() : src);
+        }
+        else if (isRegExp(src)) {
+            dst = new RegExp(src);
+        }
+        else if (isError(src)) {
+            dst = { message: src.message };
+        }
+        else if (isBoolean(src)) {
+            dst = new Boolean(src);
+        }
+        else if (isNumber(src)) {
+            dst = new Number(src);
+        }
+        else if (isString(src)) {
+            dst = new String(src);
+        }
+        else if (Object.create && Object.getPrototypeOf) {
+            dst = Object.create(Object.getPrototypeOf(src));
+        }
+        else if (src.constructor === Object) {
+            dst = {};
+        }
+        else {
+            var proto =
+                (src.constructor && src.constructor.prototype)
+                || src.__proto__
+                || {}
+            ;
+            var T = function () {};
+            T.prototype = proto;
+            dst = new T;
+        }
+        
+        forEach(objectKeys(src), function (key) {
+            dst[key] = src[key];
+        });
+        return dst;
+    }
+    else return src;
+}
+
+var objectKeys = Object.keys || function keys (obj) {
+    var res = [];
+    for (var key in obj) res.push(key)
+    return res;
+};
+
+function toS (obj) { return Object.prototype.toString.call(obj) }
+function isDate (obj) { return toS(obj) === '[object Date]' }
+function isRegExp (obj) { return toS(obj) === '[object RegExp]' }
+function isError (obj) { return toS(obj) === '[object Error]' }
+function isBoolean (obj) { return toS(obj) === '[object Boolean]' }
+function isNumber (obj) { return toS(obj) === '[object Number]' }
+function isString (obj) { return toS(obj) === '[object String]' }
+
+var isArray = Array.isArray || function isArray (xs) {
+    return Object.prototype.toString.call(xs) === '[object Array]';
+};
+
+var forEach = function (xs, fn) {
+    if (xs.forEach) return xs.forEach(fn)
+    else for (var i = 0; i < xs.length; i++) {
+        fn(xs[i], i, xs);
+    }
+};
+
+forEach(objectKeys(Traverse.prototype), function (key) {
+    traverse[key] = function (obj) {
+        var args = [].slice.call(arguments, 1);
+        var t = new Traverse(obj);
+        return t[key].apply(t, args);
+    };
+});
+
+var hasOwnProperty = Object.hasOwnProperty || function (obj, key) {
+    return key in obj;
+};
+
 
 /***/ })
 /******/ ]);

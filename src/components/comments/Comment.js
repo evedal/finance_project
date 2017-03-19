@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
-import { timeSincePosted } from '../../utils/format'
+import format from '../../utils/format';
 import ReactMarkDown from 'react-markdown';
 import CommentsRecursive from './CommentsRecursive';
 class Comment extends Component{
     render(){
         const comment = this.props.currentComment;
         console.log(comment);
-        let timeFormatted = timeSincePosted(comment.posted_datetime);
+        let timeFormatted = format.timeSincePosted(comment.posted_datetime);
         return(
             <div className="comment">
                 <Link to = {'/user/'+comment.user_id} >

@@ -3,6 +3,7 @@ import HomePosts from '../components/posts/HomePosts';
 import Header from '../components/other/Header';
 import {get} from '../utils/APImanager';
 import User from '../models/User';
+import helpers from '../utils/helpers';
 
 
 class Home extends Component{
@@ -16,7 +17,7 @@ class Home extends Component{
     }
     componentDidMount(){
         let user = this.state.user;
-        if(this.state.user.user_id) {
+        if(user.user_id) {
             get('/api/post/user/'+user.user_id, function (err, posts) {
                 if (err) {
                     console.log(err.message);
@@ -42,10 +43,28 @@ class Home extends Component{
         User.removeAllListeners('change');
     }
     handleLike(index){
-        let updatedPosts = this.state.posts;
-        updatedPosts[index].liked = !updatedPosts[index].liked;
-        updatedPosts[index].like_count = updatedPosts[index].liked ? ++updatedPosts[index].like_count : --updatedPosts[index].like_count;
-        this.setState({posts : updatedPosts})
+        console.log(this.state.user)
+        if(this.state.user && this.state.user.user_id){
+            let posts = this.state.posts;
+            let updatedPost = posts[index];
+            updatedPost.liked = !updatedPost.liked;
+            updatedPost.like_count = updatedPost.liked ? ++updatedPost.like_count : --updatedPost.like_count;
+            posts[index] = updatedPost;
+            this.setState({posts: posts}, () => {
+                let reversedPost = this.state.posts[index];
+                helpers.handleLike(reversedPost.post_id, reversedPost.liked, (err, result) => {
+                    if (err) {
+                        let posts = this.state.posts;
+                        reversedPost.liked = !reversedPost.liked;
+                        reversedPost.like_count = reversedPost.liked ? ++reversedPost.like_count : --reversedPost.like_count;
+                        posts[index] = reversedPost;
+                        return this.setState({posts: posts});
+                    }
+                    console.log(result);
+                });
+            });
+        }
+        else alert("You need to be logged in");
     }
     render(){
         let data = {

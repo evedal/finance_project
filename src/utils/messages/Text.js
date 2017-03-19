@@ -14,6 +14,8 @@ export default {
         addCompany: "Nytt selskap",
         companies: "Selskaper",
         segments: "Segmenter",
+        login: "Logg inn",
+        register: "Registrer deg",
         home: "Hjem"
     },
     messages: {
@@ -21,5 +23,8 @@ export default {
         noPosts: "Legg til den første posten!",
         noCompany: "Legg til det første selskapet!",
         noSegment: "Legg til det første segmentet!"
+    },
+    comment: {
+        commentLabel: "Kommentarer"
     }
 }

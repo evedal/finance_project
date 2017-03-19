@@ -1,60 +1,30 @@
 var db = require("../utils/db");
 
-const sqlCreateUser = "INSERT INTO user SET ?";
-const sqlDeleteUser = "DELETE FROM user WHERE user_id = ?";
-const sqlGetUserByEmail = "SELECT * FROM user WHERE email = ?";
-const sqlGetUserById = "SELECT * FROM user WHERE user_id = ?";
-const sqlUpdateOrCreatePostLike = "UPDATE post_like SET liked = ? WHERE post_like_id = ? " +
-    "IF @@ROWCOUNT=0 INSERT INTO post_like SET liked = ? user_id = ?  = ?";
+const sqlUpdatePostLike = "INSERT INTO post_like (user_id,post_id,liked) VALUES(?,?,?) ON DUPLICATE KEY UPDATE liked = ?;";
+const sqlUpdateCommentLike = "INSERT INTO comment_like (user_id,comment_id,liked) VALUES(?,?,?) ON DUPLICATE KEY UPDATE liked = ?;";
 
-function createUser(user, callback){
+function updatePostLike(like, callback){
     "use strict";
-    db.getPool().query(sqlCreateUser, user, function (err, result) {
+    let query = db.getPool().query(sqlUpdatePostLike, [like.user_id, like.post_id, like.liked, like.liked], function (err, result) {
+        console.log(query.sql)
+        if(err || !result){
+
+            return callback(err);
+        }
+        callback(null, result);
+    });
+}
+function updateCommentLike(like, callback){
+    "use strict";
+    db.getPool().query(sqlUpdateCommentLike, [like.user_id, like.comment_id, like.liked, like.liked], function (err, result) {
         if(err || !result){
             return callback(err);
         }
-        user.user_id = result.insertId;
-        callback(null, user);
+        callback(null, result);
     });
 }
-function deleteUser(user_id, callback){
-    "use strict";
-    db.getPool().query(sqlDeleteUser, user_id, function (err, result) {
-        if(err){
-            return callback(err);
-        }
-        return callback(null, result);
-    })
-}
-function getUserByEmail(email, callback) {
-    "use strict";
-    db.getPool().query(sqlGetUserByEmail, email, function (err, user) {
-        if(err){
-            console.log(err);
-            return callback(err);
-        }
-        if(!user){
-            return callback(null, false);
-        }
-        return callback(null, user[0]);
-    })
-}
-function getUserById(user_id, callback) {
-    "use strict";
-    var query = db.getPool().query(sqlGetUserById, user_id, function (err, user) {
-        if(err){
-            console.log(err);
-            return callback(err);
-        }
-        if(!user){
-            return callback(null, false);
-        }
-        return callback(null, user[0]);
-    })
-}
+
 module.exports = {
-    create: createUser,
-    findById: getUserById,
-    findByEmail: getUserByEmail,
-    delete: deleteUser
+    putPost: updatePostLike,
+    putComment: updateCommentLike
 };

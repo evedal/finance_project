@@ -34,7 +34,6 @@ passport.use(new JWTStrategy(params,
 
 //Used to authenticate user,
 function login(email, password, callback) {
-    console.log(email, password);
     User.findByEmail(email, function (err, user) {
         console.log(err, user);
         if (err) {

@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import DetailedPost from '../components/posts/DetailedPost';
 import Comments from '../components/comments/Comments'
 import Header from '../components/other/Header';
-import {get, post} from '../utils/APImanager'
+import {get, put} from '../utils/APImanager'
 import User from '../models/User';
 import APIRoute from '../utils/messages/APIRoute';
+import helpers from '../utils/helpers';
+import Text from '../utils/messages/Text';
 class PostLayout extends Component{
     constructor(){
         super();
@@ -24,23 +26,23 @@ class PostLayout extends Component{
     }
 
     handleLike(){
-        let updatedPost = this.state.post;
-        updatedPost.liked = !this.state.post.liked;
-        updatedPost.like_count = updatedPost.liked ? ++updatedPost.like_count : --updatedPost.like_count;
-        this.setState({post: updatedPost}, () => {
-            post(APIRoute.post.like(this.state.post.post_id, this.state.user.user_id),
-                {liked: this.state.post.liked}, (err, result) => {
+        if(this.state.user && this.state.user.user_id){
+            let updatedPost = this.state.post;
+            updatedPost.liked = !this.state.post.liked;
+            updatedPost.like_count = updatedPost.liked ? ++updatedPost.like_count : --updatedPost.like_count;
+            this.setState({post: updatedPost}, () => {
+                let reversedPost = this.state.post;
+                helpers.handleLike(reversedPost.post_id, reversedPost.liked, (err, result) => {
                     if (err) {
-                        let reversedPost = this.state.post;
                         reversedPost.liked = !this.state.post.liked;
                         reversedPost.like_count = reversedPost.liked ? ++reversedPost.like_count : --reversedPost.like_count;
                         return this.setState({post: reversedPost});
                     }
                     console.log(result);
                 });
-        });
-
-
+            });
+        }
+        else alert("You need to be logged in");
     }
     componentDidMount(){
         console.log(this.props.params)
@@ -50,14 +52,15 @@ class PostLayout extends Component{
                 console.log(err.message);
                 return;
             }
-            this.setState({post: post[0]});
             let encodedSlug = encodeURI(post[0].header);
             let pathname = this.props.location.pathname;
+            console.log(post[0])
             if(!params.slug){
                 if(pathname.slice(-1) != "/") pathname += "/";
                 let pathWithSlug = this.props.location.pathname+encodedSlug;
                 this.props.router.push(pathWithSlug);
             }
+            this.setState({post: post[0]});
 
         }.bind(this));
         //Get company, set state and add slug to path
