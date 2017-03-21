@@ -15,8 +15,7 @@ router.route('/post')
         });
     })
     .post(auth.isAuthenticated, function (req, res) {
-        console.log(req.body);
-        if(req.user.user_id == req.body.user_id ) {
+        if(req.user == req.body.user_id ) {
             Post.create(req.body, function (err, result) {
                 if(err){
                     res.status(400);
@@ -35,8 +34,9 @@ router.route('/post')
 
 //Create REST route for spesific posts
 router.route('/post/:post_id')
-    .get(function (req,res) {
-        Post.findById(req.params.post_id, function (err, post) {
+    .get(auth.isAuthenticated, function (req,res) {
+        console.log("USER_ID "+req.user)
+        Post.findById(req.params.post_id, req.user, function (err, post) {
             if(err){
                 res.status(400);
                 res.json(err);
@@ -69,8 +69,8 @@ router.route('/post/:post_id')
 //Route for posts from company
 //getDetails{sLimit: startCount, eLimit: endCount}
 router.route('/post/company/:ticker')
-    .get(function (req, res) {
-        Post.findByCompany(req.params.ticker, req.query, function (err, posts) {
+    .get(auth.isAuthenticated, function (req, res) {
+        Post.findByCompany(req.params.ticker, req.user, req.body, function (err, posts) {
             if(err){
                 res.status(400);
                 res.json(err);
@@ -82,8 +82,8 @@ router.route('/post/company/:ticker')
 
 //getDetails{sLimit: start limit, eLimit: end limit}
 router.route('/post/segment/:name')
-    .get(function (req, res) {
-        Post.findBySegment(req.params.name, req.query, function (err, posts) {
+    .get(auth.isAuthenticated, function (req, res) {
+        Post.findBySegment(req.params.name, req.user, req.body, function (err, posts) {
             if(err){
                 res.status(400);
                 res.json(err);
@@ -95,7 +95,7 @@ router.route('/post/segment/:name')
 
 router.route('/post/user/:user_id')
     .get(function (req, res) {
-        Post.findByUser(req.params.user_id, req.query, function (err, posts) {
+        Post.findByUser(req.params.user_id, req.body, function (err, posts) {
             if(err){
                 res.status(400);
                 res.json(err);

@@ -32,18 +32,21 @@ function isAuthenticated(callback) {
             console.log(User.getUser());
             return callback(null, user);
         });
-
     }
+    return callback(null, false)
 }
 //Authorization function for react router to check on enter to protected page
 function requireAuth(nextState, replace) {
+    console.log("HEI")
     isAuthenticated(function (err, user) {
+        console.log(err + " HEI igjen "+user)
         if (err || !user) {
             replace({
                 pathname: '/login',
                 state: {nextPathname: nextState.location.pathname}
             })
         }
+
     })
 }
 function requireNotAuth(nextState, replace) {

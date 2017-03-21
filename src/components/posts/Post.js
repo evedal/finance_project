@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
-import {timeSincePosted} from '../../utils/format'
+import format from '../../utils/format';
 class Post extends Component{
 /*
     Basepath is generated as more components are called.
@@ -11,15 +11,15 @@ class Post extends Component{
     render(){
         console.log(this.props);
         const post = this.props.currentPost;
-        let timePresentation = timeSincePosted(post.created_date);
+        let timePresentation = format.timeSincePosted(post.created_date);
         let content;
         let likeContent;
-        let encodedHeader = encodeURI(post.header);
+        let encodedHeader = format.formatUrl(post.header);
         let contentPath = this.props.basePath+"/post/"+post.post_id+"/"+encodedHeader;
         if(post.image_url){
             content = (
                 <Link to = {contentPath } >
-                    <img src={post.image_url}/>
+                    <img src={post.image_url} />
                     <h5>{post.header}</h5>
                 </Link>
             );
@@ -52,7 +52,7 @@ class Post extends Component{
             <div className="post">
                 {this.props.header}
                 <div className="post-content">
-                    {content}
+                        {content}
                     <div className="post-footer flex-center">
                         <span>Postet for {timePresentation} siden</span>
                         <div className="footer-icons flex-center">

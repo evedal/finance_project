@@ -51,16 +51,13 @@ class SiteNav extends Component{
 
     //Handles document click when dropdown is open
     handleDocumentClickMenu(event){
-        console.log("FOUND NODE:"+ReactDOM.findDOMNode(this).contains(event.target))
-        if (!ReactDOM.findDOMNode(this).contains(event.target)) {
+        if (!ReactDOM.findDOMNode(this).contains(event.target) || document.getElementById("overlay") === event.target) {
             this.toggleMenu(event);
         }
     }
     handleDocumentClickSettings(event){
-        console.log("PARENT:"+ event.target.parentNode);
-
-        console.log("FOUND NODE:"+ReactDOM.findDOMNode(this).contains(event.target.parentNode))
-        if (!ReactDOM.findDOMNode(this).contains(event.target.parentNode) && event.target.parentNode) {
+        if (!ReactDOM.findDOMNode(this).contains(event.target.parentNode) && event.target.parentNode ||
+            document.getElementById("overlay") === event.target) {
             this.toggleSettings(event);
 
         }
@@ -92,13 +89,13 @@ class SiteNav extends Component{
                 </div>
             )
         }
-        /*
+
         let overlay;
         if(this.state.dropdown.menu || this.state.dropdown.settings){
             overlay = (
-                <div className="overlay"></div>
+                <div className="overlay" id="overlay"></div>
             )
-        }*/
+        }
         let settingsIcon;
         if(this.state.dropdown.settings){
             let settingsData = {
@@ -126,6 +123,11 @@ class SiteNav extends Component{
             transitionEnterTimeout: 300,
             transitionLeaveTimeout: 300
         };
+        let transitionOverlayData = {
+            transitionName: "overlay",
+            transitionEnterTimeout: 300,
+            transitionLeaveTimeout: 300
+        };
         console.log(this.state.dropdown);
         return(
             <div>
@@ -133,11 +135,13 @@ class SiteNav extends Component{
                     {menuIcon}
                     <h1><a href="/">Aksjeprat</a></h1>
                     {settingsIcon}
-
                 </header>
                 <ReactCSSTransitionGroup {...transitionData}>
                     {menuDropdown}
                     {settingsDropdown}
+                </ReactCSSTransitionGroup>
+                <ReactCSSTransitionGroup {...transitionOverlayData}>
+                    {overlay}
                 </ReactCSSTransitionGroup>
             </div>
 

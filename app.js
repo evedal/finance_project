@@ -17,6 +17,7 @@ var apiUser = require('./routes/api/user');
 var apiCompany = require('./routes/api/company');
 var apiSegment = require('./routes/api/segment');
 var apiAuth = require('./routes/api/auth');
+var apiLike = require('./routes/api/like');
 
 import { renderToString } from 'react-dom/server';
 import { match, RouterContext } from 'react-router';
@@ -55,6 +56,7 @@ app.use('/api/', apiUser);
 app.use('/api/', apiCompany);
 app.use('/api/', apiSegment);
 app.use('/api/', apiAuth);
+app.use('/api/', apiLike);
 
 //Takes inital request and renders correct page from react router
 if(process.env.NODE_ENV !== 'test') {

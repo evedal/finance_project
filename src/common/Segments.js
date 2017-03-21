@@ -5,7 +5,7 @@ import Dropdown from '../components/other/Dropdown'
 import {get} from '../utils/APImanager'
 import Segment from '../components/segment/Segment';
 import Loader from '../components/other/Loader'
-
+import Text from '../utils/messages/Text'
 class Segments extends Component{
     constructor() {
         super();
@@ -47,9 +47,13 @@ class Segments extends Component{
         let headerData = {
             icon: "add",
             iconLink: "/segment/create",
-            links: [{
-                title: "Segmenter",
-                url: "#"
+            links: [
+                {
+                    title: Text.headers.home,
+                    url: "/"
+                },
+                {
+                title: Text.headers.segments,
             }]
         };
 

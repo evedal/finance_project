@@ -115,8 +115,12 @@ class Register extends Component{
 
     render(){
         let headerData = {
-            title: "Registrer deg",
-            titleLink: "#"
+            links: [{
+                title: Text.headers.home,
+                url: "/"
+            }, {
+                title: Text.headers.register,
+            }]
         };
         let usernameData = {
             onChange: this.handleUsernameUpdate,
@@ -190,19 +194,19 @@ class Register extends Component{
 
         return(
             <div>
-                <Header data={headerData}/>
-                <FormLayout onSubmit={this.handleSubmit} onValid={this.onValid} onInvalid={this.onInvalid}>
-
-                    <InputField {...usernameData}/>
-                    <InputField {...firstNameData}/>
-                    <InputField {...lastNameData} />
-                    <InputField {...emailData}/>
-                    <InputField {...passwordData}/>
-                    <InputField {...passwordReData}/>
-                    <SubmitBtn value={Placeholder.register.submit} />
-                </FormLayout>
-                <p>{Text.register.loginLabel}<Link to="/login"> {Text.register.loginLink}</Link></p>
-
+                <Header {...headerData}/>
+                <div className="content-wrap">
+                    <FormLayout onSubmit={this.handleSubmit} onValid={this.onValid} onInvalid={this.onInvalid}>
+                        <InputField {...usernameData}/>
+                        <InputField {...firstNameData}/>
+                        <InputField {...lastNameData} />
+                        <InputField {...emailData}/>
+                        <InputField {...passwordData}/>
+                        <InputField {...passwordReData}/>
+                        <SubmitBtn value={Placeholder.register.submit} />
+                    </FormLayout>
+                    <p>{Text.register.loginLabel}<Link to="/login"> {Text.register.loginLink}</Link></p>
+                </div>
             </div>
         );
     }

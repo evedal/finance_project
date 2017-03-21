@@ -13,6 +13,7 @@ import auth from '../../auth/authUtils';
 import Placeholder from '../../utils/messages/Placeholder';
 import ErrorMessage from '../../utils/messages/ErrorMessage';
 import Text from '../../utils/messages/Text';
+import Path from '../../utils/messages/Path';
 
 class Login extends Component{
     constructor(){
@@ -76,8 +77,12 @@ class Login extends Component{
 
     render(){
         let headerData = {
-            title: "Logg inn",
-            titleLink: "#"
+            links: [{
+                    title: Text.headers.home,
+                    url: "/"
+                }, {
+                    title: Text.headers.login,
+                }]
         };
 
         let emailData = {
@@ -112,13 +117,15 @@ class Login extends Component{
 
         return(
             <div>
-                <Header data={headerData} />
-                <FormLayout onSubmit={this.handleSubmit} onValid={this.onValid} onInvalid={this.onInvalid}>
-                    <InputField {...emailData} />
-                    <InputField {...passData} />
-                    <SubmitBtn value={Placeholder.login.submit} disabled={!this.state.allValid}/>
-                </FormLayout>
-                <p>{Text.login.registerLabel}<Link to="/register"> {Text.login.registerLink}</Link></p>
+                <Header {...headerData} />
+                <div className="content-wrap">
+                    <FormLayout onSubmit={this.handleSubmit} onValid={this.onValid} onInvalid={this.onInvalid}>
+                        <InputField {...emailData} />
+                        <InputField {...passData} />
+                        <SubmitBtn value={Placeholder.login.submit} disabled={!this.state.allValid}/>
+                    </FormLayout>
+                    <p>{Text.login.registerLabel}<Link to="/register"> {Text.login.registerLink}</Link></p>
+                </div>
             </div>
         );
     }

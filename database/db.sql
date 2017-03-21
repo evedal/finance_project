@@ -115,12 +115,11 @@ CREATE TABLE user_message(
 
 -- LIKE CONNECTED TO POST
 CREATE TABLE post_like(
-    post_like_id INTEGER,
     user_id INTEGER NOT NULL,
     post_id INTEGER NOT NULL,
     received TIMESTAMP,
     liked BOOLEAN DEFAULT TRUE,
-    CONSTRAINT pk_post_like PRIMARY KEY(post_like_id)
+    CONSTRAINT pk_post_like PRIMARY KEY(user_id, post_id)
 );
 CREATE TABLE comment(
     comment_id INTEGER AUTO_INCREMENT,
@@ -133,13 +132,11 @@ CREATE TABLE comment(
 );
 -- LIKE CONNECTED TO COMMENT
 CREATE TABLE comment_like(
-    comment_like_id INTEGER,
-    user_id INTEGER NOT NULL,
-    comment_id INTEGER NOT NULL,
+    user_id INTEGER,
+    comment_id INTEGER,
     received TIMESTAMP,
     liked BOOLEAN DEFAULT TRUE,
-    CONSTRAINT pk_comment_like PRIMARY KEY(comment_like_id)
-
+    CONSTRAINT pk_comment_like PRIMARY KEY(user_id, comment_id)
 );
 
 

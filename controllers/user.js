@@ -1,4 +1,6 @@
 var User = require('../models/User');
+var Subscription = require('../models/Subscription');
+
 var bcrypt = require('bcrypt-nodejs');
 var passport = require('passport');
 

@@ -1,13 +1,19 @@
 import Comment from './Comment';
 import React, {Component} from 'react';
 import { Link } from 'react-router';
+import classNames from 'classnames';
 
 
 class CommentWithFooter extends Component{
     render(){
         let comment = this.props.currentComment;
         let children = this.props.childComments;
-        console.log("heihei");
+        let iconClasses = classNames({
+            "flex-center": true,
+            "comment-like": true,
+            "liked": comment.liked
+        });
+        console.log(this.props.handleLike);
         return(
             <Comment currentComment = {comment} childComments = {children} footer = {
                 <div className="flex-center comment-footer">
@@ -16,7 +22,7 @@ class CommentWithFooter extends Component{
                             <span>Svar</span>
                         </Link>
 
-                        <div className="flex-center comment-like">
+                        <div className={iconClasses} onClick={this.props.handleLike} data-id={comment.comment_id}>
                             <span>{comment.like_count}</span>
                             <i className="material-icons">thumb_up</i>
                         </div>

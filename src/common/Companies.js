@@ -4,7 +4,8 @@ import Header from '../components/other/Header';
 import Dropdown from '../components/other/Dropdown'
 import {get} from '../utils/APImanager'
 import Company from '../components/company/Company';
-import Loader from '../components/other/Loader'
+import Loader from '../components/other/Loader';
+import Text from '../utils/messages/Text';
 
 class Companies extends Component{
     constructor() {
@@ -55,9 +56,12 @@ class Companies extends Component{
             icon: "add",
             iconLink: "/company/create",
             links: [{
-                title: "Selskaper",
-                url: "#"
-            }]
+                title: Text.headers.home,
+                url: "/"
+            },
+                {
+                    title: Text.headers.companies
+                }]
         };
         return(
             <div className="container">
