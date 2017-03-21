@@ -18,6 +18,7 @@ var apiCompany = require('./routes/api/company');
 var apiSegment = require('./routes/api/segment');
 var apiAuth = require('./routes/api/auth');
 var apiLike = require('./routes/api/like');
+var auth = require('./controllers/auth');
 
 import { renderToString } from 'react-dom/server';
 import { match, RouterContext } from 'react-router';
@@ -48,6 +49,7 @@ app.use(session({
 }));
 //Initalizes passport
 app.use(passport.initialize());
+app.use(auth.checkForUser);
 
 app.use('/', index);
 app.use('/api/', apiComment);

@@ -20,7 +20,7 @@ router.route("/comment")
     });
 
 router.route("/comment/:comment_id")
-    .get(auth.isAuthenticated, function (req, res) {
+    .get(function (req, res) {
         "use strict";
         Comment.findById(req.params.comment_id, req.user, function (err, comment) {
             if(err){
@@ -33,7 +33,7 @@ router.route("/comment/:comment_id")
     });
 
 router.route("/comment/post/:post_id")
-    .get(auth.isAuthenticated, function (req, res) {
+    .get(function (req, res) {
         "use strict";
         Comment.findByPost(req.params.post_id, req.user, function (err, comment) {
             if(err){

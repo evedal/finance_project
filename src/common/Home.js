@@ -4,6 +4,7 @@ import Header from '../components/other/Header';
 import {get} from '../utils/APImanager';
 import User from '../models/User';
 import helpers from '../utils/helpers';
+import Path from '../utils/messages/Path';
 
 
 class Home extends Component{
@@ -14,8 +15,15 @@ class Home extends Component{
             user: User.getUser()
         };
         this.handleLike = this.handleLike.bind(this)
+        this.fetchData = this.fetchData.bind(this)
     }
     componentDidMount(){
+        this.fetchData();
+        User.on("change", (user) => {
+            this.setState({user: user})
+        })
+    }
+    fetchData(){
         let user = this.state.user;
         if(user.user_id) {
             get('/api/post/user/'+user.user_id, function (err, posts) {
@@ -35,13 +43,11 @@ class Home extends Component{
                 this.setState({posts: posts})
             }.bind(this));
         }
-        User.on("change", (user) => {
-            this.setState({user: user})
-        })
     }
     componentWillUnmount(){
         User.removeAllListeners('change');
     }
+
     handleLike(index){
         console.log(this.state.user)
         if(this.state.user && this.state.user.user_id){

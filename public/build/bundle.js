@@ -21726,6 +21726,10 @@ var _helpers = __webpack_require__(49);
 
 var _helpers2 = _interopRequireDefault(_helpers);
 
+var _Path = __webpack_require__(63);
+
+var _Path2 = _interopRequireDefault(_Path);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21747,6 +21751,7 @@ var Home = function (_Component) {
             user: _User2.default.getUser()
         };
         _this.handleLike = _this.handleLike.bind(_this);
+        _this.fetchData = _this.fetchData.bind(_this);
         return _this;
     }
 
@@ -21755,6 +21760,14 @@ var Home = function (_Component) {
         value: function componentDidMount() {
             var _this2 = this;
 
+            this.fetchData();
+            _User2.default.on("change", function (user) {
+                _this2.setState({ user: user });
+            });
+        }
+    }, {
+        key: 'fetchData',
+        value: function fetchData() {
             var user = this.state.user;
             if (user.user_id) {
                 (0, _APImanager.get)('/api/post/user/' + user.user_id, function (err, posts) {
@@ -21773,9 +21786,6 @@ var Home = function (_Component) {
                     this.setState({ posts: posts });
                 }.bind(this));
             }
-            _User2.default.on("change", function (user) {
-                _this2.setState({ user: user });
-            });
         }
     }, {
         key: 'componentWillUnmount',
@@ -22530,6 +22540,8 @@ var Login = function (_Component) {
 
             //Sends call to api, gets back token or error
             (0, _APImanager.post)("/api/auth/login", payload, function (err, result) {
+                var _this2 = this;
+
                 if (err) return alert(err);
                 if (!result.success) {
                     return alert("Brukernavn eller passord var feil");
@@ -22537,16 +22549,14 @@ var Login = function (_Component) {
                 _User2.default.setToken(result.token);
                 _authUtils2.default.isAuthenticated(function (err, user) {
                     if (err || !user) return console.log("Fant ikke bruker til token");
-                    _User2.default.setUser(user);
+                    _this2.props.router.push("/");
                 });
-                this.props.router.push("/");
-                window.location.reload();
             }.bind(this));
         }
     }, {
         key: 'render',
         value: function render() {
-            var _this2 = this;
+            var _this3 = this;
 
             var headerData = {
                 links: [{
@@ -22565,9 +22575,9 @@ var Login = function (_Component) {
                 type: "email",
                 error: {
                     isValid: function isValid() {
-                        var field = _this2.state.email;
+                        var field = _this3.state.email;
                         //TODO: ADD EMAIL REGEX
-                        return field.length > 5 && field.length < 100;
+                        return field.length > 0 && field.length < 200;
                     },
                     message: _ErrorMessage2.default.missingInput()
                 }
@@ -22580,8 +22590,8 @@ var Login = function (_Component) {
                 type: "password",
                 error: {
                     isValid: function isValid() {
-                        var field = _this2.state.password;
-                        return field.length > 0;
+                        var field = _this3.state.password;
+                        return field.length > 7;
                     },
                     message: _ErrorMessage2.default.missingInput()
                 }
@@ -24461,20 +24471,20 @@ var SiteNav = function (_Component) {
                 menuDropdown = _react2.default.createElement(_MenuDropdown2.default, menuData);
                 menuIcon = _react2.default.createElement(
                     'div',
-                    { className: 'icon-container' },
+                    { className: 'icon-container', onClick: this.toggleMenu },
                     _react2.default.createElement(
                         'div',
-                        { className: 'hamburger-menu', onClick: this.toggleMenu },
+                        { className: 'hamburger-menu' },
                         _react2.default.createElement('div', { className: 'bar animate' })
                     )
                 );
             } else {
                 menuIcon = _react2.default.createElement(
                     'div',
-                    { className: 'icon-container' },
+                    { className: 'icon-container', onClick: this.toggleMenu },
                     _react2.default.createElement(
                         'div',
-                        { className: 'hamburger-menu', onClick: this.toggleMenu },
+                        { className: 'hamburger-menu' },
                         _react2.default.createElement('div', { className: 'bar' })
                     )
                 );

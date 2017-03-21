@@ -31,6 +31,21 @@ passport.use(new JWTStrategy(params,
         return done(null, jwt_payload.id)
 
     }));
+function checkForUser(req,res,next) {
+    console.log("\n\n\n")
+
+    console.log(req)
+    console.log("\n\n\n")
+
+        passport.authenticate('jwt', {session: false},(err, user, info) => {
+            console.log("\n\n\n")
+            console.log(err);
+            console.log(user)
+            console.log("\n\n\n")
+            req.user = user;
+            return next()
+        })(req, res, next);
+}
 
 //Used to authenticate user,
 function login(email, password, callback) {
@@ -63,8 +78,8 @@ function generateToken(user_id) {
 module.exports = {
     isAuthenticated: passport.authenticate('jwt', {session: false}),
     generateToken: generateToken,
-    login: login
-
+    login: login,
+    checkForUser: checkForUser
 }
 
 
