@@ -4,7 +4,7 @@ const sqlCreatePost = "INSERT INTO post SET ?";
 
 
 const sqlGetPosts = "SELECT post.post_id, post.header, post.content, post.created_date, post.user_id, " +
-    "company.ticker, post.image_url, post.link_url, segment.name, username, like_count, " +
+    "company.ticker, post.image_url, post.link_url, segment.name, username, IFNULL(like_count,0) as like_count, " +
     "COUNT(comment_id) as comment_count FROM post LEFT JOIN user ON post.user_id = user.user_id " +
     "LEFT JOIN (SELECT post_id, SUM(liked) as like_count FROM post_like GROUP BY post_id) as pl_sum ON pl_sum.post_id = post.post_id" +
     " LEFT JOIN comment ON comment.post_id = post.post_id " +
@@ -13,13 +13,13 @@ const sqlGetPosts = "SELECT post.post_id, post.header, post.content, post.create
     "ORDER BY created_date DESC LIMIT ?,?";
 
 const sqlGetPostById = "SELECT post.post_id, post.header, SUBSTRING(post.content, 1, 100) as content, post.created_date, post.user_id, " +
-    "post.ticker, company.name, post.image_url, post.link_url, username, like_count, COUNT(comment_id) as comment_count FROM post " +
+    "post.ticker, company.name, post.image_url, post.link_url, username, IFNULL(like_count,0) as like_count, COUNT(comment_id) as comment_count FROM post " +
     "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN (SELECT post_id, SUM(liked) as like_count FROM post_like GROUP BY post_id) as pl_sum ON pl_sum.post_id = post.post_id " +
     "LEFT JOIN comment ON comment.post_id = post.post_id JOIN company ON post.ticker = company.ticker " +
     "WHERE post.post_id = ? GROUP BY post.post_id LIMIT 1";
 
 const sqlGetPostByIdAndUser = "SELECT post.post_id, post.header, SUBSTRING(post.content, 1, 100) as content, post.created_date, post.user_id, " +
-    "post.ticker, company.name, post.image_url, post.link_url, username, like_count, COUNT(comment_id) as comment_count, " +
+    "post.ticker, company.name, post.image_url, post.link_url, username, IFNULL(like_count,0) as like_count, COUNT(comment_id) as comment_count, " +
     "IF((select count(*) from post_like WHERE post_like.post_id = post.post_id AND user_id = ? AND liked = 1) = 1, true, false) as liked FROM post " +
     "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN (SELECT post_id, SUM(liked) as like_count FROM post_like GROUP BY post_id) as pl_sum ON pl_sum.post_id = post.post_id " +
     "LEFT JOIN comment ON comment.post_id = post.post_id JOIN company ON post.ticker = company.ticker " +
@@ -31,32 +31,32 @@ const sqlUpdatePost = "UPDATE post SET content=? WHERE post_id = ?";
 
 
 const sqlGetPostsByCompany = "SELECT post.post_id, post.header, SUBSTRING(post.content, 1, 100) as content, post.created_date, post.user_id, " +
-    "ticker, post.image_url, post.link_url, username, like_count, COUNT(comment_id) as comment_count FROM post " +
+    "ticker, post.image_url, post.link_url, username, IFNULL(like_count,0) as like_count, COUNT(comment_id) as comment_count FROM post " +
     "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN (SELECT post_id, SUM(liked) as like_count FROM post_like GROUP BY post_id) as pl_sum ON pl_sum.post_id = post.post_id " +
     "LEFT JOIN comment ON comment.post_id = post.post_id WHERE post.ticker = ? GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
 
 const sqlGetPostsByCompanyAndUser = "SELECT post.post_id, post.header, SUBSTRING(post.content, 1, 100) as content, post.created_date, post.user_id, " +
-    "ticker, post.image_url, post.link_url, username, like_count, COUNT(comment_id) as comment_count, " +
+    "ticker, post.image_url, post.link_url, username, IFNULL(like_count,0) as like_count, COUNT(comment_id) as comment_count, " +
     "IF((select count(*) from post_like WHERE post_id = post.post_id AND user_id = ? AND liked = 1) = 1, true, false) as liked FROM post " +
     "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN (SELECT post_id, SUM(liked) as like_count FROM post_like GROUP BY post_id) as pl_sum ON pl_sum.post_id = post.post_id " +
     "LEFT JOIN comment ON comment.post_id = post.post_id WHERE post.ticker = ? GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
 
 
 const sqlGetPostsBySegment = "SELECT post.post_id, post.header, post.content, post.created_date, post.user_id, " +
-    "ticker, post.image_url, post.link_url, username, like_count, COUNT(comment_id) as comment_count FROM post " +
+    "ticker, post.image_url, post.link_url, username, IFNULL(like_count,0) as like_count, COUNT(comment_id) as comment_count FROM post " +
     "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN (SELECT post_id, SUM(liked) as like_count FROM post_like GROUP BY post_id) as pl_sum ON pl_sum.post_id = post.post_id " +
     "LEFT JOIN comment ON comment.post_id = post.post_id WHERE ticker IN (SELECT ticker FROM segment " +
     "WHERE name = ?) GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
 
 const sqlGetPostsBySegmentAndUser = "SELECT post.post_id, post.header, post.content, post.created_date, post.user_id, " +
-    "ticker, post.image_url, post.link_url, username, like_count, COUNT(comment_id) as comment_count, " +
+    "ticker, post.image_url, post.link_url, username, IFNULL(like_count,0) as like_count, COUNT(comment_id) as comment_count, " +
     "IF((select count(*) from post_like WHERE post_id = post.post_id AND user_id = ? AND liked = 1) = 1, true, false) as liked  FROM post " +
     "LEFT JOIN user ON post.user_id = user.user_id LEFT JOIN (SELECT post_id, SUM(liked) as like_count FROM post_like GROUP BY post_id) as pl_sum ON pl_sum.post_id = post.post_id " +
     "LEFT JOIN comment ON comment.post_id = post.post_id WHERE ticker IN (select c.ticker from segment s LEFT JOIN company c ON c.segment_id = s.segment_id where s.name = ?) "+
     "GROUP BY post_id ORDER BY created_date DESC LIMIT ?,?";
 
 const sqlGetPostsByUser = "SELECT post.post_id, post.header, post.content, post.created_date, post.user_id, " +
-    "company.ticker, post.image_url, post.link_url, segment.name, username, like_count, " +
+    "company.ticker, post.image_url, post.link_url, segment.name, username, IFNULL(like_count,0) as like_count, " +
     "COUNT(comment_id) as comment_count, IF((select count(*) from post_like WHERE post_id = post.post_id AND user_id = ? AND liked = 1) = 1, true, false) as liked " +
     "FROM post LEFT JOIN user ON post.user_id = user.user_id " +
     "LEFT JOIN (SELECT post_id, SUM(liked) as like_count FROM post_like GROUP BY post_id) as pl_sum ON pl_sum.post_id = post.post_id LEFT JOIN comment ON comment.post_id = post.post_id " +
