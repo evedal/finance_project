@@ -40,25 +40,25 @@ describe('Get Post', function () {
         });
     });
     it("Should get one post", function (done) {
-        Post.findById(1, function (err, result) {
+        Post.findById(1, false, function (err, result) {
             assert.isNotNull(result, "No error when getting one post")
             done()
         })
     })
     it("Should get posts from company", function (done) {
-        Post.findByCompany(1, {}, function (err, result) {
+        Post.findByCompany(1, false, {}, function (err, result) {
             assert.isNotNull(result, "No error when getting post from company")
             done()
         })
     })
     it("Should get posts from segment", function (done) {
-        Post.findBySegment(1, {}, function (err, result) {
+        Post.findBySegment(1, false, {}, function (err, result) {
             assert.isNotNull(result, "No error when getting post from segment")
             done()
         })
     })
     it("Should get posts from user", function (done) {
-        Post.findByUser(1, {}, function (err, result) {
+        Post.findByUser(1,{}, function (err, result) {
             assert.isNotNull(result, "No error when getting post from user")
             done()
         })
