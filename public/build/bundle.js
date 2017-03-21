@@ -22540,6 +22540,7 @@ var Login = function (_Component) {
                     _User2.default.setUser(user);
                 });
                 this.props.router.push("/");
+                window.location.reload();
             }.bind(this));
         }
     }, {
@@ -22588,7 +22589,7 @@ var Login = function (_Component) {
 
             return _react2.default.createElement(
                 'div',
-                null,
+                { className: 'container' },
                 _react2.default.createElement(_Header2.default, headerData),
                 _react2.default.createElement(
                     'div',
@@ -22936,7 +22937,9 @@ var Register = function (_Component) {
                 error: {
                     isValid: function isValid() {
                         var field = _this2.state.user.passwordRe;
-                        return field > 7 && field === _this2.state.user.password;
+                        console.log("passRE", field, "Pass", _this2.state.user.password);
+
+                        return field === _this2.state.user.password;
                     },
                     message: _ErrorMessage2.default.userAdmin.passwordRe
                 }
@@ -22944,7 +22947,7 @@ var Register = function (_Component) {
 
             return _react2.default.createElement(
                 'div',
-                null,
+                { className: 'container' },
                 _react2.default.createElement(_Header2.default, headerData),
                 _react2.default.createElement(
                     'div',

@@ -70,6 +70,7 @@ class Login extends Component{
                 User.setUser(user);
             });
             this.props.router.push("/");
+            window.location.reload();
         }.bind(this))
 
 
@@ -116,8 +117,8 @@ class Login extends Component{
         };
 
         return(
-            <div>
-                <Header {...headerData} />
+            <div className="container">
+            <Header {...headerData} />
                 <div className="content-wrap">
                     <FormLayout onSubmit={this.handleSubmit} onValid={this.onValid} onInvalid={this.onInvalid}>
                         <InputField {...emailData} />

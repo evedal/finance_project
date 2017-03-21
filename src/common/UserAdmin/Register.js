@@ -185,7 +185,9 @@ class Register extends Component{
             error: {
                 isValid: () => {
                     let field = this.state.user.passwordRe;
-                    return field > 7 && field === this.state.user.password;
+                    console.log("passRE",field,"Pass",this.state.user.password)
+
+                    return field === this.state.user.password;
                 },
                 message: ErrorMessage.userAdmin.passwordRe
             }
@@ -193,7 +195,7 @@ class Register extends Component{
 
 
         return(
-            <div>
+            <div className="container">
                 <Header {...headerData}/>
                 <div className="content-wrap">
                     <FormLayout onSubmit={this.handleSubmit} onValid={this.onValid} onInvalid={this.onInvalid}>
