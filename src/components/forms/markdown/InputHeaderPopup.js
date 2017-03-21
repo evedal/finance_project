@@ -7,9 +7,9 @@ class InputHeaderPopup extends Component {
         if (this.props.popup) {
             optionHeader = (
                 <div id="option-headers" className="option-content show">
-                    <button onClick={this.props.handleHeaders} data-prefix="#" type="button">Header</button>
-                    <button onClick={this.props.handleHeaders} data-prefix="##" type="button">Header</button>
-                    <button onClick={this.props.handleHeaders} data-prefix="###" type="button">Header</button>
+                    <button className="icon-button" onClick={this.props.handleHeaders} data-prefix="#" type="button">Header</button>
+                    <button className="icon-button" onClick={this.props.handleHeaders} data-prefix="##" type="button">Header</button>
+                    <button className="icon-button" onClick={this.props.handleHeaders} data-prefix="###" type="button">Header</button>
                 </div>)
         }
         else {

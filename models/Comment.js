@@ -2,13 +2,13 @@
 var db = require("../utils/db");
 const sqlCreateComment = "INSERT INTO comment SET ?";
 const sqlGetCommentById = "SELECT comment.comment_id, comment.content, posted_datetime, post_id, " +
-    "comment.user_id, username, parent_comment_id, IFNULL(like_count,0) as like_count " +
+    "comment.user_id, username, parent_comment_id, IFNULL(like_count,0) as like_count, " +
     "FROM comment LEFT JOIN user ON user.user_id = comment.user_id LEFT JOIN (SELECT comment_id, SUM(liked) as like_count " +
     "FROM comment_like GROUP BY comment_id) as cl " +
     "ON cl.comment_id = comment.comment_id WHERE comment.comment_id = ? GROUP BY comment.comment_id;";
 
 const sqlGetCommentByIdAndUser = "SELECT comment.comment_id, comment.content, posted_datetime, post_id, " +
-    "comment.user_id, username, parent_comment_id, IFNULL(like_count,0) as like_count " +
+    "comment.user_id, username, parent_comment_id, IFNULL(like_count,0) as like_count, " +
     "IF((select count(*) from comment_like cl WHERE cl.comment_id = comment.comment_id AND user_id = ? AND liked = 1) = 1, true, false) as liked " +
     "FROM comment LEFT JOIN user ON user.user_id = comment.user_id LEFT JOIN (SELECT comment_id, SUM(liked) as like_count " +
     "FROM comment_like GROUP BY comment_id) as cl " +

@@ -73,7 +73,7 @@ class Home extends Component{
             }]
         };
         return(
-                <div>
+                <div className="container">
                     <Header {...data} />
                     <HomePosts posts={this.state.posts} handleLike={this.handleLike}/>
                 </div>

@@ -272,7 +272,8 @@ header h1 a:last-child {
 
 }
 .all-comments{
-    padding: 0 0.5rem;
+    padding: 0.2rem 0.5rem;
+    background: white;
 }
 
 .comment{
@@ -402,9 +403,8 @@ form input{
 form .markdown{
     padding: 1rem;
     background: white;
-    -webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,0.075);
-    -moz-box-shadow: inset 0 2px 4px rgba(0,0,0,0.075);
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.075);
+    min-height: 10rem;
+    margin-bottom: 0.25rem;
 }
 .flex-column{
     flex-direction: column;
@@ -1008,3 +1008,21 @@ form .valid {
     margin: 0 0.5rem 0 0.6rem;
 }
 
+
+
+/* MEDIA QUERYIES FOR DESKTOP OPTIMIZATION
+
+    - Create margins on sides
+ */
+@media (min-width: 600px) {
+    header{
+        padding-left: 15%;
+        padding-right: 15%;
+    }
+
+    .container{
+        margin-left: 15%;
+        margin-right: 15%;
+        width: 70%;
+    }
+}

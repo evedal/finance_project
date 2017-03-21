@@ -7,6 +7,7 @@ import User from '../models/User';
 import APIRoute from '../utils/messages/APIRoute';
 import helpers from '../utils/helpers';
 import Text from '../utils/messages/Text';
+import ComponentReplacer from '../components/other/ComponentReplacer';
 class PostLayout extends Component{
     constructor(){
         super();
@@ -54,10 +55,9 @@ class PostLayout extends Component{
             }
             let encodedSlug = encodeURI(post[0].header);
             let pathname = this.props.location.pathname;
-            console.log(post[0])
             if(!params.slug){
-                if(pathname.slice(-1) != "/") pathname += "/";
-                let pathWithSlug = this.props.location.pathname+encodedSlug;
+                if(pathname.slice(-1) !== "/") pathname += "/";
+                let pathWithSlug = pathname+encodedSlug;
                 this.props.router.push(pathWithSlug);
             }
             this.setState({post: post[0]});
@@ -66,7 +66,6 @@ class PostLayout extends Component{
         //Get company, set state and add slug to path
 
         get('/api/company/'+this.props.params.ticker, function (err, company) {
-            console.log(company);
             if(err){
                 console.log(err.message);
                 return;
@@ -120,6 +119,7 @@ class PostLayout extends Component{
             <div className="container">
                 { header }
                 { postInfo }
+                <div><h3>{Text.comment.commentLabel}</h3></div>
                 { comments }
             </div>
         )

@@ -5,7 +5,7 @@ class TextInputPreview extends Component{
     render(){
         let textPresented = this.props.text ? this.props.text : "### Du må skrive noe i tekstfeltet for å bruke forhåndsvisning";
         return (
-            <div className="markdown">
+            <div className="markdown form-control">
                 <ReactMarkDown source={textPresented} escapeHTML = {true} />
             </div>
         );

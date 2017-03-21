@@ -197,7 +197,6 @@ class Register extends Component{
                 <Header {...headerData}/>
                 <div className="content-wrap">
                     <FormLayout onSubmit={this.handleSubmit} onValid={this.onValid} onInvalid={this.onInvalid}>
-
                         <InputField {...usernameData}/>
                         <InputField {...firstNameData}/>
                         <InputField {...lastNameData} />
@@ -208,7 +207,6 @@ class Register extends Component{
                     </FormLayout>
                     <p>{Text.register.loginLabel}<Link to="/login"> {Text.register.loginLink}</Link></p>
                 </div>
-
             </div>
         );
     }

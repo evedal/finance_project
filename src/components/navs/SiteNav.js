@@ -135,7 +135,6 @@ class SiteNav extends Component{
                     {menuIcon}
                     <h1><a href="/">Aksjeprat</a></h1>
                     {settingsIcon}
-
                 </header>
                 <ReactCSSTransitionGroup {...transitionData}>
                     {menuDropdown}

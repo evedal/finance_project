@@ -16,7 +16,6 @@ function getFromApi(url, callback) {
             "Content-Type": "application/json",
         }
     });
-    console.log(config.headers);
     fetch(url, config)
         .then(function (response) {
             if(response.ok){
@@ -49,7 +48,6 @@ function postToApi(url, payload, callback) {
         body: JSON.stringify(payload)
 
     });
-    console.log(config)
     fetch(url, config)
         .then(function (response) {
                 if(response.ok){
