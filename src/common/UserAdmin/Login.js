@@ -65,11 +65,10 @@ class Login extends Component{
                 return alert("Brukernavn eller passord var feil")
             }
             User.setToken(result.token);
-            auth.isAuthenticated(function (err, user) {
+            auth.isAuthenticated((err, user) => {
                 if(err || !user) return console.log("Fant ikke bruker til token");
-                User.setUser(user);
+                this.props.router.push("/");
             });
-            this.props.router.push("/");
         }.bind(this))
 
 
@@ -95,7 +94,7 @@ class Login extends Component{
                 isValid: () => {
                     let field = this.state.email;
                     //TODO: ADD EMAIL REGEX
-                    return field.length > 5 && field.length < 100;
+                    return field.length > 0 && field.length < 200;
                 },
                 message: ErrorMessage.missingInput(),
             }
@@ -109,15 +108,15 @@ class Login extends Component{
             error: {
                 isValid: () => {
                     let field = this.state.password;
-                    return field.length > 0;
+                    return field.length > 7;
                 },
                 message: ErrorMessage.missingInput(),
             }
         };
 
         return(
-            <div>
-                <Header {...headerData} />
+            <div className="container">
+            <Header {...headerData} />
                 <div className="content-wrap">
                     <FormLayout onSubmit={this.handleSubmit} onValid={this.onValid} onInvalid={this.onInvalid}>
                         <InputField {...emailData} />

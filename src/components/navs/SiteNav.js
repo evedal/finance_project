@@ -73,8 +73,8 @@ class SiteNav extends Component{
             }
             menuDropdown = <MenuDropdown {...menuData}/>;
             menuIcon = (
-                <div className="icon-container" >
-                    <div className="hamburger-menu" onClick={this.toggleMenu}>
+                <div className="icon-container" onClick={this.toggleMenu}>
+                    <div className="hamburger-menu" >
                         <div className="bar animate"></div>
                     </div>
                 </div>
@@ -82,8 +82,8 @@ class SiteNav extends Component{
         }
         else{
             menuIcon = (
-                <div className="icon-container">
-                    <div className="hamburger-menu" onClick={this.toggleMenu}>
+                <div className="icon-container" onClick={this.toggleMenu}>
+                    <div className="hamburger-menu" >
                         <div className="bar"></div>
                     </div>
                 </div>

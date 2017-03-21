@@ -34,7 +34,7 @@ router.route('/post')
 
 //Create REST route for spesific posts
 router.route('/post/:post_id')
-    .get(auth.isAuthenticated, function (req,res) {
+    .get(function (req,res) {
         console.log("USER_ID "+req.user)
         Post.findById(req.params.post_id, req.user, function (err, post) {
             if(err){
@@ -69,7 +69,7 @@ router.route('/post/:post_id')
 //Route for posts from company
 //getDetails{sLimit: startCount, eLimit: endCount}
 router.route('/post/company/:ticker')
-    .get(auth.isAuthenticated, function (req, res) {
+    .get(function (req, res) {
         Post.findByCompany(req.params.ticker, req.user, req.body, function (err, posts) {
             if(err){
                 res.status(400);
@@ -82,7 +82,7 @@ router.route('/post/company/:ticker')
 
 //getDetails{sLimit: start limit, eLimit: end limit}
 router.route('/post/segment/:name')
-    .get(auth.isAuthenticated, function (req, res) {
+    .get(function (req, res) {
         Post.findBySegment(req.params.name, req.user, req.body, function (err, posts) {
             if(err){
                 res.status(400);
