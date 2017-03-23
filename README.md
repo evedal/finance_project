@@ -27,11 +27,11 @@ URL: https://finance-project.herokuapp.com/
 15. Add segment-data
 16. Add suggested articles
 17. Add dropdown for menu and settings : DONE
-18. Add page for segments
+18. Add page for segments: DONE
 19. Add page for companies : DONE
 20. Add hot sorting for posts
 21. Add best sorting for comments
 22. Add profile page for users
 23. Add admin possibilities (user/pageadmin/siteadmim)
-24. Fix design for markdown dropdown
-25. Alter db to new local changes
+24. Fix design for markdown dropdown : DONE
+25. Alter db to new local changes : DONE
